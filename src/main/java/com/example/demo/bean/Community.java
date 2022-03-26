@@ -1,3 +1,4 @@
+
 package com.example.demo.bean;
 import java.io.File;
 import java.time.LocalDate;
@@ -45,3 +46,4 @@ public class Community {
 	@CollectionTable(name="flairs")
 	private List<String> flairs;
 }
+

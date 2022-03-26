@@ -1,10 +1,14 @@
 package com.example.demo.bean;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
 import lombok.Data;
@@ -23,13 +27,17 @@ public class Post {
 	//private List<Files> data;
 	//private Award awardsReceived;
 	private LocalDateTime createdDateTime;
-	//private List<Comment> comments;
 	private int votes;
 	private boolean voteUp;
     private boolean notSafeForWork;
     private boolean spoiler;
     private boolean originalContent;
     private String flair;
+	
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "post_id")
+	private List<Comment> comments;
+	
     //private Community community;
     
 }
