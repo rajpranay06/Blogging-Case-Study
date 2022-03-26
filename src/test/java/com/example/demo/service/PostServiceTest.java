@@ -3,6 +3,7 @@ package com.example.demo.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Disabled;
@@ -20,7 +21,6 @@ public class PostServiceTest {
 	@Autowired
 	IPostService postServ;
 	
-	@Disabled
 	@Test
 	void addPostTest() {
 		
@@ -38,6 +38,13 @@ public class PostServiceTest {
 		newPost.setVoteUp(true);
 		newPost.setSpoiler(true);
 		
+		// Adding commentIds to the list
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(26);
+		commentIds.add(27);
+		
+		newPost.setCommentIds(commentIds);
+		
 		// Adding the post
 		PostOutputDto post = postServ.addPost(newPost);
 		
@@ -50,16 +57,18 @@ public class PostServiceTest {
 		assertEquals(true, post.isOriginalContent());
 		assertEquals(true, post.isSpoiler());
 		assertEquals(true, post.isVoteUp());
+		assertEquals(2,post.getComments().size());
 		
 	}
 	
+	@Disabled
 	@Test
 	void updatePostTest() {
 		// Creating PostInputDto object
 		PostInputDto updatedPost = new PostInputDto(); 
 		
 		// Setting the values
-		updatedPost.setPostId(59);
+		updatedPost.setPostId(13);
 		updatedPost.setTitle("Game of Thrones");
 		updatedPost.setContent(PostType.LINK);
 		updatedPost.setCreatedDateTime(LocalDateTime.now());
@@ -70,11 +79,18 @@ public class PostServiceTest {
 		updatedPost.setVoteUp(true);
 		updatedPost.setSpoiler(true);
 		
+		// Adding commentIds to the list
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(16);
+		commentIds.add(17);
+				
+		updatedPost.setCommentIds(commentIds);	
+		
 		// Updating the post
 		PostOutputDto post = postServ.updatePost(updatedPost);
 		
 		// checking if the added post values are equal to the post or not
-		assertEquals(59, post.getPostId());
+		assertEquals(13, post.getPostId());
 		assertEquals("Game of Thrones", post.getTitle());
 		assertEquals(PostType.LINK, post.getContent());
 		assertEquals("GOTTheEpic", post.getFlair());
@@ -83,6 +99,7 @@ public class PostServiceTest {
 		assertEquals(true, post.isOriginalContent());
 		assertEquals(true, post.isSpoiler());
 		assertEquals(true, post.isVoteUp());
+		assertEquals(2,post.getComments().size());
 	}
 	
 	@Disabled
@@ -90,21 +107,23 @@ public class PostServiceTest {
 	void deletePostTest() {
 		
 		// Deleting the post
-		PostOutputDto deletedPost = postServ.deletePost(56);
+		PostOutputDto deletedPost = postServ.deletePost(13);
 
 		// checking if the deleted post values are equal to the post or not
-		assertEquals(56, deletedPost.getPostId());
-		assertEquals("Happy New Year", deletedPost.getTitle());
+		assertEquals(13, deletedPost.getPostId());
+		assertEquals("Game of Thrones", deletedPost.getTitle());
 		assertEquals(PostType.TEXT, deletedPost.getContent());
-		assertEquals("HappyNewYear", deletedPost.getFlair());
-		assertEquals(67, deletedPost.getVotes());
+		assertEquals("GOTTheEpic", deletedPost.getFlair());
+		assertEquals(189000, deletedPost.getVotes());
 		assertEquals(false, deletedPost.isNotSafeForWork());
-		assertEquals(false, deletedPost.isOriginalContent());
-		assertEquals(false, deletedPost.isSpoiler());
+		assertEquals(true, deletedPost.isOriginalContent());
+		assertEquals(true, deletedPost.isSpoiler());
 		assertEquals(true, deletedPost.isVoteUp());
+		assertEquals(2,deletedPost.getComments().size());
 		
 	}
 	
+	@Disabled
 	@Test
 	void getPostsBySearchStringTest() {
 		
