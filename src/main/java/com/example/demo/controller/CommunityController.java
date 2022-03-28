@@ -60,4 +60,13 @@ public class CommunityController {
 		return new ResponseEntity<>(listCom,HttpStatus.OK);
 	}
 	
+	//Get Community by using postId
+	@GetMapping("/communities/ByPostId/{postId}")
+	ResponseEntity<Community> getCommunityByPostId(@PathVariable("postId") int postId)
+	{
+		//Calling communityService getCommunityByPostId method to get community by using postid
+		Community comm = comServ.getCommunityByPostId(postId);
+		return new ResponseEntity<>(comm,HttpStatus.OK);
+	}
+	
 }

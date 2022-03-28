@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.bean.Post;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
 import com.example.demo.service.IPostService;
@@ -58,5 +59,12 @@ public class PostController {
 	@PatchMapping("/posts/upVote/{postId}")
 	void upVote(@PathVariable("postId") int postId, boolean isUpVote) {
 		postServ.upVote(postId, isUpVote);
+	}
+	//GetPosts With CommunityId
+	@GetMapping("/posts/byCommunityId/{communityId}")
+	ResponseEntity<List<Post>> listPostsByCommunityId(@PathVariable("communityId") int communityId)
+	{
+		List<Post> posts = postServ.listPostsByCommunityId(communityId);
+		return new ResponseEntity<>(posts,HttpStatus.OK);
 	}
 }

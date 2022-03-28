@@ -91,19 +91,6 @@ public class CommunityServiceTest {
 		posts.add(post1);
 		p.add(post1.getPostId());
 		com.setPost(posts);
-//		Community newCommunity = new Community();
-//		newCommunity.setCommunityId(com.getCommunityId());
-//		newCommunity.setCommunityDescription(com.getCommunityDescription());
-//		 newCommunity.setTotalMembers(com.getTotalMembers());
-//		 newCommunity.setOnlineMembers(com.getOnlineMembers());
-//		 newCommunity.setImage(com.getImage());
-//		 newCommunity.setCreatedOn(com.getCreatedOn());
-//		 newCommunity.setPostRulesAllowed(com.getPostRulesAllowed());
-//		 newCommunity.setPostRulesDisAllowed(com.getPostRulesDisAllowed());
-//		 newCommunity.setBanningPolicy(com.getBanningPolicy());
-//		 newCommunity.setFlairs(com.getFlairs());
-//		 newCommunity.setPost(posts);
-//		 newCommunity.setBlogger(bloggers);
 		
 		//Persist the community object to the DB using service implementation
 		Community c = comServ.addCommunityWithoutDto(com);
@@ -188,19 +175,6 @@ public class CommunityServiceTest {
 		posts.add(post1);
 		p.add(post1.getPostId());
 		com.setPost(posts);
-		
-//		Community newCommunity = new Community();
-//		newCommunity.setCommunityId(com.getCommunityId());
-//		newCommunity.setCommunityDescription(com.getCommunityDescription());
-//		 newCommunity.setTotalMembers(com.getTotalMembers());
-//		 newCommunity.setOnlineMembers(com.getOnlineMembers());
-//		 newCommunity.setImage(com.getImage());
-//		 newCommunity.setCreatedOn(com.getCreatedOn());
-//		 newCommunity.setPostRulesAllowed(com.getPostRulesAllowed());
-//		 newCommunity.setPostRulesDisAllowed(com.getPostRulesDisAllowed());
-//		 newCommunity.setBanningPolicy(com.getBanningPolicy());
-//		 newCommunity.setFlairs(com.getFlairs());
-//		 newCommunity.setPost(posts);
 		
 		//Update the community
 		Community c = comServ.updateCommunityWithoutDto(com);

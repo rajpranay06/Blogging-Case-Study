@@ -15,4 +15,5 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
 	// JPQL Query to find posts using LIKE operator
 	@Query(value = "SELECT * FROM post where title LIKE :searchStr", nativeQuery = true)
 	List<Post> getPostBySearchString(@Param("searchStr") String searchStr);
+	
 }

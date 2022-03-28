@@ -12,6 +12,7 @@ import com.example.demo.bean.Community;
 import com.example.demo.bean.Post;
 import com.example.demo.dto.CommunityInputDto;
 import com.example.demo.exception.ComDescriptionNotFoundException;
+import com.example.demo.exception.CommentNotFoundException;
 import com.example.demo.exception.CommunityFoundException;
 import com.example.demo.exception.CommunityNotFoundException;
 import com.example.demo.repository.IBloggerRepository;
@@ -130,6 +131,32 @@ public class CommunityServiceImpl implements ICommunityService {
 
 		return comList;
 	}
+	
+	@Override
+	public Community getCommunityByPostId(int postId) {
+		//Check whether community is present with the given postId
+		Community community = comRepo.getCommunityByPostId(postId);
+		if(community==null)
+		{
+			throw new CommentNotFoundException("No community found with postID : "+postId);
+		}
+		//Creating community object
+		Community com = new Community();
+		
+		//Set values to community object
+		com.setCommunityId(community.getCommunityId());
+		com.setCommunityDescription(community.getCommunityDescription());
+		com.setTotalMembers(community.getTotalMembers());
+		com.setOnlineMembers(community.getOnlineMembers());
+		com.setImage(community.getImage());
+		com.setCreatedOn(community.getCreatedOn());
+		com.setPostRulesAllowed(community.getPostRulesAllowed());
+		com.setPostRulesDisAllowed(community.getPostRulesDisAllowed());
+		com.setBanningPolicy(community.getBanningPolicy());
+		com.setFlairs(community.getFlairs());
+		com.setPost(community.getPost());
+		return com;
+	}
 
 	@Override
 	public long count() {
@@ -152,5 +179,7 @@ public class CommunityServiceImpl implements ICommunityService {
 		Community com = comRepo.save(community);
 		return com;
 	}
+
+	
 
 }
