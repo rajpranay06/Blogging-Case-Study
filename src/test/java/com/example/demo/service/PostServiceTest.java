@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.example.demo.bean.Post;
 import com.example.demo.bean.PostType;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
@@ -22,6 +23,7 @@ public class PostServiceTest {
 	IPostService postServ;
 	
 	@Test
+	@Disabled
 	void addPostTest() {
 		
 		// Creating PostInputDto object
@@ -132,6 +134,13 @@ public class PostServiceTest {
 		
 		// checking the no of posts
 		assertEquals(1, posts.size());
+	}
+	
+	@Test
+	void listPostsByCommunityId()
+	{
+		List<Post> posts = postServ.listPostsByCommunityId(362);
+		assertEquals(1,posts.size());
 	}
 	
 }

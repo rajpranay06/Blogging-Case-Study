@@ -25,7 +25,7 @@ public class CommunityServiceTest {
 	ICommunityService comServ;
 	
 	@Test
-//	@Disabled
+	@Disabled
 	void addCommunityTest()
 	{
 		//Create community object
@@ -110,7 +110,7 @@ public class CommunityServiceTest {
 	}
 	
 	@Test
-//	@Disabled
+	@Disabled
 	void updateCommunityTest()
 	{
 		Community com = new Community();
@@ -194,7 +194,7 @@ public class CommunityServiceTest {
 	}
 	
 	@Test
-//	@Disabled
+	@Disabled
 	void deleteCommunityTest()
 	{	
 		//Count before Delete operation
@@ -212,11 +212,48 @@ public class CommunityServiceTest {
 	}
 	
 	@Test
-//	@Disabled
+	@Disabled
 	void listAllCommunitiesTest()
 	{
 		List<Community> comList = comServ.listAllCommunities("Science");
 		int noOfCommunities = comList.size();
 		assertEquals(1,noOfCommunities);
+	}
+	
+	@Test
+	void getCommunityByPostId()
+	{
+		File fw = new File("abc.jpg");
+		
+		List<String> glist = new ArrayList<String>();
+		glist.add("Hockey");
+		glist.add("Cricket");
+		glist.add("Tennis");
+		
+		List<String> galist = new ArrayList<String>();
+		galist.add("Tours");
+		galist.add("Furniture");
+		galist.add("Houses");
+		
+		List<String> bp = new ArrayList<String>();
+		bp.add("Cheating");
+		bp.add("Drugs");
+		bp.add("Misuse");
+		
+		List<String> f = new ArrayList<String>();
+		f.add("SportsNews");
+		
+		Community com = comServ.getCommunityByPostId(379);
+		assertEquals(378,com.getCommunityId());
+		assertEquals("Humans",com.getCommunityDescription());
+		assertEquals(120,com.getTotalMembers());
+		assertEquals(110,com.getOnlineMembers());
+		assertEquals(fw,com.getImage());
+		assertEquals(LocalDate.parse("2019-02-07"),com.getCreatedOn());
+		assertEquals(glist,com.getPostRulesAllowed());
+		assertEquals(galist,com.getPostRulesDisAllowed());
+		assertEquals(bp,com.getBanningPolicy());
+		assertEquals(f,com.getFlairs());
+		
 	}
 }

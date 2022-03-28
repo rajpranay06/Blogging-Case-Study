@@ -60,6 +60,7 @@ public class PostController {
 	void upVote(@PathVariable("postId") int postId, boolean isUpVote) {
 		postServ.upVote(postId, isUpVote);
 	}
+	
 	//GetPosts With CommunityId
 	@GetMapping("/posts/byCommunityId/{communityId}")
 	ResponseEntity<List<Post>> listPostsByCommunityId(@PathVariable("communityId") int communityId)
