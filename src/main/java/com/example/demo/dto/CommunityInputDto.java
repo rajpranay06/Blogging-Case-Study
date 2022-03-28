@@ -4,9 +4,13 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 @Data
-public class CommunityDto {
+@NoArgsConstructor
+@AllArgsConstructor
+public class CommunityInputDto {
 	private int communityId;
 	private String communityDescription;
 	private int totalMembers;
@@ -17,4 +21,5 @@ public class CommunityDto {
 	private List<String> postRulesDisAllowed;
 	private List<String> banningPolicy;
 	private List<String> flairs;
+	private List<Integer> postIds;
 }

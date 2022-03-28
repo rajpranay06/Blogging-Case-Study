@@ -3,14 +3,16 @@ package com.example.demo.service;
 import java.util.List;
 
 import com.example.demo.bean.Community;
+import com.example.demo.dto.CommunityInputDto;
 
 
 public interface ICommunityService {
-	public Community addCommunity(Community community);
-	public Community updateCommunity(Community community);
+	public Community addCommunity(CommunityInputDto community);
+	public Community updateCommunity(CommunityInputDto community);
 	public Community deleteCommunity(int comId);
 	public List<Community> listAllCommunities(String searchString);
-//	public List<Community> listAllCommunitiesByBlogger(Blogger blogger);
 	public long count();
+	Community addCommunityWithoutDto(Community community);
+	Community updateCommunityWithoutDto(Community community);
 	
 }

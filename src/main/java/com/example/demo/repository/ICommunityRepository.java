@@ -16,12 +16,13 @@ import com.example.demo.bean.Community;
 public interface ICommunityRepository extends JpaRepository<Community, Integer> {
 	//JPQL Query to get all communities which are having same community description
 	@Query(value="select * from community where community_description =:searchString",nativeQuery=true)
-	
 	List<Community> listAllCommunities(@Param("searchString") String searchString);
 	
+	//Find By CommunityDescription
 	Optional<List<Community>> findByCommunityDescription(String searchString);
-
 	
+
+
 
 }
 	

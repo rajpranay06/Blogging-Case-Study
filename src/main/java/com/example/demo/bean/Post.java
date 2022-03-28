@@ -11,10 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity       
-@Data          // Used to create all getter setter constructors and tostring methods
+@Data         // Used to create all getter setter constructors and tostring methods
 public class Post {
 	
 	@Id                  // Making postId as primary key
