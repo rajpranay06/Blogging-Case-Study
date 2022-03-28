@@ -1,8 +1,10 @@
 package com.example.demo.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.constraints.Size;
+
 
 import com.example.demo.bean.PostType;
 
@@ -22,4 +24,6 @@ public class PostInputDto {
     private boolean spoiler;
     private boolean originalContent;
     private String flair;
+    List<Integer> commentIds;
+    List<Integer> awardIds;
 }

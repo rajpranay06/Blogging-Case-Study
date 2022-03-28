@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.bean.Award;
+import com.example.demo.bean.Comment;
 import com.example.demo.bean.Post;
 import com.example.demo.bean.PostType;
 import com.example.demo.dto.PostInputDto;
@@ -14,17 +16,29 @@ import com.example.demo.dto.PostOutputDto;
 import com.example.demo.exception.PostIdNotFoundException;
 import com.example.demo.exception.PostTypeInvalidException;
 import com.example.demo.repository.IPostRepository;
+import com.example.demo.repository.IAwardRepository;
+import com.example.demo.repository.ICommentRepository;
 
 @Service
 public class PostServiceImpl implements IPostService {
 	
 	@Autowired
 	IPostRepository postRepo;
+	
+	@Autowired
+	ICommentRepository commentRepo;
+	
+	@Autowired
+	IAwardRepository awardRepo;
 
+	@Override
+	public Post addPostWithoutDto(Post post) {
+		return postRepo.save(post);
+	}
 	@Override
 	public PostOutputDto addPost(PostInputDto post) {
 		
-		// Saving the post in the database
+		// Getting the post type enum
 		PostType postType = post.getContent();
 		if(!(postType.equals(PostType.TEXT) || postType.equals(PostType.LINK) || postType.equals(PostType.POLL) || postType.equals(PostType.VIDEO_IMAGE)))
 			throw new PostTypeInvalidException("Post Type should be TEXT or LINK or POLL or VIDEO_IMAGE");
@@ -43,8 +57,32 @@ public class PostServiceImpl implements IPostService {
 		newPost.setVoteUp(post.isVoteUp());
 		newPost.setSpoiler(post.isSpoiler());
 		
+		// Creating a list of comments
+		List<Comment> comments = new ArrayList<>();
+		
+		// Getting comments from the Comment Entity by using ids
+		for(Integer id : post.getCommentIds()) {
+			System.out.println(id);
+			Comment comment = commentRepo.findById(id).get();
+			System.out.println(comment);
+			comments.add(comment);
+		}
+		
+		newPost.setComments(comments);
+		System.out.println(newPost);
+		
+		List<Award> awards = new ArrayList<>();
+		for(Integer id : post.getAwardIds()) {
+			System.out.println(id);
+			Award award = awardRepo.findById(id).get();
+			System.out.println(award);
+			awards.add(award);
+		}
+		newPost.setAwards(awards);
+		System.out.println(newPost);
 		// Saving the post in database
 		Post addedPost = postRepo.save(newPost);
+		System.out.println(addedPost);
 		
 		// Creating PostOutputDto
 		PostOutputDto postOutputDto = new PostOutputDto();
@@ -60,7 +98,8 @@ public class PostServiceImpl implements IPostService {
 		postOutputDto.setVotes(addedPost.getVotes());
 		postOutputDto.setVoteUp(addedPost.isVoteUp());
 		postOutputDto.setSpoiler(addedPost.isSpoiler());
-		
+		postOutputDto.setComments(addedPost.getComments());
+		postOutputDto.setAwards(addedPost.getAwards());
 		return postOutputDto;
 	}
 
@@ -91,7 +130,25 @@ public class PostServiceImpl implements IPostService {
 		oldPost.setVotes(post.getVotes());
 		oldPost.setVoteUp(post.isVoteUp());
 		oldPost.setSpoiler(post.isSpoiler());
-		 
+		
+		// Creating a list of comments
+		List<Comment> comments = new ArrayList<>();
+				
+		// Getting comments from the Comment Entity by using ids
+		for(Integer id : post.getCommentIds()) {
+			comments.add(commentRepo.findById(id).get());
+		}
+				
+		oldPost.setComments(comments);	
+		
+		List<Award> awards = new ArrayList<>();
+		
+		for(Integer id: post.getAwardIds()) {
+			awards.add(awardRepo.findById(id).get());
+		}
+		
+		oldPost.setAwards(awards);
+		
 		Post updatedPost = postRepo.save(oldPost);
 		 
 		// Creating PostOutputDto
@@ -108,7 +165,8 @@ public class PostServiceImpl implements IPostService {
 		postOutputDto.setVotes(updatedPost.getVotes());
 		postOutputDto.setVoteUp(updatedPost.isVoteUp());
 		postOutputDto.setSpoiler(updatedPost.isSpoiler());
-			
+		postOutputDto.setComments(updatedPost.getComments());
+		postOutputDto.setAwards(updatedPost.getAwards());	
 		return postOutputDto;
 	}
 
@@ -122,6 +180,8 @@ public class PostServiceImpl implements IPostService {
 			 throw new PostIdNotFoundException("No post with id: " + id);
 		}
 		Post deletedPost = opt.get();
+		
+		// Calling delete function in postRepo
 		postRepo.delete(deletedPost);
 		
 		// Creating PostOutputDto
@@ -138,6 +198,7 @@ public class PostServiceImpl implements IPostService {
 		postOutputDto.setVotes(deletedPost.getVotes());
 		postOutputDto.setVoteUp(deletedPost.isVoteUp());
 		postOutputDto.setSpoiler(deletedPost.isSpoiler());
+		postOutputDto.setComments(deletedPost.getComments());
 			
 		return postOutputDto;
 	}
@@ -167,6 +228,7 @@ public class PostServiceImpl implements IPostService {
 			postOutputDto.setVotes(post.getVotes());
 			postOutputDto.setVoteUp(post.isVoteUp());
 			postOutputDto.setSpoiler(post.isSpoiler());
+			postOutputDto.setComments(post.getComments());
 			
 			allPosts.add(postOutputDto);
 		}
@@ -189,5 +251,28 @@ public class PostServiceImpl implements IPostService {
 		postRepo.save(post);
 		
 	}
+	@Override
+	public List<PostOutputDto> getPostByawardId(int id) {
+		List<Post> posts = postRepo.getAllPostsByAwardId(id);
+		List<PostOutputDto> allPosts = new ArrayList<>();
+		for(Post p : posts) {
+			PostOutputDto postOutputDto = new PostOutputDto();
+			postOutputDto.setPostId(p.getPostId());
+			postOutputDto.setTitle(p.getTitle());
+			postOutputDto.setContent(p.getContent());
+			postOutputDto.setCreatedDateTime(p.getCreatedDateTime());
+			postOutputDto.setVotes(p.getVotes());
+			postOutputDto.setVoteUp(p.isVoteUp());
+			postOutputDto.setNotSafeForWork(p.isNotSafeForWork());
+			postOutputDto.setSpoiler(p.isSpoiler());
+			postOutputDto.setOriginalContent(p.isOriginalContent());
+			postOutputDto.setFlair(p.getFlair());
+			postOutputDto.setComments(p.getComments());
+			allPosts.add(postOutputDto);
+		}
+		return allPosts;
+	}
 
+	
+	
 }

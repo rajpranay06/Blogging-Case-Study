@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.demo.bean.Comment;
-import com.example.demo.dto.CommentDto;
 import com.example.demo.dto.CommentInputDto;
 import com.example.demo.dto.CommentOutputDto;
 
@@ -26,7 +25,7 @@ class CommentServiceTest {
 		comment.setVotes(9);
 		//comment.setVoteUp(false);
 		
-		CommentDto comDto = comServ.addComment(comment);
+		CommentOutputDto comDto = comServ.addComment(comment);
 		assertEquals("Avg", comDto.getCommentDescription());
 		assertEquals(9, comDto.getVotes());
 		//assertEquals(57, comDto.get)
@@ -35,16 +34,11 @@ class CommentServiceTest {
 	@Test
 	@Disabled
 	void deleteCommentTest() {
-		Comment comment = new Comment();
-		comment.setCommentId(57);
-		comment.setCommentDescription("Avg");
-		comment.setVotes(9);
 		
-		if(comment!=null) {
-			assertEquals("Avg", comment.getCommentDescription());
-			assertEquals(9, comment.getVotes());
-			comServ.deleteComment(comment);
-		}
+		Comment comment = comServ.deleteComment(4);
+		
+		assertEquals("Good", comment.getCommentDescription());
+		assertEquals(10, comment.getVotes());
 		
 	}
 	

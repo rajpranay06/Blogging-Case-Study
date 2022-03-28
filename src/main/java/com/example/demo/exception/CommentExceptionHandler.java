@@ -7,18 +7,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.example.demo.bean.CommentErrorResponse;
+import com.example.demo.bean.ErrorResponse;
 
 @ControllerAdvice
 public class CommentExceptionHandler {
 
 	@ExceptionHandler
-	public ResponseEntity<CommentErrorResponse> handleException(CommentNotFoundException exception) {
-		CommentErrorResponse error = new CommentErrorResponse();
+	public ResponseEntity<ErrorResponse> handleException(CommentNotFoundException exception) {
+		ErrorResponse error = new ErrorResponse();
 		
 		error.setStatus(HttpStatus.NOT_FOUND.value());
 		error.setMessage(exception.getMessage());
-		error.setTimeStamp(LocalDateTime.now());
+		error.setTimestamp(LocalDateTime.now());
 		
 		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND); 
 	}
