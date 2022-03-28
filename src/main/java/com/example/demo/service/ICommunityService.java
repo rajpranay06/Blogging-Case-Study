@@ -10,7 +10,7 @@ public interface ICommunityService {
 	public Community updateCommunity(Community community);
 	public Community deleteCommunity(int comId);
 	public List<Community> listAllCommunities(String searchString);
-//	public List<Community> listAllCommunitiesByBlogger(Blogger blogger);
+	public List<Community> listAllCommunitiesByBloggerId(int bloggerId);
 	public long count();
 	
 }

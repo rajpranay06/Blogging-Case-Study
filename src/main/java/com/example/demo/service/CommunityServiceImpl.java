@@ -79,4 +79,14 @@ public class CommunityServiceImpl implements ICommunityService {
 		return comRepo.count();
 	}
 
+	@Override
+	public List<Community> listAllCommunitiesByBloggerId(int bloggerId) {
+		
+		List<Community> communities = comRepo.listAllCommunitiesByBloggerId(bloggerId);
+		if(communities.isEmpty()) {
+			throw new CommunityNotFoundException("No Community found with the given blogger id:"+ bloggerId);
+		}
+		return communities;
+	}
+
 }

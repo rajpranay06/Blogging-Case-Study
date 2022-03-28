@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.example.demo.bean.Post;
 import com.example.demo.bean.PostType;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
@@ -22,6 +23,7 @@ public class PostServiceTest {
 	IPostService postServ;
 	
 	@Test
+	@Disabled
 	void addPostTest() {
 		
 		// Creating PostInputDto object
@@ -46,7 +48,7 @@ public class PostServiceTest {
 		newPost.setCommentIds(commentIds);
 		
 		// Adding the post
-		PostOutputDto post = postServ.addPost(newPost);
+		Post post = postServ.addPost(newPost);
 		
 		// checking if the added post values are equal to the post or not
 		assertEquals("Game of Thrones", post.getTitle());
@@ -87,7 +89,7 @@ public class PostServiceTest {
 		updatedPost.setCommentIds(commentIds);	
 		
 		// Updating the post
-		PostOutputDto post = postServ.updatePost(updatedPost);
+		Post post = postServ.updatePost(updatedPost);
 		
 		// checking if the added post values are equal to the post or not
 		assertEquals(13, post.getPostId());
@@ -107,7 +109,7 @@ public class PostServiceTest {
 	void deletePostTest() {
 		
 		// Deleting the post
-		PostOutputDto deletedPost = postServ.deletePost(13);
+		Post deletedPost = postServ.deletePost(13);
 
 		// checking if the deleted post values are equal to the post or not
 		assertEquals(13, deletedPost.getPostId());
@@ -123,15 +125,31 @@ public class PostServiceTest {
 		
 	}
 	
-	@Disabled
 	@Test
 	void getPostsBySearchStringTest() {
 		
 		// Getting the posts
-		List<PostOutputDto> posts = postServ.getPostBySearchString("of");
+		List<Post> posts = postServ.getPostBySearchString("of");
 		
 		// checking the no of posts
-		assertEquals(1, posts.size());
+		assertEquals(2, posts.size());
 	}
 	
+	@Test
+	void getPostByCommentId() {
+		
+		// Calling getPostByCommentId function
+		PostOutputDto post = postServ.getPostByCommentId(65);
+		
+		// Comparing the values
+		assertEquals(59, post.getPostId());
+		assertEquals("Game of Thrones", post.getTitle());
+		assertEquals(PostType.TEXT, post.getContent());
+		assertEquals("GOTTheEpic", post.getFlair());
+		assertEquals(1000, post.getVotes());
+		assertEquals(false, post.isNotSafeForWork());
+		assertEquals(true, post.isOriginalContent());
+		assertEquals(true, post.isSpoiler());
+		assertEquals(true, post.isVoteUp());
+	}
 }

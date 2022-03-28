@@ -76,4 +76,11 @@ public class CommunityController {
 		return new ResponseEntity<>(listCom,HttpStatus.OK);
 	}
 	
+	// Get all communities by blogger
+	@GetMapping("/communities/byBlogger/{bloggerId}")
+	ResponseEntity<List<Community>> listAllCommunitiesByBloggerId(@PathVariable("bloggerId") int bloggerId){
+		List<Community> communities = comServ.listAllCommunitiesByBloggerId(bloggerId);
+		return new ResponseEntity<>(communities,HttpStatus.OK);
+	}
+	
 }

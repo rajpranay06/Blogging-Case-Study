@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -170,7 +168,7 @@ public class PostServiceMockitoTest {
 		// Sending post object when save function is called
 		Mockito.when(postRepo.save(post)).thenReturn(post);
 		
-		PostOutputDto addedPost = postServ.addPost(newPost);
+		Post addedPost = postServ.addPost(newPost);
 		
 		// checking if the added post values are equal to the post or not
 		assertEquals(100, addedPost.getPostId());
@@ -251,13 +249,13 @@ public class PostServiceMockitoTest {
 		Mockito.when(postRepo.findById(59)).thenReturn(Optional.of(post));
 		Mockito.when(postRepo.save(post)).thenReturn(post);
 		
-		PostOutputDto updatedPostOutput = postServ.updatePost(updatedPost);
+		Post updatedPostOutput = postServ.updatePost(updatedPost);
 		
 		// checking if the updated post values are equal to the post or not
 		assertEquals(59, updatedPostOutput.getPostId());
 		assertEquals("Game of Thrones", updatedPostOutput.getTitle());
 		assertEquals(PostType.LINK, updatedPostOutput.getContent());
-		assertEquals("GameOfThrones", updatedPostOutput.getFlair());
+		assertEquals("#GameOfThrones", updatedPostOutput.getFlair());
 		assertEquals(234578, updatedPostOutput.getVotes());
 		assertEquals(false, updatedPostOutput.isNotSafeForWork());
 		assertEquals(true, updatedPostOutput.isOriginalContent());
@@ -299,7 +297,7 @@ public class PostServiceMockitoTest {
 		post.setTitle(deletedPost.getTitle());
 		post.setContent(deletedPost.getContent());
 		post.setCreatedDateTime(deletedPost.getCreatedDateTime());
-		post.setFlair('#' + deletedPost.getFlair());
+		post.setFlair(deletedPost.getFlair());
 		post.setNotSafeForWork(deletedPost.isNotSafeForWork());
 		post.setOriginalContent(deletedPost.isOriginalContent());
 		post.setVotes(deletedPost.getVotes());
@@ -328,7 +326,7 @@ public class PostServiceMockitoTest {
 		// delete has void return type so do nothing is used
 		doNothing().when(postRepo).delete(post);
 		
-		PostOutputDto deletedPostOutput = postServ.deletePost(100);
+		Post deletedPostOutput = postServ.deletePost(100);
 		
 		// checking if the added post values are equal to the post or not
 		assertEquals(100, deletedPostOutput.getPostId());
@@ -342,5 +340,36 @@ public class PostServiceMockitoTest {
 		assertEquals(false, deletedPostOutput.isVoteUp());	
 		assertEquals(2, deletedPostOutput.getComments().size());
 		
+	}
+	
+	@Test
+	void getPostByCommentId() {
+		Post newPost = new Post();
+		// Setting the values
+		newPost.setPostId(100);
+		newPost.setTitle("Lucifer");
+		newPost.setContent(PostType.VIDEO_IMAGE);
+		newPost.setCreatedDateTime(LocalDateTime.now());
+		newPost.setFlair("#Deckerstar");
+		newPost.setNotSafeForWork(false);
+		newPost.setOriginalContent(true);
+		newPost.setVotes(10000);
+		newPost.setVoteUp(false);
+		newPost.setSpoiler(true);
+		
+		Mockito.when(postRepo.getPostByCommentId(66)).thenReturn(newPost);
+		
+		PostOutputDto post = postServ.getPostByCommentId(66);
+		
+		// checking if the added post values are equal to the post or not
+		assertEquals(100, post.getPostId());
+		assertEquals("Lucifer", post.getTitle());
+		assertEquals(PostType.VIDEO_IMAGE, post.getContent());
+		assertEquals("Deckerstar", post.getFlair());
+		assertEquals(10000, post.getVotes());
+		assertEquals(false, post.isNotSafeForWork());
+		assertEquals(true, post.isOriginalContent());
+		assertEquals(true, post.isSpoiler());
+		assertEquals(false, post.isVoteUp());	
 	}
 }
