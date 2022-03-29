@@ -8,10 +8,10 @@ import com.example.demo.dto.UserInputDto;
 
 public interface IUserService {
 
-	UserEntity signOut(int id);
-	List<UserEntity> getAllUsers();
-	UserEntity signIn(UserInputDto user);
-	Admin addAdmin(Admin admin);
-	UserEntity addNewUser(UserEntity user);
+	public UserEntity signOut(int id);
+	public List<UserEntity> getAllUsers();
+	public UserEntity signIn(UserInputDto user);
+	public Admin addAdmin(Admin admin);
+	public UserEntity addNewUser(UserEntity user);
 	
 }

@@ -61,13 +61,10 @@ public class UserServiceImpl implements IUserService{
 		return userRepo.findAll();
 	}
 
-
 	@Override
 	public Admin addAdmin(Admin admin) {
 	
 		return adminRepo.save(admin);
 	}
-
-	
 
 }

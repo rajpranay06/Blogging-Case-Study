@@ -7,8 +7,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.BloggerDto;
 import com.example.demo.dto.BloggerInputDto;
 import com.example.demo.dto.BloggerOutputDto;
+import com.example.demo.dto.CommentOutputDto;
+import com.example.demo.dto.CommunityOutputDto;
 import com.example.demo.bean.Blogger;
 import com.example.demo.bean.Comment;
 import com.example.demo.bean.Community;
@@ -42,7 +45,7 @@ public class BloggerServiceImpl implements IBloggerService {
 	}
 
 	@Override
-	public Blogger addBloggerDto(BloggerInputDto bloggerInputDto) {
+	public BloggerDto addBloggerDto(BloggerInputDto bloggerInputDto) {
 		
 		// Creating blogger object
 		Blogger blog = new Blogger();
@@ -93,11 +96,61 @@ public class BloggerServiceImpl implements IBloggerService {
 		}
 		
 		// Saving the blogger in database
-		return blogRepo.save(blog);	
+		Blogger newBlogger = blogRepo.save(blog);	
+		
+		BloggerDto bloggerDto = new BloggerDto();
+		bloggerDto.setUserId(newBlogger.getUserId());
+		bloggerDto.setBloggerName(newBlogger.getBloggerName());
+		bloggerDto.setKarma(newBlogger.getKarma());
+		bloggerDto.setPosts(newBlogger.getPosts());
+		
+		List<CommunityOutputDto> newCommunities = new ArrayList<>();
+		
+		for(Community community : newBlogger.getCommunities()) {
+			
+			//Creating communityOutputDto object
+			CommunityOutputDto com = new CommunityOutputDto();
+			
+			//Set values to community object
+			com.setCommunityId(community.getCommunityId());
+			com.setCommunityDescription(community.getCommunityDescription());
+			com.setTotalMembers(community.getTotalMembers());
+			com.setOnlineMembers(community.getOnlineMembers());
+			com.setImage(community.getImage());
+			com.setCreatedOn(community.getCreatedOn());
+			com.setPostRulesAllowed(community.getPostRulesAllowed());
+			com.setPostRulesDisAllowed(community.getPostRulesDisAllowed());
+			com.setBanningPolicy(community.getBanningPolicy());
+			com.setFlairs(community.getFlairs());
+			
+			// Adding com to communities
+			newCommunities.add(com);
+		}
+		
+		bloggerDto.setCommunities(newCommunities);
+		
+		List<CommentOutputDto> newComments = new ArrayList<>();
+		
+		for(Comment comment : newBlogger.getComments()) {
+			
+			CommentOutputDto com = new CommentOutputDto();
+			
+			com.setCommentId(comment.getCommentId());
+			com.setCommentDescription(comment.getCommentDescription());
+			com.setVotes(comment.getVotes());
+			com.setVoteUp(comment.isVoteUp());
+			
+			newComments.add(com);
+		}
+		
+		bloggerDto.setComments(newComments);
+		
+		return bloggerDto;
+		
 	}
 
 	@Override
-	public Blogger updateBlogger(BloggerInputDto blogger) throws IdNotFoundException {
+	public BloggerDto updateBlogger(BloggerInputDto blogger) throws IdNotFoundException {
 		
 		Optional<Blogger> opt = blogRepo.findById(blogger.getUserId());
 		if (!opt.isPresent()) {
@@ -143,7 +196,56 @@ public class BloggerServiceImpl implements IBloggerService {
 						
 		updateBlogger.setPosts(posts);
 		
-		return blogRepo.save(updateBlogger);
+		Blogger newBlogger = blogRepo.save(updateBlogger);
+		
+		BloggerDto bloggerDto = new BloggerDto();
+		bloggerDto.setUserId(newBlogger.getUserId());
+		bloggerDto.setBloggerName(newBlogger.getBloggerName());
+		bloggerDto.setKarma(newBlogger.getKarma());
+		bloggerDto.setPosts(newBlogger.getPosts());
+		
+		List<CommunityOutputDto> newCommunities = new ArrayList<>();
+		
+		for(Community community : newBlogger.getCommunities()) {
+			
+			//Creating communityOutputDto object
+			CommunityOutputDto com = new CommunityOutputDto();
+			
+			//Set values to community object
+			com.setCommunityId(community.getCommunityId());
+			com.setCommunityDescription(community.getCommunityDescription());
+			com.setTotalMembers(community.getTotalMembers());
+			com.setOnlineMembers(community.getOnlineMembers());
+			com.setImage(community.getImage());
+			com.setCreatedOn(community.getCreatedOn());
+			com.setPostRulesAllowed(community.getPostRulesAllowed());
+			com.setPostRulesDisAllowed(community.getPostRulesDisAllowed());
+			com.setBanningPolicy(community.getBanningPolicy());
+			com.setFlairs(community.getFlairs());
+			
+			// Adding com to communities
+			newCommunities.add(com);
+		}
+		
+		bloggerDto.setCommunities(newCommunities);
+		
+		List<CommentOutputDto> newComments = new ArrayList<>();
+		
+		for(Comment comment : newBlogger.getComments()) {
+			
+			CommentOutputDto com = new CommentOutputDto();
+			
+			com.setCommentId(comment.getCommentId());
+			com.setCommentDescription(comment.getCommentDescription());
+			com.setVotes(comment.getVotes());
+			com.setVoteUp(comment.isVoteUp());
+			
+			newComments.add(com);
+		}
+		
+		bloggerDto.setComments(newComments);
+		
+		return bloggerDto;
 
 	}
 
@@ -161,19 +263,39 @@ public class BloggerServiceImpl implements IBloggerService {
 	
 
 	@Override
-	public Blogger viewBlogger(int bloggerId) throws IdNotFoundException {
+	public BloggerOutputDto viewBlogger(int bloggerId) throws IdNotFoundException {
 
 		Optional<Blogger> opt = blogRepo.findById(bloggerId);
 		if (!opt.isPresent()) {
 			throw new IdNotFoundException("Blogger not found with the given id:" + bloggerId);
 		}
 
-		return opt.get();
+		Blogger blogger = opt.get();
+		
+		BloggerOutputDto blog = new BloggerOutputDto();
+		
+		blog.setBloggerName(blogger.getBloggerName());
+		blog.setUserId(blogger.getUserId());
+		blog.setKarma(blogger.getKarma());
+		
+		return blog;
 	}
 
 	@Override
-	public List<Blogger> viewAllBloggers() {
-		return blogRepo.findAll();
+	public List<BloggerOutputDto> viewAllBloggers() {
+		List<BloggerOutputDto> bloggers = new ArrayList<>();
+		
+		for(Blogger blogger : blogRepo.findAll()) {
+			BloggerOutputDto blog = new BloggerOutputDto();
+			
+			blog.setBloggerName(blogger.getBloggerName());
+			blog.setUserId(blogger.getUserId());
+			blog.setKarma(blogger.getKarma());
+			
+			bloggers.add(blog);
+		}
+		
+		return bloggers;
 	}
 
 	@Override

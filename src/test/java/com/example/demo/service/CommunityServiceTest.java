@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.example.demo.bean.Award;
+import com.example.demo.bean.Coin;
 import com.example.demo.bean.Community;
 import com.example.demo.bean.Post;
 import com.example.demo.bean.PostType;
@@ -87,8 +89,17 @@ public class CommunityServiceTest {
 		post1.setVoteUp(false);
 		post1.setSpoiler(true);
 		
+		Award award = new Award();
+		award.setAwardId(88);
+		award.setCoin(Coin.PLATINUM);
+		
+		List<Award> awards = new ArrayList<>();
+		awards.add(award);
+		post1.setAwards(awards);
+		
 		posts.add(post1);
 		p.add(post1.getPostId());
+		
 		com.setPost(posts);
 		
 		//Persist the community object to the DB using service implementation
@@ -105,15 +116,13 @@ public class CommunityServiceTest {
 		assertEquals(bp,c.getBanningPolicy());
 		assertEquals(f,c.getFlairs());
 		assertEquals(1,c.getPost().size());
-//		assertEquals(1,c.getBlogger().size());
 	}
 	
 	@Test
-	@Disabled
 	void updateCommunityTest()
 	{
 		Community com = new Community();
-		com.setCommunityId(386);
+		com.setCommunityId(32);
 		com.setCommunityDescription("World");
 		com.setTotalMembers(120);
 		com.setOnlineMembers(110);
@@ -171,15 +180,24 @@ public class CommunityServiceTest {
 		post1.setVoteUp(false);
 		post1.setSpoiler(true);
 				
+		Award award = new Award();
+		award.setAwardId(88);
+		award.setCoin(Coin.PLATINUM);
+		
+		List<Award> awards = new ArrayList<>();
+		awards.add(award);
+		post1.setAwards(awards);
+		
 		posts.add(post1);
 		p.add(post1.getPostId());
+		
 		com.setPost(posts);
 		
 		//Update the community
 		Community c = comServ.updateCommunityWithoutDto(com);
 		
 		//Validate details
-		assertEquals(386,c.getCommunityId());
+		assertEquals(32,c.getCommunityId());
 		assertEquals("World",c.getCommunityDescription());
 		assertEquals(120,c.getTotalMembers());
 		assertEquals(110,c.getOnlineMembers());
@@ -193,66 +211,22 @@ public class CommunityServiceTest {
 	}
 	
 	@Test
-	@Disabled
-	void deleteCommunityTest()
-	{	
-		//Count before Delete operation
-		long beforeDeletecount = comServ.count();
-		
-		//Delete the community
-		comServ.deleteCommunity(382);
-		
-		//Count after delete operation
-		long afterDeleteCount = comServ.count();
-		
-		//Validate
-		assertEquals(beforeDeletecount,afterDeleteCount+1);
-		
-	}
-	
-	@Test
-	@Disabled
 	void listAllCommunitiesTest()
 	{
-		List<CommunityOutputDto> comList = comServ.listAllCommunities("Science");
+		List<CommunityOutputDto> comList = comServ.listAllCommunitiesByDescription("Test");
 		int noOfCommunities = comList.size();
-		assertEquals(1,noOfCommunities);
+		assertEquals(2,noOfCommunities);
 	}
 	
 	@Test
 	void getCommunityByPostId()
-	{
-		File fw = new File("abc.jpg");
+	{	
+		CommunityOutputDto com = comServ.getCommunityByPostId(17);
 		
-		List<String> glist = new ArrayList<String>();
-		glist.add("Hockey");
-		glist.add("Cricket");
-		glist.add("Tennis");
+		assertEquals(19,com.getCommunityId());
+		assertEquals("Community Test 3",com.getCommunityDescription());
+		assertEquals(100,com.getTotalMembers());
 		
-		List<String> galist = new ArrayList<String>();
-		galist.add("Tours");
-		galist.add("Furniture");
-		galist.add("Houses");
-		
-		List<String> bp = new ArrayList<String>();
-		bp.add("Cheating");
-		bp.add("Drugs");
-		bp.add("Misuse");
-		
-		List<String> f = new ArrayList<String>();
-		f.add("SportsNews");
-		
-		CommunityOutputDto com = comServ.getCommunityByPostId(379);
-		assertEquals(378,com.getCommunityId());
-		assertEquals("Humans",com.getCommunityDescription());
-		assertEquals(120,com.getTotalMembers());
-		assertEquals(110,com.getOnlineMembers());
-		assertEquals(fw,com.getImage());
-		assertEquals(LocalDate.parse("2019-02-07"),com.getCreatedOn());
-		assertEquals(glist,com.getPostRulesAllowed());
-		assertEquals(galist,com.getPostRulesDisAllowed());
-		assertEquals(bp,com.getBanningPolicy());
-		assertEquals(f,com.getFlairs());
 		
 	}
 }

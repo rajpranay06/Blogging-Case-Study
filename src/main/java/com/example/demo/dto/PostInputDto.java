@@ -3,6 +3,8 @@ package com.example.demo.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.Size;
 
 
@@ -16,6 +18,7 @@ public class PostInputDto {
 	private int postId;
 	@Size(min = 3, max = 50, message = "Title should be of 3 to 50 characters")
 	private String title;
+	@Enumerated(EnumType.STRING)
 	private PostType content;
 	private LocalDateTime createdDateTime;
 	private int votes;
@@ -25,5 +28,4 @@ public class PostInputDto {
     private boolean originalContent;
     private String flair;
     private List<Integer> awardIds;
-    private List<Integer> commentIds;
 }

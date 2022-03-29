@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,32 +18,49 @@ class UserServiceTest {
 	IUserService userService;
 	
 	@Test
+	@Disabled
 	void getAllUserstest() {
+		
+		// Getting all the users
 		List<UserEntity> users = userService.getAllUsers();
-		int noOfUsers = users.size();
-		assertEquals(5,noOfUsers);
+		
+		// Comparing the number of users
+		assertEquals(8,users.size());
 	}
 	
 	@Test
+	@Disabled
 	void addNewUsertest() {
+		
+		// Created User Entity
 		UserEntity user=new UserEntity();
 		user.setEmail("kevin@gmail.com");
 		user.setPassword("kevin@1234");
 		user.setRole("Admin");
 		
-		assertEquals("kevin@gmail.com",user.getEmail());
-		assertEquals("kevin@1234",user.getPassword());
-		assertEquals("Admin",user.getRole());
+		// Added User Entity
+		UserEntity addedUser = userService.addNewUser(user);
+		
+		// Comparing values
+		assertEquals("kevin@gmail.com",addedUser.getEmail());
+		assertEquals("kevin@1234",addedUser.getPassword());
+		assertEquals("Admin",addedUser.getRole());
 	}
 	
 	@Test
+	@Disabled
 	void signOuttest() {
-		UserEntity user=new UserEntity();
-		user.setEmail("bob@gmail.com");
-		user.setPassword("bob@1234");
 		
-		assertEquals("bob@gmail.com",user.getEmail());
-		assertEquals("bob@1234",user.getPassword());
+		UserEntity user=new UserEntity();
+		user.setUserId(15);
+		user.setEmail("test4@gmail.com");
+		user.setPassword("test4@123");
+		
+		UserEntity signedOutUser = userService.signOut(user.getUserId());
+		
+		assertEquals(15, signedOutUser.getUserId());
+		assertEquals("test4@gmail.com",signedOutUser.getEmail());
+		assertEquals("test4@123",signedOutUser.getPassword());
 	}
 
 }

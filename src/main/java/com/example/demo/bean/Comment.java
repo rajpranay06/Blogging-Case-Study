@@ -1,8 +1,11 @@
 package com.example.demo.bean;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -28,4 +31,9 @@ public class Comment {
 	private int votes;
 	private boolean voteUp;
 
+	// ManyToOne Relationship with Post
+	// One post can have many comments
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "post_id")
+	private Post post;
 }

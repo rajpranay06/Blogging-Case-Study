@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,12 @@ public class AwardServiceImpl implements IAwardService{
 
 	@Override
 	public void deleteAwardById(int awardId) {
-		Award aw = awardRepo.getById(awardId);
-		if(aw != null) {
-			awardRepo.deleteById(awardId);
+		Optional<Award> opt = awardRepo.findById(awardId);
+		if(!opt.isPresent()) {
+			throw new AwardNotFoundException("No award found with id: " + awardId);
 		}
-		throw new AwardNotFoundException("No award found with id: " + awardId);
+		awardRepo.delete(opt.get());
+		
 	}
 
 	@Override
