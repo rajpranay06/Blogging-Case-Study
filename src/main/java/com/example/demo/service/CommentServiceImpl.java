@@ -44,7 +44,7 @@ public class CommentServiceImpl implements ICommentService{
 	}
 
 	@Override
-	public Comment deleteComment(int id) {
+	public void deleteComment(int id) {
 		//Check whether comment is available in DB or not by using Id
 		Optional<Comment> opt = comRepo.findById(id);
 		if(!opt.isPresent()) {
@@ -53,7 +53,6 @@ public class CommentServiceImpl implements ICommentService{
 		Comment comment = opt.get();
 		//Delete Comment
 		comRepo.delete(comment);
-		return comment;
 	}
 
 	@Override

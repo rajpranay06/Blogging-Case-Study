@@ -11,14 +11,10 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-//@AllArgsConstructor
-//@NoArgsConstructor
 public class UserEntity {
 
 	@Id
@@ -30,10 +26,9 @@ public class UserEntity {
 	@Size(min=8,max=15, message="Min 8 characters required")
 	private String password;
 	private String role;
-	//@JsonIgnore
 	private boolean loginStatus;
 	
-	@OneToOne(cascade=CascadeType.PERSIST)
+	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="userId")
 	@JsonIgnore
 	private Admin admin;
@@ -42,7 +37,6 @@ public class UserEntity {
 	public UserEntity() {
 		super();
 	}
-
 
 	public UserEntity(int userId, @NotEmpty String email,
 			@Size(min = 8, max = 15, message = "Min 8 characters required") String password, String role,

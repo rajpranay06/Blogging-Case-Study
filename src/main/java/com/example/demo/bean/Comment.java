@@ -1,6 +1,5 @@
 package com.example.demo.bean;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -28,10 +27,5 @@ public class Comment {
 	private String commentDescription;
 	private int votes;
 	private boolean voteUp;
-
-}
-	
-//	@ManyToOne(mappedBy="post_id", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-//	private Post post;
 
 }

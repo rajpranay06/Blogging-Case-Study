@@ -2,8 +2,6 @@ package com.example.demo.dto;
 
 import java.time.LocalDateTime;
 
-import com.example.demo.bean.Award;
-import com.example.demo.bean.Comment;
 import com.example.demo.bean.PostType;
 
 import lombok.Data;
@@ -21,6 +19,4 @@ public class PostOutputDto {
     private boolean spoiler;
     private boolean originalContent;
     private String flair;
-    List<Comment> comments;
-    List<Award> awards;
 }

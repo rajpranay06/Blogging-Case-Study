@@ -21,18 +21,21 @@ public class AwardController {
 	@Autowired
 	IAwardService awardServ;
 	
+	// Add Awards
 	@PostMapping("/awards")
 	ResponseEntity<Award> addAward(@RequestBody Award award){
 		Award aw = awardServ.addAward(award);
 		return new ResponseEntity<>(aw, HttpStatus.OK);
 	}
 	
+	// Delete award by id
 	@DeleteMapping("/awards/{id}")
-	ResponseEntity<Award> deleteAwardById(@PathVariable("id") int id){
-		Award aw = awardServ.deleteAwardById(id);
-		return new ResponseEntity<>(aw, HttpStatus.OK);
+	ResponseEntity<String> deleteAwardById(@PathVariable("id") int id){
+		awardServ.deleteAwardById(id);
+		return new ResponseEntity<>("Award with id " + id + " is deleted", HttpStatus.OK);
 	}
 	
+	// Get Awards by post id
 	@GetMapping("/awards/post/{id}")
 	ResponseEntity<List<Award>> getAwardsByPostId(@PathVariable("id") int id){
 		List<Award> aw = awardServ.getAwardByPostId(id);

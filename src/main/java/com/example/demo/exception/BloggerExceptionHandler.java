@@ -19,7 +19,7 @@ public class BloggerExceptionHandler {
 		
 		error.setStatus(HttpStatus.NOT_FOUND.value());
 		error.setMessage(exception.getMessage());
-		error.setTimeStamp(LocalDateTime.now());
+		error.setTimestamp(LocalDateTime.now());
 		
 		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 	}

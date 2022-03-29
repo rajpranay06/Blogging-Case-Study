@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.demo.bean.Award;
-import com.example.demo.bean.Comment;
-
 
 @SpringBootTest
 class AwardServiceTest {

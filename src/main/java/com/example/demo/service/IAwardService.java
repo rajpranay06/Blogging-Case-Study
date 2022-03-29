@@ -6,7 +6,7 @@ import com.example.demo.bean.Award;
 
 public interface IAwardService {
 
-	Award addAward(Award award);
-	Award deleteAwardById(int awardId);
-	List<Award> getAwardByPostId(int id);
+	public Award addAward(Award award);
+	public void deleteAwardById(int awardId);
+	public List<Award> getAwardByPostId(int id);
 }

@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.bean.Admin;
 import com.example.demo.bean.UserEntity;
-import com.example.demo.bean.UserInputDto;
+import com.example.demo.dto.UserInputDto;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.IUserRepository;
 import com.example.demo.service.IAdminService;

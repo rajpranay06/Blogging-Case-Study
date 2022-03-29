@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.bean.Community;
 import com.example.demo.dto.CommunityInputDto;
+import com.example.demo.dto.CommunityOutputDto;
 import com.example.demo.service.ICommunityService;
 
 @RestController
@@ -44,36 +45,36 @@ public class CommunityController {
 	
 	//Deleting community By using CommunityId
 	@DeleteMapping("/communities/ByCommunityId/{comId}")
-	ResponseEntity<Community> deleteCommunity(@PathVariable("comId") int comId)
+	ResponseEntity<String> deleteCommunity(@PathVariable("comId") int comId)
 	{
 		//Calling communityService deleteCommunity method to delete the community from database
-		Community delCom = comServ.deleteCommunity(comId);
-		return new ResponseEntity<>(delCom,HttpStatus.OK);
+		comServ.deleteCommunity(comId);
+		return new ResponseEntity<>("Community with id " + comId + " is deleted", HttpStatus.OK);
 	}
 	
 	//Get All communities list by using community description
 	@GetMapping("/communities/{communityDescription}")
-	ResponseEntity<List<Community>> listAllCommunities(@PathVariable("communityDescription") String communityDescription)
+	ResponseEntity<List<CommunityOutputDto>> listAllCommunities(@PathVariable("communityDescription") String communityDescription)
 	{
 		//Calling communityService listAllCommunities method to list all communities from database by communityDescription
-		List<Community> listCom = comServ.listAllCommunities(communityDescription);
+		List<CommunityOutputDto> listCom = comServ.listAllCommunities(communityDescription);
 		return new ResponseEntity<>(listCom,HttpStatus.OK);
 	}
 	
 
 	//Get Community by using postId
 	@GetMapping("/communities/ByPostId/{postId}")
-	ResponseEntity<Community> getCommunityByPostId(@PathVariable("postId") int postId)
+	ResponseEntity<CommunityOutputDto> getCommunityByPostId(@PathVariable("postId") int postId)
 	{
 		//Calling communityService getCommunityByPostId method to get community by using postid
-		Community comm = comServ.getCommunityByPostId(postId);
+		CommunityOutputDto comm = comServ.getCommunityByPostId(postId);
 		return new ResponseEntity<>(comm,HttpStatus.OK);
 	}
 
 	// Get all communities by blogger
 	@GetMapping("/communities/byBlogger/{bloggerId}")
-	ResponseEntity<List<Community>> listAllCommunitiesByBloggerId(@PathVariable("bloggerId") int bloggerId){
-		List<Community> communities = comServ.listAllCommunitiesByBloggerId(bloggerId);
+	ResponseEntity<List<CommunityOutputDto>> listAllCommunitiesByBloggerId(@PathVariable("bloggerId") int bloggerId){
+		List<CommunityOutputDto> communities = comServ.listAllCommunitiesByBloggerId(bloggerId);
 		return new ResponseEntity<>(communities,HttpStatus.OK);
 
 	}
