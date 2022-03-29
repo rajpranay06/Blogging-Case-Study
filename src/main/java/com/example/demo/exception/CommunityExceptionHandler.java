@@ -16,7 +16,9 @@ public class CommunityExceptionHandler {
 	@ExceptionHandler
 	public ResponseEntity<CommunityErrorResponse> handleException(CommunityNotFoundException exception)
 	{
+		//Create CommunityErrorResponse Object
 		CommunityErrorResponse error = new CommunityErrorResponse();
+		//Set error Status,Message,TimeStamp
 		error.setStatus(HttpStatus.NOT_FOUND.value());
 		error.setMessage(exception.getMessage());
 		error.setTimeStamp(LocalDateTime.now());
@@ -27,7 +29,9 @@ public class CommunityExceptionHandler {
 	@ExceptionHandler
 	public ResponseEntity<CommunityErrorResponse> handleException(CommunityFoundException exception)
 	{
+		//Create CommunityErrorResponse Object
 		CommunityErrorResponse error = new CommunityErrorResponse();
+		//Set error Status,Message,TimeStamp
 		error.setStatus(HttpStatus.NOT_FOUND.value());
 		error.setMessage(exception.getMessage());
 		error.setTimeStamp(LocalDateTime.now());
@@ -38,7 +42,9 @@ public class CommunityExceptionHandler {
 	@ExceptionHandler
 	public ResponseEntity<CommunityErrorResponse> handleException(ComDescriptionNotFoundException exception)
 	{
+		//Create CommunityErrorResponse Object
 		CommunityErrorResponse error = new CommunityErrorResponse();
+		//Set error Status,Message,TimeStamp
 		error.setStatus(HttpStatus.NOT_FOUND.value());
 		error.setMessage(exception.getMessage());
 		error.setTimeStamp(LocalDateTime.now());

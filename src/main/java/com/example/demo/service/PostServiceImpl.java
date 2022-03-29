@@ -8,14 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.bean.Comment;
+import com.example.demo.bean.Community;
 import com.example.demo.bean.Post;
 import com.example.demo.bean.PostType;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
+import com.example.demo.exception.CommunityNotFoundException;
 import com.example.demo.exception.PostIdNotFoundException;
 import com.example.demo.exception.PostTypeInvalidException;
 import com.example.demo.repository.IPostRepository;
 import com.example.demo.repository.ICommentRepository;
+import com.example.demo.repository.ICommunityRepository;
 
 @Service
 public class PostServiceImpl implements IPostService {
@@ -25,6 +28,9 @@ public class PostServiceImpl implements IPostService {
 	
 	@Autowired
 	ICommentRepository commentRepo;
+	
+	@Autowired
+	ICommunityRepository communityRepo;
 
 	@Override
 	public Post addPostWithoutDto(Post post) {
@@ -159,6 +165,25 @@ public class PostServiceImpl implements IPostService {
 		
 	}
 	@Override
+
+	public List<Post> listPostsByCommunityId(int communityId) {
+		//Find community with communityId
+		Optional<Community> com = communityRepo.findById(communityId);
+		if(!com.isPresent())
+		{
+			throw new CommunityNotFoundException("No community found with id " + communityId);
+		}
+		
+		Community community = com.get();
+		
+		//Find whether community has posts or not
+		if(community.getPost().isEmpty())
+		{
+			throw new PostIdNotFoundException("No post found for the community with id: "+ communityId);
+		}
+		
+		return community.getPost();
+	}
 	public PostOutputDto getPostByCommentId(int commentId) {
 		Post post = postRepo.getPostByCommentId(commentId);
 		if(post == null) {
@@ -181,6 +206,7 @@ public class PostServiceImpl implements IPostService {
 		postOutputDto.setSpoiler(post.isSpoiler());
 		
 		return postOutputDto;
+
 	}
 
 }

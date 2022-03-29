@@ -14,5 +14,9 @@ public interface IPostService {
 //	public List<PostOutputDto> getPostByBlogger(Blogger blogger);
 	public void upVote(int postId, boolean upVote);
 	public Post addPostWithoutDto(Post post);
+
+	public List<Post> listPostsByCommunityId(int communityId);
+
 	public PostOutputDto getPostByCommentId(int commentId);
+
 }

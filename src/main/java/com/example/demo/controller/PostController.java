@@ -61,10 +61,20 @@ public class PostController {
 		postServ.upVote(postId, isUpVote);
 	}
 	
+
+	//GetPosts With CommunityId
+	@GetMapping("/posts/byCommunityId/{communityId}")
+	ResponseEntity<List<Post>> listPostsByCommunityId(@PathVariable("communityId") int communityId)
+	{
+		List<Post> posts = postServ.listPostsByCommunityId(communityId);
+		return new ResponseEntity<>(posts,HttpStatus.OK);
+	}
+
 	// Get post by Comment id
 	@GetMapping("/posts/byComment/{commentId}")
 	ResponseEntity<PostOutputDto> getPostByCommentId(@PathVariable("commentId") int commentId){
 		PostOutputDto post = postServ.getPostByCommentId(commentId);
 		return new ResponseEntity<>(post, HttpStatus.OK);
+
 	}
 }

@@ -2,7 +2,10 @@ package com.example.demo.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 
+import java.io.File;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +18,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.example.demo.bean.Comment;
+import com.example.demo.bean.Community;
 import com.example.demo.bean.Post;
 import com.example.demo.bean.PostType;
+import com.example.demo.dto.CommunityInputDto;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
 import com.example.demo.repository.ICommentRepository;
+import com.example.demo.repository.ICommunityRepository;
 import com.example.demo.repository.IPostRepository;
 
 @ExtendWith(SpringExtension.class)
@@ -33,12 +40,18 @@ public class PostServiceMockitoTest {
 	@InjectMocks
 	PostServiceImpl postServ;
 	
+	@InjectMocks
+	CommunityServiceImpl communityServ;
+	
 	// @MockBean - Creates Mock of a class or interface
 	@MockBean
 	IPostRepository postRepo;
 	
 	@MockBean
 	ICommentRepository comRepo;
+	
+	@MockBean
+	ICommunityRepository communityRepo;
 	
 	// Initialization of mock objects
 	@BeforeEach
@@ -255,7 +268,7 @@ public class PostServiceMockitoTest {
 		assertEquals(59, updatedPostOutput.getPostId());
 		assertEquals("Game of Thrones", updatedPostOutput.getTitle());
 		assertEquals(PostType.LINK, updatedPostOutput.getContent());
-		assertEquals("#GameOfThrones", updatedPostOutput.getFlair());
+		assertEquals("GameOfThrones", updatedPostOutput.getFlair());
 		assertEquals(234578, updatedPostOutput.getVotes());
 		assertEquals(false, updatedPostOutput.isNotSafeForWork());
 		assertEquals(true, updatedPostOutput.isOriginalContent());
@@ -297,7 +310,7 @@ public class PostServiceMockitoTest {
 		post.setTitle(deletedPost.getTitle());
 		post.setContent(deletedPost.getContent());
 		post.setCreatedDateTime(deletedPost.getCreatedDateTime());
-		post.setFlair(deletedPost.getFlair());
+		post.setFlair('#' + deletedPost.getFlair());
 		post.setNotSafeForWork(deletedPost.isNotSafeForWork());
 		post.setOriginalContent(deletedPost.isOriginalContent());
 		post.setVotes(deletedPost.getVotes());
@@ -343,33 +356,71 @@ public class PostServiceMockitoTest {
 	}
 	
 	@Test
-	void getPostByCommentId() {
-		Post newPost = new Post();
-		// Setting the values
-		newPost.setPostId(100);
-		newPost.setTitle("Lucifer");
-		newPost.setContent(PostType.VIDEO_IMAGE);
-		newPost.setCreatedDateTime(LocalDateTime.now());
-		newPost.setFlair("#Deckerstar");
-		newPost.setNotSafeForWork(false);
-		newPost.setOriginalContent(true);
-		newPost.setVotes(10000);
-		newPost.setVoteUp(false);
-		newPost.setSpoiler(true);
+	void listPostsByCommunityId()
+	{
+		File fw = new File("abc.jpg");
 		
-		Mockito.when(postRepo.getPostByCommentId(66)).thenReturn(newPost);
+		List<String> glist = new ArrayList<String>();
+		glist.add("Hockey");
+		glist.add("Cricket");
+		glist.add("Tennis");
 		
-		PostOutputDto post = postServ.getPostByCommentId(66);
+		List<String> galist = new ArrayList<String>();
+		galist.add("Tours");
+		galist.add("Furniture");
+		galist.add("Houses");
 		
-		// checking if the added post values are equal to the post or not
-		assertEquals(100, post.getPostId());
-		assertEquals("Lucifer", post.getTitle());
-		assertEquals(PostType.VIDEO_IMAGE, post.getContent());
-		assertEquals("Deckerstar", post.getFlair());
-		assertEquals(10000, post.getVotes());
-		assertEquals(false, post.isNotSafeForWork());
-		assertEquals(true, post.isOriginalContent());
-		assertEquals(true, post.isSpoiler());
-		assertEquals(false, post.isVoteUp());	
+		List<String> bp = new ArrayList<String>();
+		bp.add("Cheating");
+		bp.add("Drugs");
+		bp.add("Misuse");
+		
+		List<String> f = new ArrayList<String>();
+		f.add("SportsNews");
+		
+		List<Integer> p = new ArrayList<Integer>();
+		List<Post> posts = new ArrayList<Post>();
+		
+		Post post1 = new Post();
+		post1.setPostId(100);
+		post1.setTitle("Lucifer");
+		post1.setContent(PostType.VIDEO_IMAGE);
+		post1.setCreatedDateTime(LocalDateTime.now());
+		post1.setFlair("Deckerstar");
+		post1.setNotSafeForWork(false);
+		post1.setOriginalContent(true);
+		post1.setVotes(10000);
+		post1.setVoteUp(false);
+		post1.setSpoiler(true);
+		
+		Mockito.when(postRepo.findById(100)).thenReturn(Optional.of(post1));
+		posts.add(post1);
+		p.add(post1.getPostId());
+		
+		CommunityInputDto com = new CommunityInputDto(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f,p);
+		Community community = new Community();
+		community.setCommunityId(com.getCommunityId());
+		community.setCommunityDescription(com.getCommunityDescription());
+		community.setTotalMembers(com.getTotalMembers());
+		community.setOnlineMembers(com.getOnlineMembers());
+		community.setImage(com.getImage());
+		community.setCreatedOn(com.getCreatedOn());
+		community.setPostRulesAllowed(com.getPostRulesAllowed());
+		community.setPostRulesDisAllowed(com.getPostRulesDisAllowed());
+		community.setBanningPolicy(com.getBanningPolicy());
+		community.setFlairs(com.getFlairs());
+		community.setPost(posts);
+		
+		Mockito.when(communityRepo.save(community)).thenReturn(community);
+		Community newCommunity = communityServ.addCommunityWithoutDto(community);
+		
+		Mockito.when(communityRepo.findById(12)).thenReturn(Optional.of(community));
+		
+		List<Post> postslist = postServ.listPostsByCommunityId(12);
+		assertEquals(1,postslist.size());
+		
+		
+		
+		
 	}
 }

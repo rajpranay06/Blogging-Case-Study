@@ -1,22 +1,26 @@
 package com.example.demo.service;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.File;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.example.demo.bean.Blogger;
 import com.example.demo.bean.Community;
-import com.example.demo.dto.CommunityDto;
+import com.example.demo.bean.Post;
+import com.example.demo.bean.PostType;
+import com.example.demo.dto.CommunityInputDto;
+
 
 @SpringBootTest
 public class CommunityServiceTest {
-	
 	@Autowired
 	ICommunityService comServ;
 	
@@ -25,7 +29,8 @@ public class CommunityServiceTest {
 	void addCommunityTest()
 	{
 		//Create community object
-		CommunityDto com = new CommunityDto();
+		Community com = new Community();
+		com.setCommunityId(1);
 		com.setCommunityDescription("Humans");
 		com.setTotalMembers(120);
 		com.setOnlineMembers(110);
@@ -62,39 +67,54 @@ public class CommunityServiceTest {
 		f.add("SportsNews");
 		com.setFlairs(f);
 		
-		Community community = new Community();
-		community.setCommunityDescription(com.getCommunityDescription());
-		community.setBanningPolicy(com.getBanningPolicy());
-		community.setCreatedOn(com.getCreatedOn());
-		community.setImage(com.getImage());
-		community.setFlairs(com.getFlairs());
-		community.setOnlineMembers(com.getOnlineMembers());
-		community.setPostRulesAllowed(com.getPostRulesAllowed());
-		community.setPostRulesDisAllowed(com.getPostRulesDisAllowed());
-		community.setTotalMembers(com.getTotalMembers());
+		//To set List of postIds &  Posts 
+		
+		//List of PostIds
+		List<Integer> p = new ArrayList<Integer>();
+		//List of posts
+		List<Post> posts = new ArrayList<Post>();
+		
+		//Creating post object
+		Post post1 = new Post();
+		//Adding data to post object
+		post1.setPostId(100);
+		post1.setTitle("Lucifer");
+		post1.setContent(PostType.VIDEO_IMAGE);
+		post1.setCreatedDateTime(LocalDateTime.now());
+		post1.setFlair("Deckerstar");
+		post1.setNotSafeForWork(false);
+		post1.setOriginalContent(true);
+		post1.setVotes(10000);
+		post1.setVoteUp(false);
+		post1.setSpoiler(true);
+		
+		posts.add(post1);
+		p.add(post1.getPostId());
+		com.setPost(posts);
 		
 		//Persist the community object to the DB using service implementation
-		Community addedCommunity = comServ.addCommunity(community);
+		Community c = comServ.addCommunityWithoutDto(com);
 		
 		//Validate details
-		assertEquals("Humans",addedCommunity.getCommunityDescription());
-		assertEquals(120,addedCommunity.getTotalMembers());
-		assertEquals(110,addedCommunity.getOnlineMembers());
-		assertEquals(fw,addedCommunity.getImage());
-		assertEquals(LocalDate.parse("2019-02-07"),addedCommunity.getCreatedOn());
-		assertEquals(glist,addedCommunity.getPostRulesAllowed());
-		assertEquals(galist,addedCommunity.getPostRulesDisAllowed());
-		assertEquals(bp,addedCommunity.getBanningPolicy());
-		assertEquals(f,addedCommunity.getFlairs());
+		assertEquals("Humans",c.getCommunityDescription());
+		assertEquals(120,c.getTotalMembers());
+		assertEquals(110,c.getOnlineMembers());
+		assertEquals(fw,c.getImage());
+		assertEquals(LocalDate.parse("2019-02-07"),c.getCreatedOn());
+		assertEquals(glist,c.getPostRulesAllowed());
+		assertEquals(galist,c.getPostRulesDisAllowed());
+		assertEquals(bp,c.getBanningPolicy());
+		assertEquals(f,c.getFlairs());
+		assertEquals(1,c.getPost().size());
+//		assertEquals(1,c.getBlogger().size());
 	}
 	
 	@Test
 	@Disabled
 	void updateCommunityTest()
 	{
-		//Create community object
-		CommunityDto com = new CommunityDto();
-		com.setCommunityId(70);
+		Community com = new Community();
+		com.setCommunityId(386);
 		com.setCommunityDescription("World");
 		com.setTotalMembers(120);
 		com.setOnlineMembers(110);
@@ -103,7 +123,7 @@ public class CommunityServiceTest {
 		com.setImage(fw);
 		
 		//To set created date
-		com.setCreatedOn(LocalDate.parse("2022-03-28"));
+		com.setCreatedOn(LocalDate.parse("2019-02-07"));
 		
 		//To set list of post rules allowed
 		List<String> glist = new ArrayList<String>();
@@ -128,35 +148,49 @@ public class CommunityServiceTest {
 		
 		//To set list of flairs
 		List<String> f = new ArrayList<String>();
-		f.add("SportsNews");
+		f.add("DogsNews");
 		com.setFlairs(f);
 		
-		Community community = new Community();
-		community.setCommunityId(com.getCommunityId());
-		community.setCommunityDescription(com.getCommunityDescription());
-		community.setBanningPolicy(com.getBanningPolicy());
-		community.setCreatedOn(com.getCreatedOn());
-		community.setImage(com.getImage());
-		community.setFlairs(com.getFlairs());
-		community.setOnlineMembers(com.getOnlineMembers());
-		community.setPostRulesAllowed(com.getPostRulesAllowed());
-		community.setPostRulesDisAllowed(com.getPostRulesDisAllowed());
-		community.setTotalMembers(com.getTotalMembers());
+		//To set List of postIds &  Posts 
+		
+		//List of PostIds
+		List<Integer> p = new ArrayList<Integer>();
+		//List of posts
+		List<Post> posts = new ArrayList<Post>();
+				
+		//Creating post object
+		Post post1 = new Post();
+		//Adding data to post object
+		post1.setPostId(100);
+		post1.setTitle("Documentry");
+		post1.setContent(PostType.VIDEO_IMAGE);
+		post1.setCreatedDateTime(LocalDateTime.now());
+		post1.setFlair("UrbanLiving");
+		post1.setNotSafeForWork(false);
+		post1.setOriginalContent(true);
+		post1.setVotes(10000);
+		post1.setVoteUp(false);
+		post1.setSpoiler(true);
+				
+		posts.add(post1);
+		p.add(post1.getPostId());
+		com.setPost(posts);
 		
 		//Update the community
-		Community c = comServ.updateCommunity(community);
+		Community c = comServ.updateCommunityWithoutDto(com);
 		
 		//Validate details
-		assertEquals(70,c.getCommunityId());
+		assertEquals(386,c.getCommunityId());
 		assertEquals("World",c.getCommunityDescription());
 		assertEquals(120,c.getTotalMembers());
 		assertEquals(110,c.getOnlineMembers());
 		assertEquals(fw,c.getImage());
-		assertEquals(LocalDate.parse("2022-03-28"),c.getCreatedOn());
+		assertEquals(LocalDate.parse("2019-02-07"),c.getCreatedOn());
 		assertEquals(glist,c.getPostRulesAllowed());
 		assertEquals(galist,c.getPostRulesDisAllowed());
 		assertEquals(bp,c.getBanningPolicy());
 		assertEquals(f,c.getFlairs());
+		assertEquals(1,c.getPost().size());
 	}
 	
 	@Test
@@ -167,7 +201,7 @@ public class CommunityServiceTest {
 		long beforeDeletecount = comServ.count();
 		
 		//Delete the community
-		comServ.deleteCommunity(70);
+		Community c = comServ.deleteCommunity(382);
 		
 		//Count after delete operation
 		long afterDeleteCount = comServ.count();
@@ -187,10 +221,39 @@ public class CommunityServiceTest {
 	}
 	
 	@Test
-	void listAllCommunitiesByBloggerId() {
+	void getCommunityByPostId()
+	{
+		File fw = new File("abc.jpg");
 		
-		List<Community> communities = comServ.listAllCommunitiesByBloggerId(63);
+		List<String> glist = new ArrayList<String>();
+		glist.add("Hockey");
+		glist.add("Cricket");
+		glist.add("Tennis");
 		
-		assertEquals(2, communities.size());
+		List<String> galist = new ArrayList<String>();
+		galist.add("Tours");
+		galist.add("Furniture");
+		galist.add("Houses");
+		
+		List<String> bp = new ArrayList<String>();
+		bp.add("Cheating");
+		bp.add("Drugs");
+		bp.add("Misuse");
+		
+		List<String> f = new ArrayList<String>();
+		f.add("SportsNews");
+		
+		Community com = comServ.getCommunityByPostId(379);
+		assertEquals(378,com.getCommunityId());
+		assertEquals("Humans",com.getCommunityDescription());
+		assertEquals(120,com.getTotalMembers());
+		assertEquals(110,com.getOnlineMembers());
+		assertEquals(fw,com.getImage());
+		assertEquals(LocalDate.parse("2019-02-07"),com.getCreatedOn());
+		assertEquals(glist,com.getPostRulesAllowed());
+		assertEquals(galist,com.getPostRulesDisAllowed());
+		assertEquals(bp,com.getBanningPolicy());
+		assertEquals(f,com.getFlairs());
+		
 	}
 }

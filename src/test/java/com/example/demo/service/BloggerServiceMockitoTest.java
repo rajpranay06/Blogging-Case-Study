@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,12 +21,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.example.demo.dto.BloggerInputDto;
 import com.example.demo.dto.BloggerOutputDto;
-import com.example.demo.dto.CommunityDto;
+import com.example.demo.dto.CommunityInputDto;
 import com.example.demo.bean.Blogger;
 import com.example.demo.bean.Community;
+import com.example.demo.bean.Post;
+import com.example.demo.bean.PostType;
 import com.example.demo.exception.IdNotFoundException;
 import com.example.demo.repository.IBloggerRepository;
 import com.example.demo.repository.ICommunityRepository;
+import com.example.demo.repository.IPostRepository;
 
 import org.mockito.BDDMockito;
 
@@ -43,6 +47,9 @@ class BloggerServiceMockitoTest {
 	
 	@MockBean
 	ICommunityRepository comRepo;
+	
+	@MockBean
+	IPostRepository postRepo;
 
 	@BeforeEach
 	void init() {
@@ -85,8 +92,27 @@ class BloggerServiceMockitoTest {
 			List<String> f = new ArrayList<String>();
 			f.add("SportsNews");
 			
+			List<Integer> p = new ArrayList<Integer>();
+			List<Post> posts = new ArrayList<Post>();
+			
+			Post post1 = new Post();
+			post1.setPostId(100);
+			post1.setTitle("Lucifer");
+			post1.setContent(PostType.VIDEO_IMAGE);
+			post1.setCreatedDateTime(LocalDateTime.now());
+			post1.setFlair("Deckerstar");
+			post1.setNotSafeForWork(false);
+			post1.setOriginalContent(true);
+			post1.setVotes(10000);
+			post1.setVoteUp(false);
+			post1.setSpoiler(true);
+			
+			Mockito.when(postRepo.findById(100)).thenReturn(Optional.of(post1));
+			posts.add(post1);
+			p.add(post1.getPostId());
+			
 			// Creating communityDto object using constructor
-			CommunityDto com = new CommunityDto(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f);
+			CommunityInputDto com = new CommunityInputDto(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f,p);
 			
 			// Creating community object and setting values
 			Community newCommunity = new Community();
@@ -159,8 +185,28 @@ class BloggerServiceMockitoTest {
 			List<String> f = new ArrayList<String>();
 			f.add("SportsNews");
 			
+			List<Integer> p = new ArrayList<Integer>();
+			List<Post> posts = new ArrayList<Post>();
+			
+			Post post1 = new Post();
+			post1.setPostId(100);
+			post1.setTitle("Lucifer");
+			post1.setContent(PostType.VIDEO_IMAGE);
+			post1.setCreatedDateTime(LocalDateTime.now());
+			post1.setFlair("Deckerstar");
+			post1.setNotSafeForWork(false);
+			post1.setOriginalContent(true);
+			post1.setVotes(10000);
+			post1.setVoteUp(false);
+			post1.setSpoiler(true);
+			
+			Mockito.when(postRepo.findById(100)).thenReturn(Optional.of(post1));
+			posts.add(post1);
+			p.add(post1.getPostId());
+			
+			
 			// Creating communityDto object using constructor
-			CommunityDto com = new CommunityDto(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f);
+			CommunityInputDto com = new CommunityInputDto(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f,p);
 			
 			// Creating community object and setting values
 			Community newCommunity = new Community();
@@ -244,8 +290,28 @@ class BloggerServiceMockitoTest {
 			List<String> f = new ArrayList<String>();
 			f.add("SportsNews");
 			
+			List<Integer> p = new ArrayList<Integer>();
+			List<Post> posts = new ArrayList<Post>();
+			
+			Post post1 = new Post();
+			post1.setPostId(100);
+			post1.setTitle("Lucifer");
+			post1.setContent(PostType.VIDEO_IMAGE);
+			post1.setCreatedDateTime(LocalDateTime.now());
+			post1.setFlair("Deckerstar");
+			post1.setNotSafeForWork(false);
+			post1.setOriginalContent(true);
+			post1.setVotes(10000);
+			post1.setVoteUp(false);
+			post1.setSpoiler(true);
+			
+			Mockito.when(postRepo.findById(100)).thenReturn(Optional.of(post1));
+			posts.add(post1);
+			p.add(post1.getPostId());
+			
+			
 			// Creating communityDto object using constructor
-			CommunityDto com = new CommunityDto(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f);
+			CommunityInputDto com = new CommunityInputDto(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f,p);
 			
 			// Creating community object and setting values
 			Community newCommunity = new Community();
@@ -319,8 +385,28 @@ class BloggerServiceMockitoTest {
 			List<String> f = new ArrayList<String>();
 			f.add("SportsNews");
 			
+			List<Integer> p = new ArrayList<Integer>();
+			List<Post> posts = new ArrayList<Post>();
+			
+			Post post1 = new Post();
+			post1.setPostId(100);
+			post1.setTitle("Lucifer");
+			post1.setContent(PostType.VIDEO_IMAGE);
+			post1.setCreatedDateTime(LocalDateTime.now());
+			post1.setFlair("Deckerstar");
+			post1.setNotSafeForWork(false);
+			post1.setOriginalContent(true);
+			post1.setVotes(10000);
+			post1.setVoteUp(false);
+			post1.setSpoiler(true);
+			
+			Mockito.when(postRepo.findById(100)).thenReturn(Optional.of(post1));
+			posts.add(post1);
+			p.add(post1.getPostId());
+			
+			
 			// Creating communityDto object using constructor
-			CommunityDto com = new CommunityDto(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f);
+			CommunityInputDto com = new CommunityInputDto(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f,p);
 			
 			// Creating community object and setting values
 			Community newCommunity = new Community();

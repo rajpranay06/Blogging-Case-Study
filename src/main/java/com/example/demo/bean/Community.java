@@ -4,12 +4,17 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
 
@@ -26,25 +31,44 @@ public class Community {
 	@Id
 	@GeneratedValue
 	private int communityId;
-
+	//Community Description
 	private String communityDescription;
+	//Total members in Community
 	private int totalMembers;
+	//Total online members in community
 	private int onlineMembers;
+	//Community Images
 	private File image;
+	
+	//Date when community is created
 	@Convert(converter = LocalDateConverter.class)
 	private LocalDate createdOn;
+	
+	//Post Rules Allowed
 	@ElementCollection
 	@CollectionTable(name="Rules_Allowed")
 	private List<String> postRulesAllowed;
+	
+	//Post Rules Disallowed
 	@ElementCollection
 	@CollectionTable(name="Rules_DisAllowed")
 	private List<String> postRulesDisAllowed;
+	
+	//Posts Banning policy
 	@ElementCollection
 	@CollectionTable(name="Banning_policy")
 	private List<String> banningPolicy;
+	
+	//Posts Flairs
 	@ElementCollection
 	@CollectionTable(name="flairs")
 	private List<String> flairs;
 	
+
+	//OneToMany-One Community can have many posts, One post Belongs to one Community
+	@OneToMany(cascade=CascadeType.ALL)
+	@JoinColumn(name="CommunityId")
+	private List<Post> post;
+
 }
 
