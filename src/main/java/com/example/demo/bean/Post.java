@@ -13,10 +13,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity       
-@Data          // Used to create all getter setter constructors and tostring methods
+@Data         // Used to create all getter setter constructors and tostring methods
 public class Post {
 	
 	@Id                  // Making postId as primary key
@@ -39,7 +41,7 @@ public class Post {
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "post_id")
 	private List<Comment> comments;
-	
+
     //private Community community;
     
   @ManyToMany(cascade = CascadeType.MERGE)

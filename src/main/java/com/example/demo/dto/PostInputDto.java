@@ -26,4 +26,5 @@ public class PostInputDto {
     private String flair;
     List<Integer> commentIds;
     List<Integer> awardIds;
+    private List<Integer> commentIds;
 }

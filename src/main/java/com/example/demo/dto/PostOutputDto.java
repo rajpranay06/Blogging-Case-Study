@@ -1,7 +1,6 @@
 package com.example.demo.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.example.demo.bean.Award;
 import com.example.demo.bean.Comment;

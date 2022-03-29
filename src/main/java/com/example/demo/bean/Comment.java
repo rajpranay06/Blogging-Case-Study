@@ -1,9 +1,9 @@
 package com.example.demo.bean;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -30,4 +30,8 @@ public class Comment {
 	private boolean voteUp;
 
 }
+	
+//	@ManyToOne(mappedBy="post_id", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+//	private Post post;
 
+}
