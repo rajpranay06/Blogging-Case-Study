@@ -7,14 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.example.demo.bean.AwardErrorResponse;
+import com.example.demo.bean.ErrorResponse;
 
 @ControllerAdvice
 public class AwardExceptionHandler {
 
 	@ExceptionHandler
-	public ResponseEntity<AwardErrorResponse> handleException(AwardNotFoundException exception) {
-		AwardErrorResponse error = new AwardErrorResponse();
+	public ResponseEntity<ErrorResponse> handleException(AwardNotFoundException exception) {
+		ErrorResponse error = new ErrorResponse();
 		
 		error.setStatus(HttpStatus.NOT_FOUND.value());
 		error.setMessage(exception.getMessage());
