@@ -42,13 +42,17 @@ public class PostServiceTest {
 		
 		// Adding commentIds to the list
 		List<Integer> commentIds = new ArrayList<>();
-		commentIds.add(26);
-		commentIds.add(27);
+		commentIds.add(95);
+		commentIds.add(93);
 		
 		newPost.setCommentIds(commentIds);
 		
+		List<Integer> awardIds = new ArrayList<>();
+		awardIds.add(88);
+		newPost.setAwardIds(awardIds);
 		// Adding the post
 		Post post = postServ.addPost(newPost);
+		
 		
 		// checking if the added post values are equal to the post or not
 		assertEquals("Game of Thrones", post.getTitle());
@@ -60,17 +64,19 @@ public class PostServiceTest {
 		assertEquals(true, post.isSpoiler());
 		assertEquals(true, post.isVoteUp());
 		assertEquals(2,post.getComments().size());
+		assertEquals(1,post.getAwards().size());
 		
 	}
 	
-	@Disabled
+	
 	@Test
+	@Disabled
 	void updatePostTest() {
 		// Creating PostInputDto object
 		PostInputDto updatedPost = new PostInputDto(); 
 		
 		// Setting the values
-		updatedPost.setPostId(13);
+		updatedPost.setPostId(94);
 		updatedPost.setTitle("Game of Thrones");
 		updatedPost.setContent(PostType.LINK);
 		updatedPost.setCreatedDateTime(LocalDateTime.now());
@@ -83,16 +89,20 @@ public class PostServiceTest {
 		
 		// Adding commentIds to the list
 		List<Integer> commentIds = new ArrayList<>();
-		commentIds.add(16);
-		commentIds.add(17);
+		commentIds.add(95);
+		commentIds.add(93);
 				
 		updatedPost.setCommentIds(commentIds);	
+		
+		List<Integer> awardIds = new ArrayList<>();
+		awardIds.add(88);
+		updatedPost.setAwardIds(awardIds);
 		
 		// Updating the post
 		Post post = postServ.updatePost(updatedPost);
 		
 		// checking if the added post values are equal to the post or not
-		assertEquals(13, post.getPostId());
+		assertEquals(94, post.getPostId());
 		assertEquals("Game of Thrones", post.getTitle());
 		assertEquals(PostType.LINK, post.getContent());
 		assertEquals("GOTTheEpic", post.getFlair());
@@ -102,6 +112,7 @@ public class PostServiceTest {
 		assertEquals(true, post.isSpoiler());
 		assertEquals(true, post.isVoteUp());
 		assertEquals(2,post.getComments().size());
+		assertEquals(1,post.getAwards().size());
 	}
 	
 	@Disabled
@@ -122,6 +133,7 @@ public class PostServiceTest {
 		assertEquals(true, deletedPost.isSpoiler());
 		assertEquals(true, deletedPost.isVoteUp());
 		assertEquals(2,deletedPost.getComments().size());
+		assertEquals(1,deletedPost.getAwards().size());
 		
 	}
 	
@@ -137,10 +149,14 @@ public class PostServiceTest {
 	}
 	
 	@Test
+	void getPostByawardIdTest() {
+		List<PostOutputDto> posts = postServ.getPostByawardId(88);
+		assertEquals(8, posts.size());
+	}
+	@Test
 	void listPostsByCommunityId()
 	{
 		List<Post> posts = postServ.listPostsByCommunityId(362);
 		assertEquals(1,posts.size());
 	}
-	
 }

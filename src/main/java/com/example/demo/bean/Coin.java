@@ -9,4 +9,5 @@ public enum Coin {
 	Coin(int i) {
 		this.value=i;	
 	}
+	
 }

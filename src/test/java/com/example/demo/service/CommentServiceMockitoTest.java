@@ -74,5 +74,4 @@ class CommentServiceMockitoTest {
 		assertEquals(true, comment.isVoteUp());
 	}
 
-
 }

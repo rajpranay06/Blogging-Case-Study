@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.bean.Award;
 import com.example.demo.bean.Comment;
 import com.example.demo.bean.Community;
 import com.example.demo.bean.Post;
@@ -17,6 +18,7 @@ import com.example.demo.exception.CommunityNotFoundException;
 import com.example.demo.exception.PostIdNotFoundException;
 import com.example.demo.exception.PostTypeInvalidException;
 import com.example.demo.repository.IPostRepository;
+import com.example.demo.repository.IAwardRepository;
 import com.example.demo.repository.ICommentRepository;
 import com.example.demo.repository.ICommunityRepository;
 
@@ -30,6 +32,7 @@ public class PostServiceImpl implements IPostService {
 	ICommentRepository commentRepo;
 	
 	@Autowired
+	IAwardRepository awardRepo;
 	ICommunityRepository communityRepo;
 
 	@Override
@@ -68,10 +71,41 @@ public class PostServiceImpl implements IPostService {
 		}
 		
 		newPost.setComments(comments);
+		System.out.println(newPost);
+		
+		List<Award> awards = new ArrayList<>();
+		for(Integer id : post.getAwardIds()) {
+			System.out.println(id);
+			Award award = awardRepo.findById(id).get();
+			System.out.println(award);
+			awards.add(award);
+		}
+		newPost.setAwards(awards);
+		System.out.println(newPost);
+		// Saving the post in database
+		Post addedPost = postRepo.save(newPost);
+		System.out.println(addedPost);
+		
+		// Creating PostOutputDto
+		PostOutputDto postOutputDto = new PostOutputDto();
+		
+		// Setting values for postOutputDto by addedPost values
+		postOutputDto.setPostId(addedPost.getPostId());
+		postOutputDto.setTitle(addedPost.getTitle());
+		postOutputDto.setContent(addedPost.getContent());
+		postOutputDto.setCreatedDateTime(addedPost.getCreatedDateTime());
+		postOutputDto.setFlair(addedPost.getFlair().substring(1));
+		postOutputDto.setNotSafeForWork(addedPost.isNotSafeForWork());
+		postOutputDto.setOriginalContent(addedPost.isOriginalContent());
+		postOutputDto.setVotes(addedPost.getVotes());
+		postOutputDto.setVoteUp(addedPost.isVoteUp());
+		postOutputDto.setSpoiler(addedPost.isSpoiler());
+		postOutputDto.setComments(addedPost.getComments());
+		postOutputDto.setAwards(addedPost.getAwards());
+		return postOutputDto;
 
 		// Saving the post in database
 		return postRepo.save(newPost);
-
 	}
 
 	@Override
@@ -111,9 +145,34 @@ public class PostServiceImpl implements IPostService {
 		}
 				
 		oldPost.setComments(comments);	
+		List<Award> awards = new ArrayList<>();
 		
-		return postRepo.save(oldPost);
+		for(Integer id: post.getAwardIds()) {
+			awards.add(awardRepo.findById(id).get());
+		}
+		
+		oldPost.setAwards(awards);
+		
+		Post updatedPost = postRepo.save(oldPost);
 		 
+		// Creating PostOutputDto
+		PostOutputDto postOutputDto = new PostOutputDto();
+			
+		// Setting values for postOutputDto by updatedPost values
+		postOutputDto.setPostId(updatedPost.getPostId());
+		postOutputDto.setTitle(updatedPost.getTitle());
+		postOutputDto.setContent(updatedPost.getContent());
+		postOutputDto.setCreatedDateTime(updatedPost.getCreatedDateTime());
+		postOutputDto.setFlair(updatedPost.getFlair().substring(1));
+		postOutputDto.setNotSafeForWork(updatedPost.isNotSafeForWork());
+		postOutputDto.setOriginalContent(updatedPost.isOriginalContent());
+		postOutputDto.setVotes(updatedPost.getVotes());
+		postOutputDto.setVoteUp(updatedPost.isVoteUp());
+		postOutputDto.setSpoiler(updatedPost.isSpoiler());
+		postOutputDto.setComments(updatedPost.getComments());
+		postOutputDto.setAwards(updatedPost.getAwards());	
+		return postOutputDto;
+		return postRepo.save(oldPost);
 	}
 
 	@Override
@@ -165,6 +224,25 @@ public class PostServiceImpl implements IPostService {
 		
 	}
 	@Override
+	public List<PostOutputDto> getPostByawardId(int id) {
+		List<Post> posts = postRepo.getAllPostsByAwardId(id);
+		List<PostOutputDto> allPosts = new ArrayList<>();
+		for(Post p : posts) {
+			PostOutputDto postOutputDto = new PostOutputDto();
+			postOutputDto.setPostId(p.getPostId());
+			postOutputDto.setTitle(p.getTitle());
+			postOutputDto.setContent(p.getContent());
+			postOutputDto.setCreatedDateTime(p.getCreatedDateTime());
+			postOutputDto.setVotes(p.getVotes());
+			postOutputDto.setVoteUp(p.isVoteUp());
+			postOutputDto.setNotSafeForWork(p.isNotSafeForWork());
+			postOutputDto.setSpoiler(p.isSpoiler());
+			postOutputDto.setOriginalContent(p.isOriginalContent());
+			postOutputDto.setFlair(p.getFlair());
+			postOutputDto.setComments(p.getComments());
+			allPosts.add(postOutputDto);
+		}
+		return allPosts;
 
 	public List<Post> listPostsByCommunityId(int communityId) {
 		//Find community with communityId
@@ -206,7 +284,8 @@ public class PostServiceImpl implements IPostService {
 		postOutputDto.setSpoiler(post.isSpoiler());
 		
 		return postOutputDto;
-
 	}
 
+	
+	
 }

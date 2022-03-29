@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.bean.Award;
 
 import com.example.demo.bean.Post;
 import com.example.demo.dto.PostInputDto;
@@ -60,8 +61,10 @@ public class PostController {
 	void upVote(@PathVariable("postId") int postId, boolean isUpVote) {
 		postServ.upVote(postId, isUpVote);
 	}
-	
-
+	@GetMapping("/posts/awards/{id}")
+	ResponseEntity<List<PostOutputDto>> getPostByAwardId(@PathVariable("id") int id){
+		List<PostOutputDto> posts = postServ.getPostByawardId(id);
+		return new ResponseEntity<>(posts, HttpStatus.OK);
 	//GetPosts With CommunityId
 	@GetMapping("/posts/byCommunityId/{communityId}")
 	ResponseEntity<List<Post>> listPostsByCommunityId(@PathVariable("communityId") int communityId)
@@ -75,6 +78,5 @@ public class PostController {
 	ResponseEntity<PostOutputDto> getPostByCommentId(@PathVariable("commentId") int commentId){
 		PostOutputDto post = postServ.getPostByCommentId(commentId);
 		return new ResponseEntity<>(post, HttpStatus.OK);
-
 	}
 }

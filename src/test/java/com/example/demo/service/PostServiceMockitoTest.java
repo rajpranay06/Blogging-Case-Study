@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.example.demo.bean.Award;
 import com.example.demo.bean.Comment;
 import com.example.demo.bean.Community;
 import com.example.demo.bean.Post;
@@ -29,6 +30,7 @@ import com.example.demo.bean.PostType;
 import com.example.demo.dto.CommunityInputDto;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
+import com.example.demo.repository.IAwardRepository;
 import com.example.demo.repository.ICommentRepository;
 import com.example.demo.repository.ICommunityRepository;
 import com.example.demo.repository.IPostRepository;
@@ -51,8 +53,8 @@ public class PostServiceMockitoTest {
 	ICommentRepository comRepo;
 	
 	@MockBean
+	IAwardRepository awardRepo;
 	ICommunityRepository communityRepo;
-	
 	// Initialization of mock objects
 	@BeforeEach
 	void init() {
@@ -81,6 +83,8 @@ public class PostServiceMockitoTest {
 		
 		// Sending comment when getCommentById is called
 		Mockito.when(comRepo.findById(26)).thenReturn(Optional.of(comment1));
+		
+		
 		
 		Comment comment2 = new Comment();
 		comment2.setCommentId(27);
@@ -221,6 +225,11 @@ public class PostServiceMockitoTest {
 				
 		updatedPost.setCommentIds(commentIds);
 		
+		//Adding awardIds to list
+		List<Integer> awardIds = new ArrayList<>();
+		awardIds.add(88);
+		updatedPost.setAwardIds(awardIds);
+		
 		// Creating post object
 		Post post = new Post();
 		
@@ -258,6 +267,15 @@ public class PostServiceMockitoTest {
 		
 		post.setComments(comments);
 		
+		Award awards = new Award();
+		awards.setAwardId(88);
+		
+		Mockito.when(awardRepo.findById(88)).thenReturn(Optional.of(awards));
+		
+		List<Award> allAwards = new ArrayList<>();
+		allAwards.add(awards);
+		
+		post.setAwards(allAwards);
 		// Sending the post object when the following functions are called instead of using database
 		Mockito.when(postRepo.findById(59)).thenReturn(Optional.of(post));
 		Mockito.when(postRepo.save(post)).thenReturn(post);
@@ -275,6 +293,7 @@ public class PostServiceMockitoTest {
 		assertEquals(true, updatedPostOutput.isSpoiler());
 		assertEquals(true, updatedPostOutput.isVoteUp());
 		assertEquals(2, updatedPostOutput.getComments().size());
+		assertEquals(1, updatedPostOutput.getAwards().size());
 	}
 	
 	@Test
@@ -356,6 +375,79 @@ public class PostServiceMockitoTest {
 	}
 	
 	@Test
+	void getPostByawardIdTest() {
+		PostInputDto newPost = new PostInputDto(); 
+		
+		// Setting the values
+		newPost.setPostId(100);
+		newPost.setTitle("Lucifer");
+		newPost.setContent(PostType.VIDEO_IMAGE);
+		newPost.setCreatedDateTime(LocalDateTime.now());
+		newPost.setFlair("Deckerstar");
+		newPost.setNotSafeForWork(false);
+		newPost.setOriginalContent(true);
+		newPost.setVotes(10000);
+		newPost.setVoteUp(false);
+		newPost.setSpoiler(true);
+		
+		// Adding commentIds to the list
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(16);
+		commentIds.add(17);
+		
+		newPost.setCommentIds(commentIds);
+		
+		//Adding awardIds to list
+		List<Integer> awardIds = new ArrayList<>();
+		awardIds.add(88);
+		newPost.setAwardIds(awardIds);
+		
+		Post post = new Post();
+		
+		post.setPostId(newPost.getPostId());
+		post.setTitle(newPost.getTitle());
+		post.setContent(newPost.getContent());
+		post.setCreatedDateTime(newPost.getCreatedDateTime());
+		post.setFlair(newPost.getFlair());
+		post.setNotSafeForWork(newPost.isNotSafeForWork());
+		post.setOriginalContent(newPost.isOriginalContent());
+		post.setVotes(newPost.getVotes());
+		post.setVoteUp(newPost.isVoteUp());
+		post.setSpoiler(newPost.isSpoiler());
+		
+		Comment comment1 = new Comment();
+		comment1.setCommentId(26);
+		comment1.setCommentDescription("Awesome");
+		comment1.setVotes(10);
+		
+		// Sending comment when getCommentById is called
+		Mockito.when(comRepo.findById(16)).thenReturn(Optional.of(comment1));
+		
+		Comment comment2 = new Comment();
+		comment2.setCommentId(27);
+		comment2.setCommentDescription("Fab");
+		comment2.setVotes(10);
+		
+		// Sending comment when getCommentById is called
+		Mockito.when(comRepo.findById(17)).thenReturn(Optional.of(comment2));
+				
+		List<Comment> comments = new ArrayList<>();
+		comments.add(comment1);
+		comments.add(comment2);
+				
+		post.setComments(comments);
+		System.out.println(post);
+		
+		List<Post> posts = new ArrayList<>();
+		posts.add(post);
+				
+		
+
+		Mockito.when(postRepo.getAllPostsByAwardId(88)).thenReturn(posts);
+		
+		List<PostOutputDto> allPost = postServ.getPostByawardId(88);
+		
+		assertEquals(1, allPost.size());
 	void listPostsByCommunityId()
 	{
 		File fw = new File("abc.jpg");

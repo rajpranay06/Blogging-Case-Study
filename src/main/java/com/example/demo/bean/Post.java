@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
@@ -41,5 +43,13 @@ public class Post {
 	private List<Comment> comments;
 
     //private Community community;
+    
+  @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+    		name = "post_awards",
+    		joinColumns = {@JoinColumn(name = "post_id") },
+    		inverseJoinColumns = { @JoinColumn(name = "award_id") }
+    )
+    private List<Award> awards;
     
 }
