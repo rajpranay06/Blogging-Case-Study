@@ -79,6 +79,7 @@ public class BloggerController {
 	@GetMapping("/bloggers/byCommentId/{commentId}")
 	BloggerOutputDto getBloggerByCommentId(@PathVariable("commentId") int commentId) {
 		return blogServ.getBloggerByCommentId(commentId);
+	}
 
 	//Get Bloggers by Community Id
 	@GetMapping("/blogger/byCommunity/{communityId}")
