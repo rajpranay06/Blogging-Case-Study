@@ -47,8 +47,9 @@ public class Blogger {
 //	private List<Post> upvoted;
 //	private List<Post> downvoted;
 	
+	//OneToMany-One Blogger can comment many times
 	@OneToMany(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "user_id")
+        @JoinColumn(name = "user_id")
 	private List<Comment> comments;
 	
 	
@@ -58,7 +59,7 @@ public class Blogger {
 	
 	
 }
-	
+	//ManyToMany-Many Bloggera can be a part of many communities
 	@ManyToMany(cascade=CascadeType.MERGE)
 	@JoinTable(
 			name = "blogger_and_communities",
@@ -68,9 +69,10 @@ public class Blogger {
 	
 	private int karma;
 	
-	 @OneToMany(cascade = CascadeType.PERSIST)
-	 @JoinColumn(name = "user_id")
-	 private List<Post> posts;
+        //OneToMany-One Blogger can have many posts
+	@OneToMany(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "user_id")
+	private List<Post> posts;
 
 	
 	
