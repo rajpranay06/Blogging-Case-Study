@@ -8,13 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.bean.Award;
-import com.example.demo.bean.Comment;
 import com.example.demo.bean.Post;
-import com.example.demo.bean.PostType;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
+import com.example.demo.exception.AwardNotFoundException;
 import com.example.demo.exception.PostIdNotFoundException;
-import com.example.demo.exception.PostTypeInvalidException;
 import com.example.demo.repository.IPostRepository;
 import com.example.demo.repository.IAwardRepository;
 import com.example.demo.repository.ICommentRepository;
@@ -38,11 +36,6 @@ public class PostServiceImpl implements IPostService {
 	@Override
 	public Post addPost(PostInputDto post) {
 		
-		// Getting the post type enum
-		PostType postType = post.getContent();
-		if(!(postType.equals(PostType.TEXT) || postType.equals(PostType.LINK) || postType.equals(PostType.POLL) || postType.equals(PostType.VIDEO_IMAGE)))
-			throw new PostTypeInvalidException("Post Type should be TEXT or LINK or POLL or VIDEO_IMAGE");
-		
 		// Creating post object
 		Post newPost = new Post();
 		
@@ -56,18 +49,6 @@ public class PostServiceImpl implements IPostService {
 		newPost.setVotes(post.getVotes());
 		newPost.setVoteUp(post.isVoteUp());
 		newPost.setSpoiler(post.isSpoiler());
-		
-		// Creating a list of comments
-		List<Comment> comments = new ArrayList<>();
-		
-		// Getting comments from the Comment Entity by using ids
-		for(Integer id : post.getCommentIds()) {
-			Comment comment = commentRepo.findById(id).get();
-			comments.add(comment);
-		}
-		
-		// Setting the comments to the post
-		newPost.setComments(comments);
 		
 		// Getting awards by award ID
 		List<Award> awards = new ArrayList<>();
@@ -96,12 +77,7 @@ public class PostServiceImpl implements IPostService {
 		}
 		// If post is present update the oldPost with new Post
 		Post oldPost = opt.get();
-		 
-		// Assigning PostType to check if valid or not 
-		PostType postType = post.getContent();
-			if(!(postType.equals(PostType.TEXT) || postType.equals(PostType.LINK) || postType.equals(PostType.POLL) || postType.equals(PostType.VIDEO_IMAGE)))
-				throw new PostTypeInvalidException("Post Type should be TEXT or LINK or POLL or VIDEO_IMAGE");
-		 
+	
 	    // Assigning values to oldPost
 		oldPost.setTitle(post.getTitle());
 		oldPost.setContent(post.getContent());
@@ -113,21 +89,17 @@ public class PostServiceImpl implements IPostService {
 		oldPost.setVoteUp(post.isVoteUp());
 		oldPost.setSpoiler(post.isSpoiler());
 		
-		// Creating a list of comments
-		List<Comment> comments = new ArrayList<>();
-				
-		// Getting comments from the Comment Entity by using ids
-		for(Integer id : post.getCommentIds()) {
-			comments.add(commentRepo.findById(id).get());
-		}
-				
-		oldPost.setComments(comments);	
-		
 		// Creating List of Award Objects to store awards 
 		List<Award> awards = new ArrayList<>();
 		
 		for(Integer id: post.getAwardIds()) {
-			awards.add(awardRepo.findById(id).get());
+			System.out.println(id);
+			Optional<Award> opt1 = awardRepo.findById(id);
+			if(!opt1.isPresent()) {
+				throw new AwardNotFoundException("Not found any award with id: " + id);
+			}
+			awards.add(opt1.get());
+			
 		}
 		// Setting the awards
 		oldPost.setAwards(awards);
@@ -291,6 +263,4 @@ public class PostServiceImpl implements IPostService {
 		return postOutputDto;
 	}
 
-	
-	
 }

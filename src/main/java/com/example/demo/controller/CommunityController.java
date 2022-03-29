@@ -54,10 +54,19 @@ public class CommunityController {
 	
 	//Get All communities list by using community description
 	@GetMapping("/communities/{communityDescription}")
-	ResponseEntity<List<CommunityOutputDto>> listAllCommunities(@PathVariable("communityDescription") String communityDescription)
+	ResponseEntity<List<CommunityOutputDto>> listAllCommunitiesByDescription(@PathVariable("communityDescription") String communityDescription)
 	{
 		//Calling communityService listAllCommunities method to list all communities from database by communityDescription
-		List<CommunityOutputDto> listCom = comServ.listAllCommunities(communityDescription);
+		List<CommunityOutputDto> listCom = comServ.listAllCommunitiesByDescription(communityDescription);
+		return new ResponseEntity<>(listCom,HttpStatus.OK);
+	}
+	
+	// Get all communities
+	@GetMapping("/communities")
+	ResponseEntity<List<CommunityOutputDto>> listAllCommunities()
+	{
+		//Calling communityService listAllCommunities method to list all communities from database by communityDescription
+		List<CommunityOutputDto> listCom = comServ.listAllCommunities();
 		return new ResponseEntity<>(listCom,HttpStatus.OK);
 	}
 	

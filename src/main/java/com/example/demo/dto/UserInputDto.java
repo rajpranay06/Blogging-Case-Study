@@ -20,5 +20,6 @@ public class UserInputDto {
 		this.email = email;
 		this.password = password;
 	}
+	public UserInputDto() {}
 	
 }

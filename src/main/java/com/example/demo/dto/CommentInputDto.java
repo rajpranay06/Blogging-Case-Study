@@ -21,4 +21,5 @@ public class CommentInputDto {
 	private String commentDescription;
 	private int votes;
 	private boolean voteUp;
+	private Integer postId;
 }

@@ -14,7 +14,7 @@ public interface IPostService {
 	public List<Post> getPostBySearchString(String searchStr);
 	public void upVote(int postId, boolean upVote);
 	public Post addPostWithoutDto(Post post);
-	List<PostOutputDto> getPostByawardId(int id);
+	public List<PostOutputDto> getPostByawardId(int id);
 	public List<PostOutputDto> listPostsByCommunityId(int communityId);
 	public PostOutputDto getPostByCommentId(int commentId);
 	public List<PostOutputDto> getPostsByBlogger(int id);

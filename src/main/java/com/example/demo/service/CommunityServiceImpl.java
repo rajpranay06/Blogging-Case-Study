@@ -11,7 +11,6 @@ import com.example.demo.bean.Community;
 import com.example.demo.bean.Post;
 import com.example.demo.dto.CommunityInputDto;
 import com.example.demo.dto.CommunityOutputDto;
-import com.example.demo.exception.ComDescriptionNotFoundException;
 import com.example.demo.exception.CommentNotFoundException;
 import com.example.demo.exception.CommunityFoundException;
 import com.example.demo.exception.CommunityNotFoundException;
@@ -119,18 +118,12 @@ public class CommunityServiceImpl implements ICommunityService {
 	}
 
 	@Override
-	public List<CommunityOutputDto> listAllCommunities(String searchString) {
+	public List<CommunityOutputDto> listAllCommunities() {
 		
-		Optional<List<Community>> opt = comRepo.findByCommunityDescription(searchString);
-		if (opt.isPresent() && opt.get().isEmpty()) {
-			throw new ComDescriptionNotFoundException("Community is not found with the given description : " + searchString);
-		}
-
-		//	Get list of communities with same CommunityDescription
-		List<Community> comList = comRepo.listAllCommunities(searchString);
+		List<Community> comList= comRepo.findAll();
 		
 		if(comList.isEmpty()) {
-			throw new CommunityNotFoundException("No community is found with search string: " + searchString);
+			throw new CommunityNotFoundException("No community is found");
 		}
 		
 		// List to store community output dtos
@@ -221,6 +214,43 @@ public class CommunityServiceImpl implements ICommunityService {
 		List<CommunityOutputDto> communities = new ArrayList<>();
 		
 		for(Community community : comList) {
+			
+			//Creating communityOutputDto object
+			CommunityOutputDto com = new CommunityOutputDto();
+			
+			//Set values to community object
+			com.setCommunityId(community.getCommunityId());
+			com.setCommunityDescription(community.getCommunityDescription());
+			com.setTotalMembers(community.getTotalMembers());
+			com.setOnlineMembers(community.getOnlineMembers());
+			com.setImage(community.getImage());
+			com.setCreatedOn(community.getCreatedOn());
+			com.setPostRulesAllowed(community.getPostRulesAllowed());
+			com.setPostRulesDisAllowed(community.getPostRulesDisAllowed());
+			com.setBanningPolicy(community.getBanningPolicy());
+			com.setFlairs(community.getFlairs());
+			
+			// Adding com to communities
+			communities.add(com);
+		}
+		
+		return communities;
+	}
+
+	@Override
+	public List<CommunityOutputDto> listAllCommunitiesByDescription(String communityDescription) {
+		String description = '%' + communityDescription + '%';
+		// Creating a list of PostOutputDto
+		List<Community> allCommunities = comRepo.listAllCommunitiesByDescription(description);
+				
+		if(allCommunities.isEmpty()) {
+			throw new CommunityNotFoundException("No community with deascription: " + communityDescription);
+		}
+		
+		// List to store community output dtos
+		List<CommunityOutputDto> communities = new ArrayList<>();
+		
+		for(Community community : allCommunities) {
 			
 			//Creating communityOutputDto object
 			CommunityOutputDto com = new CommunityOutputDto();

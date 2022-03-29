@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Blogger {
+public class Blogger{
 	@Id
 	@GeneratedValue
 	private int userId;
@@ -40,8 +40,8 @@ public class Blogger {
 	}
 	
 	//OneToMany-One Blogger can comment many times
-	@OneToMany(cascade = CascadeType.MERGE)
-        @JoinColumn(name = "user_id")
+	@OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id")
 	private List<Comment> comments;
 	
 	//ManyToMany-Many Bloggers can be a part of many communities

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.demo.bean.Comment;
+import com.example.demo.dto.CommentDto;
 import com.example.demo.dto.CommentInputDto;
 import com.example.demo.dto.CommentOutputDto;
 
@@ -20,46 +20,42 @@ class CommentServiceTest {
 	ICommentService comServ;
 
 	@Test
+	@Disabled
 	void addCommentTest() {
-		Comment comment = new Comment();
-		comment.setCommentDescription("Avg");
+		CommentInputDto comment = new CommentInputDto();
+		comment.setCommentDescription("Test 1");
 		comment.setVotes(9);
+		comment.setPostId(17);
 		
-		CommentOutputDto comDto = comServ.addComment(comment);
-		assertEquals("Avg", comDto.getCommentDescription());
+		CommentDto comDto = comServ.addCommentDto(comment);
+		assertEquals("Test 1", comDto.getCommentDescription());
 		assertEquals(9, comDto.getVotes());
+		assertEquals(17, comDto.getPost().getPostId());
 	}
 	
 	@Test
 	@Disabled
-	void deleteCommentTest() {
+	void updateCommentTest() {
+		CommentInputDto comment = new CommentInputDto();
+		comment.setCommentDescription("Updated Test 1");
+		comment.setVotes(9);
+		comment.setPostId(17);
 		
-		comServ.deleteComment(4);
-		
+		CommentDto comDto = comServ.addCommentDto(comment);
+		assertEquals("Updated Test 1", comDto.getCommentDescription());
+		assertEquals(9, comDto.getVotes());
+		assertEquals(17, comDto.getPost().getPostId());
 	}
 	
 	@Test
 	@Disabled
-	void addCommentDtoTest() {
-		CommentInputDto comDto = new CommentInputDto();
-		comDto.setCommentId(1);
-		comDto.setCommentDescription("Good");
-		comDto.setVotes(3);
-		comDto.setVoteUp(false);
-		CommentOutputDto comOutDto = comServ.addCommentDto(comDto);
-		assertEquals("Good", comOutDto.getCommentDescription());
-		assertEquals(3, comOutDto.getVotes());
-		assertEquals(false, comOutDto.isVoteUp());
-	}
-	
-	@Test
 	void getCommentsByPostIdTest() {
 		
 		// Calling listAllCommentsByPost Function
-		List<Comment> comments = comServ.listAllCommentsOfPost(59);
+		List<CommentOutputDto> comments = comServ.listAllCommentsOfPost(17);
 		
 		// Comapring the number of comments
-		assertEquals(2, comments.size());
+		assertEquals(3, comments.size());
 	}
 
 }
