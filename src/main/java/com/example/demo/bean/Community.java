@@ -64,10 +64,11 @@ public class Community {
 	@CollectionTable(name="flairs")
 	private List<String> flairs;
 	
+
 	//OneToMany-One Community can have many posts, One post Belongs to one Community
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinColumn(name="CommunityId")
 	private List<Post> post;
-	
+
 }
 

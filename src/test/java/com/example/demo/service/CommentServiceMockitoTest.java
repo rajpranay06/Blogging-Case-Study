@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
 
 import java.util.Optional;
 
@@ -18,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.example.demo.bean.Comment;
 import com.example.demo.dto.CommentOutputDto;
 import com.example.demo.repository.ICommentRepository;
-import com.example.demo.repository.IPostRepository;
 
 @ExtendWith(SpringExtension.class)
 class CommentServiceMockitoTest {
@@ -67,7 +65,7 @@ class CommentServiceMockitoTest {
 	}
 	
 	@Test
-	void addCommentDto() {
+	void addCommentDtoTest() {
 		Comment comment = new Comment(3, "Good", 5, true);
 		Mockito.when(comRepo.save(comment)).thenReturn(comment);
 		assertEquals(3, comment.getCommentId());
@@ -75,5 +73,6 @@ class CommentServiceMockitoTest {
 		assertEquals(5, comment.getVotes());
 		assertEquals(true, comment.isVoteUp());
 	}
+
 
 }

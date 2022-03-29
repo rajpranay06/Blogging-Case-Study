@@ -12,6 +12,9 @@ public interface ICommunityService {
 	public Community updateCommunity(CommunityInputDto community);
 	public Community deleteCommunity(int comId);
 	public List<Community> listAllCommunities(String searchString);
+
+	public List<Community> listAllCommunitiesByBloggerId(int bloggerId);
+
 	public long count();
 	public Community addCommunityWithoutDto(Community community);
 	public Community updateCommunityWithoutDto(Community community);

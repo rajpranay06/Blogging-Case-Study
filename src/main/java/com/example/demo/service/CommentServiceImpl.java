@@ -91,6 +91,9 @@ public class CommentServiceImpl implements ICommentService{
 			 throw new PostIdNotFoundException("No post with id: " + postId);
 		}
 		Post postById = opt.get();
+		if(postById.getComments().isEmpty()) {
+			throw new CommentNotFoundException("No comments for the post with post id: " + postId);
+		}
 		return postById.getComments();
 	}
 	

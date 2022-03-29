@@ -39,7 +39,7 @@ public class Post {
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "post_id")
 	private List<Comment> comments;
-	
+
     //private Community community;
     
 }

@@ -60,6 +60,7 @@ public class CommunityController {
 		return new ResponseEntity<>(listCom,HttpStatus.OK);
 	}
 	
+
 	//Get Community by using postId
 	@GetMapping("/communities/ByPostId/{postId}")
 	ResponseEntity<Community> getCommunityByPostId(@PathVariable("postId") int postId)
@@ -67,6 +68,14 @@ public class CommunityController {
 		//Calling communityService getCommunityByPostId method to get community by using postid
 		Community comm = comServ.getCommunityByPostId(postId);
 		return new ResponseEntity<>(comm,HttpStatus.OK);
+	}
+
+	// Get all communities by blogger
+	@GetMapping("/communities/byBlogger/{bloggerId}")
+	ResponseEntity<List<Community>> listAllCommunitiesByBloggerId(@PathVariable("bloggerId") int bloggerId){
+		List<Community> communities = comServ.listAllCommunitiesByBloggerId(bloggerId);
+		return new ResponseEntity<>(communities,HttpStatus.OK);
+
 	}
 	
 }

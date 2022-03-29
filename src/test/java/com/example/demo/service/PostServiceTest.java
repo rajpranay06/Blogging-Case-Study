@@ -48,7 +48,7 @@ public class PostServiceTest {
 		newPost.setCommentIds(commentIds);
 		
 		// Adding the post
-		PostOutputDto post = postServ.addPost(newPost);
+		Post post = postServ.addPost(newPost);
 		
 		// checking if the added post values are equal to the post or not
 		assertEquals("Game of Thrones", post.getTitle());
@@ -89,7 +89,7 @@ public class PostServiceTest {
 		updatedPost.setCommentIds(commentIds);	
 		
 		// Updating the post
-		PostOutputDto post = postServ.updatePost(updatedPost);
+		Post post = postServ.updatePost(updatedPost);
 		
 		// checking if the added post values are equal to the post or not
 		assertEquals(13, post.getPostId());
@@ -109,7 +109,7 @@ public class PostServiceTest {
 	void deletePostTest() {
 		
 		// Deleting the post
-		PostOutputDto deletedPost = postServ.deletePost(13);
+		Post deletedPost = postServ.deletePost(13);
 
 		// checking if the deleted post values are equal to the post or not
 		assertEquals(13, deletedPost.getPostId());
@@ -130,7 +130,7 @@ public class PostServiceTest {
 	void getPostsBySearchStringTest() {
 		
 		// Getting the posts
-		List<PostOutputDto> posts = postServ.getPostBySearchString("of");
+		List<Post> posts = postServ.getPostBySearchString("of");
 		
 		// checking the no of posts
 		assertEquals(1, posts.size());

@@ -29,29 +29,29 @@ public class PostController {
 	
 	// Adding Post
 	@PostMapping("/posts")
-	ResponseEntity<PostOutputDto> addPost(@Valid @RequestBody PostInputDto post){
-		PostOutputDto newPost = postServ.addPost(post);
+	ResponseEntity<Post> addPost(@Valid @RequestBody PostInputDto post){
+		Post newPost = postServ.addPost(post);
 		return new ResponseEntity<>(newPost, HttpStatus.ACCEPTED);
 	}
 	
 	// Updating Post
 	@PutMapping("/posts")
-	ResponseEntity<PostOutputDto> updatePost(@Valid @RequestBody PostInputDto post){
-		PostOutputDto updatedPost = postServ.updatePost(post);
+	ResponseEntity<Post> updatePost(@Valid @RequestBody PostInputDto post){
+		Post updatedPost = postServ.updatePost(post);
 		return new ResponseEntity<>(updatedPost, HttpStatus.ACCEPTED);
 	}
 	
 	// Deleting Post
 	@DeleteMapping("/posts/{id}")
-	ResponseEntity<PostOutputDto> deletePost(@PathVariable("id") int id){
-		PostOutputDto deletedPost = postServ.deletePost(id);
+	ResponseEntity<Post> deletePost(@PathVariable("id") int id){
+		Post deletedPost = postServ.deletePost(id);
 		return new ResponseEntity<>(deletedPost, HttpStatus.OK);
 	}
 	
 	// Get Posts by Searching
 	@GetMapping("/posts/bySearchString/{searchString}")
-	ResponseEntity<List<PostOutputDto>> getPostsBySearchString(@PathVariable("searchString") String searchStr){
-		List<PostOutputDto> posts = postServ.getPostBySearchString(searchStr);
+	ResponseEntity<List<Post>> getPostsBySearchString(@PathVariable("searchString") String searchStr){
+		List<Post> posts = postServ.getPostBySearchString(searchStr);
 		return new ResponseEntity<>(posts, HttpStatus.OK);
 	}
 	
@@ -61,11 +61,20 @@ public class PostController {
 		postServ.upVote(postId, isUpVote);
 	}
 	
+
 	//GetPosts With CommunityId
 	@GetMapping("/posts/byCommunityId/{communityId}")
 	ResponseEntity<List<Post>> listPostsByCommunityId(@PathVariable("communityId") int communityId)
 	{
 		List<Post> posts = postServ.listPostsByCommunityId(communityId);
 		return new ResponseEntity<>(posts,HttpStatus.OK);
+	}
+
+	// Get post by Comment id
+	@GetMapping("/posts/byComment/{commentId}")
+	ResponseEntity<PostOutputDto> getPostByCommentId(@PathVariable("commentId") int commentId){
+		PostOutputDto post = postServ.getPostByCommentId(commentId);
+		return new ResponseEntity<>(post, HttpStatus.OK);
+
 	}
 }
