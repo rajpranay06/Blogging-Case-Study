@@ -17,9 +17,9 @@ public class UserExceptionHandler {
 		ErrorResponse error = new ErrorResponse();
 		
 		error.setStatus(HttpStatus.NOT_FOUND.value());
-		error.setMsg(exception.getMessage());
+		error.setMessage(exception.getMessage());
 		//error.setTimestamp(System.currentTimeMillis());
-		error.setTimeStamp(LocalDateTime.now());
+		error.setTimestamp(LocalDateTime.now());
 		
 		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);  //404 Not found
 	}

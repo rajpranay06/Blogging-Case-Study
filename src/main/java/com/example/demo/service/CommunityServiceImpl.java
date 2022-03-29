@@ -7,10 +7,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.bean.Blogger;
 import com.example.demo.bean.Community;
 import com.example.demo.bean.Post;
 import com.example.demo.dto.CommunityInputDto;
+import com.example.demo.dto.CommunityOutputDto;
 import com.example.demo.exception.ComDescriptionNotFoundException;
 import com.example.demo.exception.CommentNotFoundException;
 import com.example.demo.exception.CommunityFoundException;
@@ -104,44 +104,71 @@ public class CommunityServiceImpl implements ICommunityService {
 	}
 
 	@Override
-	public Community deleteCommunity(int comId) {
+	public void deleteCommunity(int comId) {
 		// Check whether community is available in DB or not by using Id
 
 		Optional<Community> opt = comRepo.findById(comId);
 		if (!opt.isPresent()) {
 			throw new CommunityNotFoundException("Community not found with the given id:" + comId);
 		}
+		
 		// Delete Community
-
 		Community deletedCommunity = opt.get();
 		comRepo.delete(deletedCommunity);
-		return deletedCommunity;
 	}
 
 	@Override
-	public List<Community> listAllCommunities(String searchString) {
+	public List<CommunityOutputDto> listAllCommunities(String searchString) {
+		
 		Optional<List<Community>> opt = comRepo.findByCommunityDescription(searchString);
 		if (opt.isPresent() && opt.get().isEmpty()) {
-			throw new ComDescriptionNotFoundException(
-					"Community is not found with the given description : " + searchString);
+			throw new ComDescriptionNotFoundException("Community is not found with the given description : " + searchString);
 		}
 
-//		Get list of communities with same CommunityDescription
+		//	Get list of communities with same CommunityDescription
 		List<Community> comList = comRepo.listAllCommunities(searchString);
-
-		return comList;
+		
+		if(comList.isEmpty()) {
+			throw new CommunityNotFoundException("No community is found with search string: " + searchString);
+		}
+		
+		// List to store community output dtos
+		List<CommunityOutputDto> communities = new ArrayList<>();
+		
+		for(Community community : comList) {
+			
+			//Creating communityOutputDto object
+			CommunityOutputDto com = new CommunityOutputDto();
+			
+			//Set values to community object
+			com.setCommunityId(community.getCommunityId());
+			com.setCommunityDescription(community.getCommunityDescription());
+			com.setTotalMembers(community.getTotalMembers());
+			com.setOnlineMembers(community.getOnlineMembers());
+			com.setImage(community.getImage());
+			com.setCreatedOn(community.getCreatedOn());
+			com.setPostRulesAllowed(community.getPostRulesAllowed());
+			com.setPostRulesDisAllowed(community.getPostRulesDisAllowed());
+			com.setBanningPolicy(community.getBanningPolicy());
+			com.setFlairs(community.getFlairs());
+			
+			// Adding com to communities
+			communities.add(com);
+		}
+		
+		return communities;
 	}
 	
 	@Override
-	public Community getCommunityByPostId(int postId) {
+	public CommunityOutputDto getCommunityByPostId(int postId) {
 		//Check whether community is present with the given postId
 		Community community = comRepo.getCommunityByPostId(postId);
 		if(community==null)
 		{
 			throw new CommentNotFoundException("No community found with postID : "+postId);
 		}
-		//Creating community object
-		Community com = new Community();
+		//Creating communityOutputDto object
+		CommunityOutputDto com = new CommunityOutputDto();
 		
 		//Set values to community object
 		com.setCommunityId(community.getCommunityId());
@@ -154,7 +181,7 @@ public class CommunityServiceImpl implements ICommunityService {
 		com.setPostRulesDisAllowed(community.getPostRulesDisAllowed());
 		com.setBanningPolicy(community.getBanningPolicy());
 		com.setFlairs(community.getFlairs());
-		com.setPost(community.getPost());
+		
 		return com;
 	}
 
@@ -166,7 +193,6 @@ public class CommunityServiceImpl implements ICommunityService {
 	@Override
 
 	public Community addCommunityWithoutDto(Community community) {
-
 		return comRepo.save(community);
 	}
 
@@ -183,12 +209,37 @@ public class CommunityServiceImpl implements ICommunityService {
 
 	
 
-	public List<Community> listAllCommunitiesByBloggerId(int bloggerId) {
+	public List<CommunityOutputDto> listAllCommunitiesByBloggerId(int bloggerId) {
 		
-		List<Community> communities = comRepo.listAllCommunitiesByBloggerId(bloggerId);
-		if(communities.isEmpty()) {
-			throw new CommunityNotFoundException("No Community found with the given blogger id:"+ bloggerId);
+		List<Community> comList = comRepo.listAllCommunitiesByBloggerId(bloggerId);
+		if(comList.isEmpty()) {
+			throw new CommunityNotFoundException("No community is found with blogger id: " + bloggerId);
 		}
+		
+		// List to store community output dtos
+		List<CommunityOutputDto> communities = new ArrayList<>();
+		
+		for(Community community : comList) {
+			
+			//Creating communityOutputDto object
+			CommunityOutputDto com = new CommunityOutputDto();
+			
+			//Set values to community object
+			com.setCommunityId(community.getCommunityId());
+			com.setCommunityDescription(community.getCommunityDescription());
+			com.setTotalMembers(community.getTotalMembers());
+			com.setOnlineMembers(community.getOnlineMembers());
+			com.setImage(community.getImage());
+			com.setCreatedOn(community.getCreatedOn());
+			com.setPostRulesAllowed(community.getPostRulesAllowed());
+			com.setPostRulesDisAllowed(community.getPostRulesDisAllowed());
+			com.setBanningPolicy(community.getBanningPolicy());
+			com.setFlairs(community.getFlairs());
+			
+			// Adding com to communities
+			communities.add(com);
+		}
+		
 		return communities;
 	}
 

@@ -1,4 +1,3 @@
-
 package com.example.demo.bean;
 import java.io.File;
 import java.time.LocalDate;
@@ -12,8 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
@@ -66,7 +63,7 @@ public class Community {
 	
 
 	//OneToMany-One Community can have many posts, One post Belongs to one Community
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.MERGE)
 	@JoinColumn(name="CommunityId")
 	private List<Post> post;
 

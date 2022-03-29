@@ -120,20 +120,7 @@ public class PostServiceTest {
 	void deletePostTest() {
 		
 		// Deleting the post
-		Post deletedPost = postServ.deletePost(13);
-
-		// checking if the deleted post values are equal to the post or not
-		assertEquals(13, deletedPost.getPostId());
-		assertEquals("Game of Thrones", deletedPost.getTitle());
-		assertEquals(PostType.TEXT, deletedPost.getContent());
-		assertEquals("GOTTheEpic", deletedPost.getFlair());
-		assertEquals(189000, deletedPost.getVotes());
-		assertEquals(false, deletedPost.isNotSafeForWork());
-		assertEquals(true, deletedPost.isOriginalContent());
-		assertEquals(true, deletedPost.isSpoiler());
-		assertEquals(true, deletedPost.isVoteUp());
-		assertEquals(2,deletedPost.getComments().size());
-		assertEquals(1,deletedPost.getAwards().size());
+		postServ.deletePost(13);
 		
 	}
 	
@@ -156,7 +143,7 @@ public class PostServiceTest {
 	@Test
 	void listPostsByCommunityId()
 	{
-		List<Post> posts = postServ.listPostsByCommunityId(362);
+		List<PostOutputDto> posts = postServ.listPostsByCommunityId(362);
 		assertEquals(1,posts.size());
 	}
 }

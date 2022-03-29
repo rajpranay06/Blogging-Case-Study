@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.demo.bean.Award;
 
 import com.example.demo.bean.Post;
 import com.example.demo.dto.PostInputDto;
@@ -43,10 +42,10 @@ public class PostController {
 	}
 	
 	// Deleting Post
-	@DeleteMapping("/posts/{id}")
-	ResponseEntity<Post> deletePost(@PathVariable("id") int id){
-		Post deletedPost = postServ.deletePost(id);
-		return new ResponseEntity<>(deletedPost, HttpStatus.OK);
+	@DeleteMapping("/posts/{postId}")
+	ResponseEntity<String> deletePost(@PathVariable("id") int postId){
+		postServ.deletePost(postId);
+		return new ResponseEntity<>("Post with id " + postId + " is deleted", HttpStatus.OK);
 	}
 	
 	// Get Posts by Searching
@@ -75,12 +74,13 @@ public class PostController {
 	ResponseEntity<List<PostOutputDto>> getPostByAwardId(@PathVariable("id") int id){
 		List<PostOutputDto> posts = postServ.getPostByawardId(id);
 		return new ResponseEntity<>(posts, HttpStatus.OK);
+	}
     
 	//Get posts with CommunityId
 	@GetMapping("/posts/byCommunityId/{communityId}")
-	ResponseEntity<List<Post>> listPostsByCommunityId(@PathVariable("communityId") int communityId)
+	ResponseEntity<List<PostOutputDto>> listPostsByCommunityId(@PathVariable("communityId") int communityId)
 	{
-		List<Post> posts = postServ.listPostsByCommunityId(communityId);
+		List<PostOutputDto> posts = postServ.listPostsByCommunityId(communityId);
 		return new ResponseEntity<>(posts,HttpStatus.OK);
 	}
 

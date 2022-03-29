@@ -12,11 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.demo.bean.Blogger;
 import com.example.demo.bean.Community;
 import com.example.demo.bean.Post;
 import com.example.demo.bean.PostType;
-import com.example.demo.dto.CommunityInputDto;
+import com.example.demo.dto.CommunityOutputDto;
 
 
 @SpringBootTest
@@ -201,7 +200,7 @@ public class CommunityServiceTest {
 		long beforeDeletecount = comServ.count();
 		
 		//Delete the community
-		Community c = comServ.deleteCommunity(382);
+		comServ.deleteCommunity(382);
 		
 		//Count after delete operation
 		long afterDeleteCount = comServ.count();
@@ -215,7 +214,7 @@ public class CommunityServiceTest {
 	@Disabled
 	void listAllCommunitiesTest()
 	{
-		List<Community> comList = comServ.listAllCommunities("Science");
+		List<CommunityOutputDto> comList = comServ.listAllCommunities("Science");
 		int noOfCommunities = comList.size();
 		assertEquals(1,noOfCommunities);
 	}
@@ -243,7 +242,7 @@ public class CommunityServiceTest {
 		List<String> f = new ArrayList<String>();
 		f.add("SportsNews");
 		
-		Community com = comServ.getCommunityByPostId(379);
+		CommunityOutputDto com = comServ.getCommunityByPostId(379);
 		assertEquals(378,com.getCommunityId());
 		assertEquals("Humans",com.getCommunityDescription());
 		assertEquals(120,com.getTotalMembers());

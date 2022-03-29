@@ -8,9 +8,5 @@ import com.example.demo.bean.UserEntity;
 @Repository
 public interface IUserRepository extends JpaRepository<UserEntity, Integer> {
 
-
-	//void signOut(int id);
-	
-
 }
 

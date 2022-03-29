@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.bean.Admin;
 import com.example.demo.bean.UserEntity;
-import com.example.demo.bean.UserInputDto;
+import com.example.demo.dto.UserInputDto;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.IAdminRepository;
 import com.example.demo.repository.IUserRepository;
@@ -21,10 +21,6 @@ public class UserServiceImpl implements IUserService{
 	
 	@Autowired
 	IAdminRepository adminRepo;
-	
-	//@Autowired
-	//IUserService userServ;
-
 	
 	@Override
 	public UserEntity addNewUser(UserEntity user) {

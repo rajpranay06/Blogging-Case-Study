@@ -9,9 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.bean.Community;
-import com.example.demo.bean.Post;
-
-
 
 @Repository
 public interface ICommunityRepository extends JpaRepository<Community, Integer> {

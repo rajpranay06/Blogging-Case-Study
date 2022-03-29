@@ -7,9 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.repository.query.Param;
 
-import com.example.demo.bean.Award;
 import com.example.demo.bean.Post;
-import com.example.demo.dto.PostOutputDto;
 
 @Repository
 public interface IPostRepository extends JpaRepository<Post, Integer> {
@@ -27,4 +25,7 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
 	// JPQL Query to get post by comment id
 	@Query(value = "SELECT p.* from post p join comment c on p.post_id = c.post_id where c.comment_id = :commentId", nativeQuery = true)
 	public Post getPostByCommentId(@Param("commentId") int commentId);
+	
+	@Query(value = "SELECT p.* FROM post p join community c on p.community_id = c.community_id where c.community_id = :communityId", nativeQuery = true)
+	public List<Post> getAllPostsByCommunityId(@Param("communityId") int communityId);
 }

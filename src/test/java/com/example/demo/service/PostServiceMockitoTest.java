@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -18,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -83,8 +81,6 @@ public class PostServiceMockitoTest {
 		
 		// Sending comment when getCommentById is called
 		Mockito.when(comRepo.findById(26)).thenReturn(Optional.of(comment1));
-		
-		
 		
 		Comment comment2 = new Comment();
 		comment2.setCommentId(27);
@@ -358,19 +354,8 @@ public class PostServiceMockitoTest {
 		// delete has void return type so do nothing is used
 		doNothing().when(postRepo).delete(post);
 		
-		Post deletedPostOutput = postServ.deletePost(100);
-		
-		// checking if the added post values are equal to the post or not
-		assertEquals(100, deletedPostOutput.getPostId());
-		assertEquals("Lucifer", deletedPostOutput.getTitle());
-		assertEquals(PostType.VIDEO_IMAGE, deletedPostOutput.getContent());
-		assertEquals("Deckerstar", deletedPostOutput.getFlair());
-		assertEquals(10000, deletedPostOutput.getVotes());
-		assertEquals(false, deletedPostOutput.isNotSafeForWork());
-		assertEquals(true, deletedPostOutput.isOriginalContent());
-		assertEquals(true, deletedPostOutput.isSpoiler());
-		assertEquals(false, deletedPostOutput.isVoteUp());	
-		assertEquals(2, deletedPostOutput.getComments().size());
+		postServ.deletePost(100);
+	
 		
 	}
 	
@@ -441,13 +426,13 @@ public class PostServiceMockitoTest {
 		List<Post> posts = new ArrayList<>();
 		posts.add(post);
 				
-		
-
 		Mockito.when(postRepo.getAllPostsByAwardId(88)).thenReturn(posts);
 		
 		List<PostOutputDto> allPost = postServ.getPostByawardId(88);
 		
 		assertEquals(1, allPost.size());
+		
+	}
 	void listPostsByCommunityId()
 	{
 		File fw = new File("abc.jpg");
@@ -504,11 +489,11 @@ public class PostServiceMockitoTest {
 		community.setPost(posts);
 		
 		Mockito.when(communityRepo.save(community)).thenReturn(community);
-		Community newCommunity = communityServ.addCommunityWithoutDto(community);
+		communityServ.addCommunityWithoutDto(community);
 		
 		Mockito.when(communityRepo.findById(12)).thenReturn(Optional.of(community));
 		
-		List<Post> postslist = postServ.listPostsByCommunityId(12);
+		List<PostOutputDto> postslist = postServ.listPostsByCommunityId(12);
 		assertEquals(1,postslist.size());
 		
 		

@@ -4,8 +4,9 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.example.demo.bean.Post;
+import lombok.Data;
 
+@Data
 public class CommunityOutputDto {
 	private int communityId;
 	private String communityDescription;
@@ -17,5 +18,4 @@ public class CommunityOutputDto {
 	private List<String> postRulesDisAllowed;
 	private List<String> banningPolicy;
 	private List<String> flairs;
-	private List<Post> post;
 }

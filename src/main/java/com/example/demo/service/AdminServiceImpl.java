@@ -12,7 +12,6 @@ public class AdminServiceImpl implements IAdminService{
 	@Autowired
 	IAdminRepository adminRepo;
 	
-
 	@Override
 	public Admin addAdmin(Admin admin) {
 		return adminRepo.save(admin);

@@ -1,4 +1,4 @@
-package com.example.demo.bean;
+package com.example.demo.dto;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,7 +20,5 @@ public class UserInputDto {
 		this.email = email;
 		this.password = password;
 	}
-	
-	
 	
 }

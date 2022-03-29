@@ -34,10 +34,7 @@ class CommentServiceTest {
 	@Disabled
 	void deleteCommentTest() {
 		
-		Comment comment = comServ.deleteComment(4);
-		
-		assertEquals("Good", comment.getCommentDescription());
-		assertEquals(10, comment.getVotes());
+		comServ.deleteComment(4);
 		
 	}
 	

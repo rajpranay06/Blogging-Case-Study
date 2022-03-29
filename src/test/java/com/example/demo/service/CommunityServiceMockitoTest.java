@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,11 +19,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.example.demo.bean.Blogger;
 import com.example.demo.bean.Community;
 import com.example.demo.bean.Post;
 import com.example.demo.bean.PostType;
 import com.example.demo.dto.CommunityInputDto;
+import com.example.demo.dto.CommunityOutputDto;
 import com.example.demo.repository.IBloggerRepository;
 import com.example.demo.repository.ICommunityRepository;
 import com.example.demo.repository.IPostRepository;
@@ -262,9 +261,7 @@ public class CommunityServiceMockitoTest {
 		
 		doNothing().when(comRepo).deleteById(30);
 
-		Community com = comServ.deleteCommunity(30);
-		
-		assertEquals(comm,com);
+		comServ.deleteCommunity(30);
 		
 	}
 	
@@ -366,7 +363,7 @@ public class CommunityServiceMockitoTest {
 		
 		Mockito.when(comRepo.listAllCommunities("Science")).thenReturn(list);
 		
-		List<Community> comlist = comServ.listAllCommunities("Science");
+		List<CommunityOutputDto> comlist = comServ.listAllCommunities("Science");
 		
 		int noOfCommunities = comlist.size();
 		
@@ -431,10 +428,10 @@ public class CommunityServiceMockitoTest {
 		 newCommunity.setPost(posts);
 		 
 		Mockito.when(comRepo.save(newCommunity)).thenReturn(newCommunity);
-		Community c1 = comServ.addCommunity(com1);
+		comServ.addCommunity(com1);
 		
 		Mockito.when(comRepo.getCommunityByPostId(100)).thenReturn(newCommunity);
-		Community community = comServ.getCommunityByPostId(100);
+		CommunityOutputDto community = comServ.getCommunityByPostId(100);
 		
 		assertEquals(12,community.getCommunityId());
 		assertEquals("Science",community.getCommunityDescription());

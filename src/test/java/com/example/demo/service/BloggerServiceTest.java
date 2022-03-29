@@ -130,11 +130,8 @@ class BloggerServiceTest {
 		
 		blogger.setCommunityIds(communityIds);
 		
-		Blogger deletedBlogger = bloggerSer.deleteBlogger(blogger);
+		bloggerSer.deleteBlogger(blogger.getUserId());
 		
-		assertEquals(69, deletedBlogger.getUserId());
-		assertEquals("updateTestDemo", deletedBlogger.getBloggerName());
-		assertEquals(30, deletedBlogger.getKarma());
 		
 	}
 
