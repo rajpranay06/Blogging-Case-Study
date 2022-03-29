@@ -45,5 +45,6 @@ public class Community {
 	@ElementCollection
 	@CollectionTable(name="flairs")
 	private List<String> flairs;
+	
 }
 

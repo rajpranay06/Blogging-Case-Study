@@ -24,5 +24,5 @@ public class PostInputDto {
     private boolean spoiler;
     private boolean originalContent;
     private String flair;
-    List<Integer> commentIds;
+    private List<Integer> commentIds;
 }

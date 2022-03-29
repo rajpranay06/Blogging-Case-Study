@@ -14,13 +14,16 @@ import com.example.demo.bean.Community;
 
 @Repository
 public interface ICommunityRepository extends JpaRepository<Community, Integer> {
+	
 	//JPQL Query to get all communities which are having same community description
 	@Query(value="select * from community where community_description =:searchString",nativeQuery=true)
-	
 	List<Community> listAllCommunities(@Param("searchString") String searchString);
 	
 	Optional<List<Community>> findByCommunityDescription(String searchString);
 
+	// JPQL Query to get all communities by blogger
+	@Query(value = "SELECT c.* from blogger b join blogger_and_communities bc on b.user_id = bc.user_id join community c on bc.community_id = c.community_id where b.user_id = :bloggerId", nativeQuery = true)
+	public List<Community> listAllCommunitiesByBloggerId(@Param("bloggerId") int bloggerId);
 	
 
 }
