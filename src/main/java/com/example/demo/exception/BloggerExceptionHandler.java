@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.example.demo.bean.BloggerErrorResponse;
 import com.example.demo.bean.ErrorResponse;
 
 
@@ -14,12 +15,12 @@ import com.example.demo.bean.ErrorResponse;
 public class BloggerExceptionHandler {
 	
 	@ExceptionHandler
-	public ResponseEntity<ErrorResponse> handleException(IdNotFoundException exception) {
-		ErrorResponse error = new ErrorResponse();
+	public ResponseEntity<BloggerErrorResponse> handleException(IdNotFoundException exception) {
+		BloggerErrorResponse error = new BloggerErrorResponse();
 		
 		error.setStatus(HttpStatus.NOT_FOUND.value());
 		error.setMessage(exception.getMessage());
-		error.setTimestamp(LocalDateTime.now());
+		error.setTimeStamp(LocalDateTime.now());
 		
 		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 	}

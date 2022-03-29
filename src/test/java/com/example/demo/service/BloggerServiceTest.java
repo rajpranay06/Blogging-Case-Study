@@ -42,11 +42,28 @@ class BloggerServiceTest {
 	@Test
 	@Disabled
 	void addBloggerDtoTest() {
-		
+		// Creating BloggerInputDto object
 		// Creating bloggerInputDto object and setting values
 		BloggerInputDto blogInputDto = new BloggerInputDto();
+		
+		// Setting the values
 		blogInputDto.setBloggerName("TestdemoDto");
 		blogInputDto.setKarma(3);
+
+		// Adding commentIds to the list
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(26);
+		commentIds.add(27);
+		
+		blogInputDto.setCommentIds(commentIds);
+		
+		// Adding the blogger
+		Blogger blogOutputDto = bloggerSer.addBloggerDto(blogInputDto);
+		
+		// Checking if the added blogger values are equal to the blogger or not
+		assertEquals("TestdemoDto", blogOutputDto.getBloggerName());
+		assertEquals(3, blogOutputDto.getKarma());
+		assertEquals(2,blogOutputDto.getComments().size());
 		
 		// Storing community ids in a list of integers
 		List<Integer> communityIds = new ArrayList<>();
@@ -66,12 +83,16 @@ class BloggerServiceTest {
 	@Test
 	@Disabled
 	void updateBloggerTest() throws IdNotFoundException {
-		
 		BloggerInputDto blogger = new BloggerInputDto();
 		blogger.setUserId(69);
 		blogger.setBloggerName("updateTestDemo");
 		blogger.setKarma(30);
 		
+		// Storing comment ids in a list of integers
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(62);
+		
+		blogger.setCommentIds(commentIds);
 		// Storing community ids in a list of integers
 		List<Integer> communityIds = new ArrayList<>();
 		communityIds.add(62);
@@ -83,7 +104,10 @@ class BloggerServiceTest {
 		assertEquals(69, updatedBlog.getUserId());
 		assertEquals("updateTestDemo", updatedBlog.getBloggerName());
 		assertEquals(30, updatedBlog.getKarma());
+		assertEquals(1, updatedBlog.getComments().size());
+
 		assertEquals(1, updatedBlog.getCommunities().size());
+
 	}
 
 	@Test
@@ -95,6 +119,11 @@ class BloggerServiceTest {
 		blogger.setBloggerName("updateTestDemo");
 		blogger.setKarma(30);
 		
+		// Storing comment ids in a list of integers
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(62);
+		
+		blogger.setCommentIds(commentIds);
 		// Storing community ids in a list of integers
 		List<Integer> communityIds = new ArrayList<>();
 		communityIds.add(62);
@@ -106,6 +135,7 @@ class BloggerServiceTest {
 		assertEquals(69, deletedBlogger.getUserId());
 		assertEquals("updateTestDemo", deletedBlogger.getBloggerName());
 		assertEquals(30, deletedBlogger.getKarma());
+		
 	}
 
 	@Test

@@ -27,14 +27,37 @@ public class Blogger {
 	@Id
 	@GeneratedValue
 	private int userId;
+	
 	@NotEmpty(message="Name shouldn't be empty")
 	@Size(min=3, max=50, message="Min 3 characters required")
 	private String bloggerName;
+	
+	private int karma;
+	
+	public Blogger(int userId,@NotEmpty(message = "Name shouldn't be empty") @Size(min = 3, max = 50, message = "Min 3 characters required") String bloggerName,int karma) {
+		super();
+		this.userId = userId;
+		this.bloggerName = bloggerName;
+		this.karma = karma;
+	}
+
+
+//	private List<Post> posts;
 //	private List<Comment> comments;
 //	private List<Post> upvoted;
 //	private List<Post> downvoted;
+	
+	@OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "user_id")
+	private List<Comment> comments;
+	
+	
 //	private Award awardsReceived;
 //	private Award awardsGiven;
+//	private List<Community> communities;
+	
+	
+}
 	
 	@ManyToMany(cascade=CascadeType.MERGE)
 	@JoinTable(

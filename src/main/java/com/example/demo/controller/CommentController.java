@@ -55,4 +55,12 @@ public class CommentController {
 		List<Comment> comments = comServ.listAllCommentsOfPost(postId);
 		return new ResponseEntity<>(comments, HttpStatus.OK);
 	}
+	
+	@GetMapping("/comments/byBloggerId/{userId}")
+	public ResponseEntity<List<Comment>> listAllCommentsOfBlogger(@PathVariable("userId") int userId){
+		List<Comment> comments = comServ.listAllCommentsOfBlogger(userId);
+		return new ResponseEntity<>(comments, HttpStatus.OK);
+	}
+
+	
 }
