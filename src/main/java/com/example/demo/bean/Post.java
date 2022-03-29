@@ -36,23 +36,23 @@ public class Post {
 	private LocalDateTime createdDateTime;
 	private int votes;
 	private boolean voteUp;
-    private boolean notSafeForWork;
-    private boolean spoiler;
-    private boolean originalContent;
-    private String flair;
-	
-    @OneToMany(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "post_id")
+	private boolean notSafeForWork;
+	private boolean spoiler;
+	private boolean originalContent;
+	private String flair;
+
+	@OneToMany(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "post_id")
 	private List<Comment> comments;
 
-    //private Community community;
-    
-  @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(
-    		name = "post_awards",
-    		joinColumns = {@JoinColumn(name = "post_id") },
-    		inverseJoinColumns = { @JoinColumn(name = "award_id") }
-    )
-    private List<Award> awards;
+	//private Community community;
+
+	@ManyToMany(cascade = CascadeType.MERGE)
+	@JoinTable(
+		name = "post_awards",
+		joinColumns = {@JoinColumn(name = "post_id") },
+		inverseJoinColumns = { @JoinColumn(name = "award_id") }
+	)
+	private List<Award> awards;
     
 }
