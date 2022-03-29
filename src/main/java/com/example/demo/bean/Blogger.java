@@ -72,15 +72,6 @@ public class Blogger {
 	 @JoinColumn(name = "user_id")
 	 private List<Post> posts;
 
-	public Blogger(int userId,
-			@NotEmpty(message = "Name shouldn't be empty") @Size(min = 3, max = 50, message = "Min 3 characters required") String bloggerName,
-			int karma) {
-		super();
-		this.userId = userId;
-		this.bloggerName = bloggerName;
-		this.karma = karma;
-	}
-	 
-	 
+	
 	
 }
