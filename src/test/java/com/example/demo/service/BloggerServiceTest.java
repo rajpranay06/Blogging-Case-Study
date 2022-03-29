@@ -48,6 +48,13 @@ class BloggerServiceTest {
 		blogInputDto.setBloggerName("TestdemoDto");
 		blogInputDto.setKarma(3);
 		
+		// Adding commentIds to the list
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(26);
+		commentIds.add(27);
+		
+		blogInputDto.setCommentIds(commentIds);
+		
 		// Storing community ids in a list of integers
 		List<Integer> communityIds = new ArrayList<>();
 		communityIds.add(62);
@@ -60,6 +67,7 @@ class BloggerServiceTest {
 		// Comparing values
 		assertEquals("TestdemoDto", blog.getBloggerName());
 		assertEquals(3, blog.getKarma());
+		assertEquals(2, blog.getComments().size());
 		assertEquals(1, blog.getCommunities().size());
 	}
 
@@ -72,6 +80,12 @@ class BloggerServiceTest {
 		blogger.setBloggerName("updateTestDemo");
 		blogger.setKarma(30);
 		
+		// Storing comment ids in a list of integers
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(62);
+		
+		blogger.setCommentIds(commentIds);
+		
 		// Storing community ids in a list of integers
 		List<Integer> communityIds = new ArrayList<>();
 		communityIds.add(62);
@@ -83,7 +97,9 @@ class BloggerServiceTest {
 		assertEquals(69, updatedBlog.getUserId());
 		assertEquals("updateTestDemo", updatedBlog.getBloggerName());
 		assertEquals(30, updatedBlog.getKarma());
+		assertEquals(1, updatedBlog.getComments().size());
 		assertEquals(1, updatedBlog.getCommunities().size());
+		
 	}
 
 	@Test
@@ -94,6 +110,12 @@ class BloggerServiceTest {
 		blogger.setUserId(69);
 		blogger.setBloggerName("updateTestDemo");
 		blogger.setKarma(30);
+		
+		// Storing comment ids in a list of integers
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(62);
+		
+		blogger.setCommentIds(commentIds);
 		
 		// Storing community ids in a list of integers
 		List<Integer> communityIds = new ArrayList<>();
