@@ -46,15 +46,15 @@ public class BloggerController {
 
 	// Add new blogger with dto
 	@PostMapping("/bloggers/dto")
-	ResponseEntity<BloggerOutputDto> addBloggerDto(@Valid @RequestBody BloggerInputDto blogger) {
-		BloggerOutputDto newDtoBlog = blogServ.addBloggerDto(blogger);
+	ResponseEntity<Blogger> addBloggerDto(@Valid @RequestBody BloggerInputDto blogger) {
+		Blogger newDtoBlog = blogServ.addBloggerDto(blogger);
 		return new ResponseEntity<>(newDtoBlog, HttpStatus.CREATED);
 
 	}
 
 	// Update blogger
 	@PutMapping("/blogger")
-	ResponseEntity<Blogger> updateBlogger(@RequestBody Blogger blogger) throws IdNotFoundException {
+	ResponseEntity<Blogger> updateBlogger(@RequestBody BloggerInputDto blogger) throws IdNotFoundException {
 		Blogger updatedBlog = blogServ.updateBlogger(blogger);
 		return new ResponseEntity<>(updatedBlog, HttpStatus.CREATED);
 
@@ -62,11 +62,12 @@ public class BloggerController {
 
 	// Delete Blog
 	@DeleteMapping("/blogger")
-	ResponseEntity<Blogger> deleteBlogger(@RequestBody Blogger blogger) throws IdNotFoundException {
+	ResponseEntity<Blogger> deleteBlogger(@RequestBody BloggerInputDto blogger) throws IdNotFoundException {
 		Blogger deletedBlog = blogServ.deleteBlogger(blogger);
 		return new ResponseEntity<>(deletedBlog, HttpStatus.CREATED);
 
 	}
+	
 	//Get Blogger by Id
 	@GetMapping("/blogger/{id}")
 	Blogger viewBlogger(@PathVariable("id") int bloggerId) throws IdNotFoundException {
@@ -74,7 +75,10 @@ public class BloggerController {
 
 	}
 	
-
-	
-
+	//Get Bloggers by Community Id
+	@GetMapping("/blogger/byCommunity/{communityId}")
+	ResponseEntity<List<BloggerOutputDto>> viewBloggerListByCommunityId(@PathVariable("communityId") int communityId) throws IdNotFoundException{
+		List<BloggerOutputDto> bloggers = blogServ.viewBloggerListByCommunityId(communityId);
+		return new ResponseEntity<>(bloggers, HttpStatus.OK);
+	}
 }

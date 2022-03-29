@@ -28,6 +28,7 @@ public class CommentServiceImpl implements ICommentService{
 	public CommentOutputDto addComment(Comment comment) {
 		
 		Comment com = comRepo.save(comment);
+		// Setting comment variables by commentOutputDto values
 		CommentOutputDto comDto = new CommentOutputDto();
 		comDto.setCommentId(com.getCommentId());
 		comDto.setCommentDescription(com.getCommentDescription());
@@ -38,32 +39,40 @@ public class CommentServiceImpl implements ICommentService{
 
 	@Override
 	public Comment deleteComment(int id) {
+		//Check whether comment is available in DB or not by using Id
 		Optional<Comment> opt = comRepo.findById(id);
 		if(!opt.isPresent()) {
 			throw new CommentNotFoundException("Comment Not Found");
 		}
 		Comment comment = opt.get();
+		//Delete Comment
 		comRepo.delete(comment);
 		return comment;
 	}
 
 	@Override
 	public void upVote(int commentId, boolean upVote) {
+		//Check whether comment is available in DB or not by using Id
 		Optional<Comment> opt = comRepo.findById(commentId);
 		if(!opt.isPresent()) {
 			throw new CommentNotFoundException("Comment Not Found with the given id: " +commentId);
 		}
 		Comment com = opt.get();
+		//set vote value
 		com.setVoteUp(upVote);
 		comRepo.save(com);
 	}
 
 	@Override
 	public CommentOutputDto addCommentDto(CommentInputDto commentInputDto) {
+		// Creating Comment object
 		Comment com = new Comment();
+		
+		// Setting Comment variables by CommentInputDto values
 		com.setCommentDescription(commentInputDto.getCommentDescription());
 		com.setVotes(commentInputDto.getVotes());
 		com.setVoteUp(commentInputDto.isVoteUp());
+		//save the comment in DB
 		Comment newCom = comRepo.save(com);
 		CommentOutputDto comOutputDto = new CommentOutputDto();
 		comOutputDto.setCommentDescription(newCom.getCommentDescription());
@@ -75,6 +84,7 @@ public class CommentServiceImpl implements ICommentService{
 
 	@Override
 	public Comment getCommentById(int id) {
+		//Check whether comment is available in DB or not by using Id
 		Optional<Comment> opt = comRepo.findById(id);
 		if(!opt.isPresent()) {
 			throw new CommentNotFoundException("Comment Not Found with the given id: " + id);
@@ -91,6 +101,9 @@ public class CommentServiceImpl implements ICommentService{
 			 throw new PostIdNotFoundException("No post with id: " + postId);
 		}
 		Post postById = opt.get();
+		if(postById.getComments().isEmpty()) {
+			throw new CommentNotFoundException("No comments for the post with post id: " + postId);
+		}
 		return postById.getComments();
 	}
 	

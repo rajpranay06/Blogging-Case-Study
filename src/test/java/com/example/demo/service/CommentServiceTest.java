@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +22,12 @@ class CommentServiceTest {
 	@Test
 	void addCommentTest() {
 		Comment comment = new Comment();
-		comment.setCommentId(57);
 		comment.setCommentDescription("Avg");
 		comment.setVotes(9);
-		//comment.setVoteUp(false);
 		
 		CommentOutputDto comDto = comServ.addComment(comment);
 		assertEquals("Avg", comDto.getCommentDescription());
 		assertEquals(9, comDto.getVotes());
-		//assertEquals(57, comDto.get)
 	}
 	
 	@Test
@@ -43,7 +42,8 @@ class CommentServiceTest {
 	}
 	
 	@Test
-	void addCommentDto() {
+	@Disabled
+	void addCommentDtoTest() {
 		CommentInputDto comDto = new CommentInputDto();
 		comDto.setCommentId(1);
 		comDto.setCommentDescription("Good");
@@ -53,6 +53,16 @@ class CommentServiceTest {
 		assertEquals("Good", comOutDto.getCommentDescription());
 		assertEquals(3, comOutDto.getVotes());
 		assertEquals(false, comOutDto.isVoteUp());
+	}
+	
+	@Test
+	void getCommentsByPostIdTest() {
+		
+		// Calling listAllCommentsByPost Function
+		List<Comment> comments = comServ.listAllCommentsOfPost(59);
+		
+		// Comapring the number of comments
+		assertEquals(2, comments.size());
 	}
 
 }

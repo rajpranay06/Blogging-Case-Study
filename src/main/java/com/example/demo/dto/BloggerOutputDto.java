@@ -13,5 +13,4 @@ public class BloggerOutputDto {
 	private String bloggerName;
 	private int karma;
 	private List<Post> post;
-
 }

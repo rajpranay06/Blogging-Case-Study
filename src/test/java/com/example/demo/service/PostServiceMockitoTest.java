@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
+import java.io.File;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +22,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.example.demo.bean.Award;
 import com.example.demo.bean.Comment;
+import com.example.demo.bean.Community;
 import com.example.demo.bean.Post;
 import com.example.demo.bean.PostType;
+import com.example.demo.dto.CommunityInputDto;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
+import com.example.demo.repository.IAwardRepository;
 import com.example.demo.repository.ICommentRepository;
+import com.example.demo.repository.ICommunityRepository;
 import com.example.demo.repository.IPostRepository;
 
 @ExtendWith(SpringExtension.class)
@@ -35,6 +42,9 @@ public class PostServiceMockitoTest {
 	@InjectMocks
 	PostServiceImpl postServ;
 	
+	@InjectMocks
+	CommunityServiceImpl communityServ;
+	
 	// @MockBean - Creates Mock of a class or interface
 	@MockBean
 	IPostRepository postRepo;
@@ -42,6 +52,9 @@ public class PostServiceMockitoTest {
 	@MockBean
 	ICommentRepository comRepo;
 	
+	@MockBean
+	IAwardRepository awardRepo;
+	ICommunityRepository communityRepo;
 	// Initialization of mock objects
 	@BeforeEach
 	void init() {
@@ -70,6 +83,8 @@ public class PostServiceMockitoTest {
 		
 		// Sending comment when getCommentById is called
 		Mockito.when(comRepo.findById(26)).thenReturn(Optional.of(comment1));
+		
+		
 		
 		Comment comment2 = new Comment();
 		comment2.setCommentId(27);
@@ -170,7 +185,7 @@ public class PostServiceMockitoTest {
 		// Sending post object when save function is called
 		Mockito.when(postRepo.save(post)).thenReturn(post);
 		
-		PostOutputDto addedPost = postServ.addPost(newPost);
+		Post addedPost = postServ.addPost(newPost);
 		
 		// checking if the added post values are equal to the post or not
 		assertEquals(100, addedPost.getPostId());
@@ -210,6 +225,11 @@ public class PostServiceMockitoTest {
 				
 		updatedPost.setCommentIds(commentIds);
 		
+		//Adding awardIds to list
+		List<Integer> awardIds = new ArrayList<>();
+		awardIds.add(88);
+		updatedPost.setAwardIds(awardIds);
+		
 		// Creating post object
 		Post post = new Post();
 		
@@ -247,11 +267,20 @@ public class PostServiceMockitoTest {
 		
 		post.setComments(comments);
 		
+		Award awards = new Award();
+		awards.setAwardId(88);
+		
+		Mockito.when(awardRepo.findById(88)).thenReturn(Optional.of(awards));
+		
+		List<Award> allAwards = new ArrayList<>();
+		allAwards.add(awards);
+		
+		post.setAwards(allAwards);
 		// Sending the post object when the following functions are called instead of using database
 		Mockito.when(postRepo.findById(59)).thenReturn(Optional.of(post));
 		Mockito.when(postRepo.save(post)).thenReturn(post);
 		
-		PostOutputDto updatedPostOutput = postServ.updatePost(updatedPost);
+		Post updatedPostOutput = postServ.updatePost(updatedPost);
 		
 		// checking if the updated post values are equal to the post or not
 		assertEquals(59, updatedPostOutput.getPostId());
@@ -264,6 +293,7 @@ public class PostServiceMockitoTest {
 		assertEquals(true, updatedPostOutput.isSpoiler());
 		assertEquals(true, updatedPostOutput.isVoteUp());
 		assertEquals(2, updatedPostOutput.getComments().size());
+		assertEquals(1, updatedPostOutput.getAwards().size());
 	}
 	
 	@Test
@@ -328,7 +358,7 @@ public class PostServiceMockitoTest {
 		// delete has void return type so do nothing is used
 		doNothing().when(postRepo).delete(post);
 		
-		PostOutputDto deletedPostOutput = postServ.deletePost(100);
+		Post deletedPostOutput = postServ.deletePost(100);
 		
 		// checking if the added post values are equal to the post or not
 		assertEquals(100, deletedPostOutput.getPostId());
@@ -341,6 +371,148 @@ public class PostServiceMockitoTest {
 		assertEquals(true, deletedPostOutput.isSpoiler());
 		assertEquals(false, deletedPostOutput.isVoteUp());	
 		assertEquals(2, deletedPostOutput.getComments().size());
+		
+	}
+	
+	@Test
+	void getPostByawardIdTest() {
+		PostInputDto newPost = new PostInputDto(); 
+		
+		// Setting the values
+		newPost.setPostId(100);
+		newPost.setTitle("Lucifer");
+		newPost.setContent(PostType.VIDEO_IMAGE);
+		newPost.setCreatedDateTime(LocalDateTime.now());
+		newPost.setFlair("Deckerstar");
+		newPost.setNotSafeForWork(false);
+		newPost.setOriginalContent(true);
+		newPost.setVotes(10000);
+		newPost.setVoteUp(false);
+		newPost.setSpoiler(true);
+		
+		// Adding commentIds to the list
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(16);
+		commentIds.add(17);
+		
+		newPost.setCommentIds(commentIds);
+		
+		//Adding awardIds to list
+		List<Integer> awardIds = new ArrayList<>();
+		awardIds.add(88);
+		newPost.setAwardIds(awardIds);
+		
+		Post post = new Post();
+		
+		post.setPostId(newPost.getPostId());
+		post.setTitle(newPost.getTitle());
+		post.setContent(newPost.getContent());
+		post.setCreatedDateTime(newPost.getCreatedDateTime());
+		post.setFlair(newPost.getFlair());
+		post.setNotSafeForWork(newPost.isNotSafeForWork());
+		post.setOriginalContent(newPost.isOriginalContent());
+		post.setVotes(newPost.getVotes());
+		post.setVoteUp(newPost.isVoteUp());
+		post.setSpoiler(newPost.isSpoiler());
+		
+		Comment comment1 = new Comment();
+		comment1.setCommentId(26);
+		comment1.setCommentDescription("Awesome");
+		comment1.setVotes(10);
+		
+		// Sending comment when getCommentById is called
+		Mockito.when(comRepo.findById(16)).thenReturn(Optional.of(comment1));
+		
+		Comment comment2 = new Comment();
+		comment2.setCommentId(27);
+		comment2.setCommentDescription("Fab");
+		comment2.setVotes(10);
+		
+		// Sending comment when getCommentById is called
+		Mockito.when(comRepo.findById(17)).thenReturn(Optional.of(comment2));
+				
+		List<Comment> comments = new ArrayList<>();
+		comments.add(comment1);
+		comments.add(comment2);
+				
+		post.setComments(comments);
+		System.out.println(post);
+		
+		List<Post> posts = new ArrayList<>();
+		posts.add(post);
+				
+		
+
+		Mockito.when(postRepo.getAllPostsByAwardId(88)).thenReturn(posts);
+		
+		List<PostOutputDto> allPost = postServ.getPostByawardId(88);
+		
+		assertEquals(1, allPost.size());
+	void listPostsByCommunityId()
+	{
+		File fw = new File("abc.jpg");
+		
+		List<String> glist = new ArrayList<String>();
+		glist.add("Hockey");
+		glist.add("Cricket");
+		glist.add("Tennis");
+		
+		List<String> galist = new ArrayList<String>();
+		galist.add("Tours");
+		galist.add("Furniture");
+		galist.add("Houses");
+		
+		List<String> bp = new ArrayList<String>();
+		bp.add("Cheating");
+		bp.add("Drugs");
+		bp.add("Misuse");
+		
+		List<String> f = new ArrayList<String>();
+		f.add("SportsNews");
+		
+		List<Integer> p = new ArrayList<Integer>();
+		List<Post> posts = new ArrayList<Post>();
+		
+		Post post1 = new Post();
+		post1.setPostId(100);
+		post1.setTitle("Lucifer");
+		post1.setContent(PostType.VIDEO_IMAGE);
+		post1.setCreatedDateTime(LocalDateTime.now());
+		post1.setFlair("Deckerstar");
+		post1.setNotSafeForWork(false);
+		post1.setOriginalContent(true);
+		post1.setVotes(10000);
+		post1.setVoteUp(false);
+		post1.setSpoiler(true);
+		
+		Mockito.when(postRepo.findById(100)).thenReturn(Optional.of(post1));
+		posts.add(post1);
+		p.add(post1.getPostId());
+		
+		CommunityInputDto com = new CommunityInputDto(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f,p);
+		Community community = new Community();
+		community.setCommunityId(com.getCommunityId());
+		community.setCommunityDescription(com.getCommunityDescription());
+		community.setTotalMembers(com.getTotalMembers());
+		community.setOnlineMembers(com.getOnlineMembers());
+		community.setImage(com.getImage());
+		community.setCreatedOn(com.getCreatedOn());
+		community.setPostRulesAllowed(com.getPostRulesAllowed());
+		community.setPostRulesDisAllowed(com.getPostRulesDisAllowed());
+		community.setBanningPolicy(com.getBanningPolicy());
+		community.setFlairs(com.getFlairs());
+		community.setPost(posts);
+		
+		Mockito.when(communityRepo.save(community)).thenReturn(community);
+		Community newCommunity = communityServ.addCommunityWithoutDto(community);
+		
+		Mockito.when(communityRepo.findById(12)).thenReturn(Optional.of(community));
+		
+		List<Post> postslist = postServ.listPostsByCommunityId(12);
+		assertEquals(1,postslist.size());
+		
+		
+		
 		
 	}
 }
