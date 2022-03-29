@@ -7,14 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.example.demo.bean.UserErrorResponse;
+import com.example.demo.bean.ErrorResponse;
 
 @ControllerAdvice
 public class UserExceptionHandler {
 
 	@ExceptionHandler
-	public ResponseEntity<UserErrorResponse> handleException(UserNotFoundException exception) {
-		UserErrorResponse error = new UserErrorResponse();
+	public ResponseEntity<ErrorResponse> handleException(UserNotFoundException exception) {
+		ErrorResponse error = new ErrorResponse();
 		
 		error.setStatus(HttpStatus.NOT_FOUND.value());
 		error.setMsg(exception.getMessage());
