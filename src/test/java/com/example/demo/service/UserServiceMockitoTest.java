@@ -45,16 +45,15 @@ class UserServiceMockitoTest {
 	}
 	
 	@Test
-	@Disabled
 	void singIntest() {
-		UserInputDto user=new UserInputDto(10,"samy@gmail.com","samy@1234");
+		UserInputDto user=new UserInputDto(8,"john@gmail.com","john@1234");
 		UserEntity userEntity=new UserEntity();
 		userEntity.setUserId(user.getUserId());
 		userEntity.setEmail(user.getEmail());
 		userEntity.setPassword(user.getPassword());
 		userEntity.setRole("Admin");
 		userEntity.setLoginStatus(true);
-		Mockito.when(userRepo.findById(8)).thenReturn(Optional.of(userEntity));
+		Mockito.when(userRepo.getById(8)).thenReturn(userEntity);
 		UserEntity userTest=userService.signIn(user);
 		assertEquals(8,userTest.getUserId());
 		assertEquals("john@gmail.com",userTest.getEmail());

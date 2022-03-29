@@ -17,16 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.BloggerInputDto;
 import com.example.demo.dto.BloggerOutputDto;
+import com.example.demo.dto.PostOutputDto;
 import com.example.demo.bean.Blogger;
 import com.example.demo.bean.Comment;
 import com.example.demo.exception.IdNotFoundException;
 import com.example.demo.service.IBloggerService;
+import com.example.demo.service.IPostService;
 
 @RestController
 public class BloggerController {
 
 	@Autowired
 	IBloggerService blogServ;
+	
 
 	// Add new blogger
 	@PostMapping("/bloggers")
@@ -65,16 +68,23 @@ public class BloggerController {
 		return new ResponseEntity<>(deletedBlog, HttpStatus.CREATED);
 
 	}
+	
 	//Get Blogger by Id
 	@GetMapping("/bloggers/{userId}")
 	Blogger viewBlogger(@PathVariable("userId") int bloggerId) throws IdNotFoundException {
 		return blogServ.viewBlogger(bloggerId);
 
 	}
-	
 	// Get Blogger by Comment Id
 	@GetMapping("/bloggers/byCommentId/{commentId}")
 	BloggerOutputDto getBloggerByCommentId(@PathVariable("commentId") int commentId) {
 		return blogServ.getBloggerByCommentId(commentId);
+
+	//Get Bloggers by Community Id
+	@GetMapping("/blogger/byCommunity/{communityId}")
+	ResponseEntity<List<BloggerOutputDto>> viewBloggerListByCommunityId(@PathVariable("communityId") int communityId) throws IdNotFoundException{
+		List<BloggerOutputDto> bloggers = blogServ.viewBloggerListByCommunityId(communityId);
+		return new ResponseEntity<>(bloggers, HttpStatus.OK);
+
 	}
 }

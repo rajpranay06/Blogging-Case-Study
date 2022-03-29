@@ -8,13 +8,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity       
 @Data          // Used to create all getter setter constructors and tostring methods
+//@Table(name="Blogger")
+@Data         // Used to create all getter setter constructors and tostring methods
 public class Post {
 	
 	@Id                  // Making postId as primary key
@@ -37,7 +44,15 @@ public class Post {
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "post_id")
 	private List<Comment> comments;
-	
+
     //private Community community;
+    
+  @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+    		name = "post_awards",
+    		joinColumns = {@JoinColumn(name = "post_id") },
+    		inverseJoinColumns = { @JoinColumn(name = "award_id") }
+    )
+    private List<Award> awards;
     
 }

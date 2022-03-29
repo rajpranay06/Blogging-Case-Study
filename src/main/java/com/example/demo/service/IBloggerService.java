@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.example.demo.dto.BloggerInputDto;
 import com.example.demo.dto.BloggerOutputDto;
+import com.example.demo.dto.PostOutputDto;
 import com.example.demo.bean.Blogger;
-import com.example.demo.bean.Community;
 import com.example.demo.exception.IdNotFoundException;
 
 public interface IBloggerService {
@@ -14,6 +14,9 @@ public interface IBloggerService {
 	//public Blogger updateBlogger(Blogger blogger) throws IdNotFoundException;
 
 	//public Blogger deleteBlogger(Blogger blogger) throws IdNotFoundException;
+	public Blogger updateBlogger(BloggerInputDto blogger) throws IdNotFoundException;
+
+	public Blogger deleteBlogger(BloggerInputDto blogger) throws IdNotFoundException;
 
 	public Blogger viewBlogger(int bloggerId) throws IdNotFoundException;
 
@@ -31,5 +34,11 @@ public interface IBloggerService {
 	public BloggerOutputDto getBloggerByCommentId(int commentId);
 
 	//public BloggerOutputDto getBloggerByCommentId(int commentId);
+	public List<BloggerOutputDto> viewBloggerListByCommunityId(int communityId) throws IdNotFoundException;
+
+	// public List<Customer> viewCustomerList(int theatreid);
+	public BloggerOutputDto addBloggerDto(BloggerInputDto blogger);
+	
+	public Blogger addBloggerDto(BloggerInputDto blogger);
 
 }

@@ -25,12 +25,15 @@ class BloggerServiceTest {
 	@Disabled
 	void addBloggerTest() {
 		
+		// Creating blogger object and setting values
 		Blogger blogger = new Blogger();
-		blogger.setUserId(12);
 		blogger.setBloggerName("TestDemo");
 		blogger.setKarma(3);
+		
+		// Calling addBlogger function in bloggerservice
 		Blogger newBlog = bloggerSer.addBlogger(blogger);
-		assertEquals(12, newBlog.getUserId());
+		
+		// Comparing both the blogger values
 		assertEquals("TestDemo", newBlog.getBloggerName());
 		assertEquals(3, newBlog.getKarma());
 
@@ -40,6 +43,7 @@ class BloggerServiceTest {
 	@Disabled
 	void addBloggerDtoTest() {
 		// Creating BloggerInputDto object
+		// Creating bloggerInputDto object and setting values
 		BloggerInputDto blogInputDto = new BloggerInputDto();
 		
 		// Setting the values
@@ -60,6 +64,20 @@ class BloggerServiceTest {
 		assertEquals("TestdemoDto", blogOutputDto.getBloggerName());
 		assertEquals(3, blogOutputDto.getKarma());
 		assertEquals(2,blogOutputDto.getComments().size());
+		
+		// Storing community ids in a list of integers
+		List<Integer> communityIds = new ArrayList<>();
+		communityIds.add(62);
+		
+		blogInputDto.setCommunityIds(communityIds);
+	
+		// Calling addBloggerDto function
+		Blogger blog = bloggerSer.addBloggerDto(blogInputDto);
+		
+		// Comparing values
+		assertEquals("TestdemoDto", blog.getBloggerName());
+		assertEquals(3, blog.getKarma());
+		assertEquals(1, blog.getCommunities().size());
 	}
 
 	@Test
@@ -75,6 +93,11 @@ class BloggerServiceTest {
 		commentIds.add(62);
 		
 		blogger.setCommentIds(commentIds);
+		// Storing community ids in a list of integers
+		List<Integer> communityIds = new ArrayList<>();
+		communityIds.add(62);
+		
+		blogger.setCommunityIds(communityIds);
 		
 		Blogger updatedBlog = bloggerSer.updateBlogger(blogger);
 		
@@ -82,7 +105,9 @@ class BloggerServiceTest {
 		assertEquals("updateTestDemo", updatedBlog.getBloggerName());
 		assertEquals(30, updatedBlog.getKarma());
 		assertEquals(1, updatedBlog.getComments().size());
-		
+
+		assertEquals(1, updatedBlog.getCommunities().size());
+
 	}
 
 	@Test
@@ -99,6 +124,11 @@ class BloggerServiceTest {
 		commentIds.add(62);
 		
 		blogger.setCommentIds(commentIds);
+		// Storing community ids in a list of integers
+		List<Integer> communityIds = new ArrayList<>();
+		communityIds.add(62);
+		
+		blogger.setCommunityIds(communityIds);
 		
 		Blogger deletedBlogger = bloggerSer.deleteBlogger(blogger);
 		
@@ -106,7 +136,6 @@ class BloggerServiceTest {
 		assertEquals("updateTestDemo", deletedBlogger.getBloggerName());
 		assertEquals(30, deletedBlogger.getKarma());
 		
-
 	}
 
 	@Test
@@ -126,7 +155,13 @@ class BloggerServiceTest {
 		assertEquals(8, noOfBloggers);
 	}
 
-	// public List<Blogger> viewBloggerList(Community community);
+	@Test
+	void viewBloggerListByCommunityIdTest() throws IdNotFoundException {
+		
+		List<BloggerOutputDto> bloggers = bloggerSer.viewBloggerListByCommunityId(61);
+		
+		assertEquals(1, bloggers.size());
+	}
 
 	// public List<Customer> viewCustomerList(int theatreid);
 

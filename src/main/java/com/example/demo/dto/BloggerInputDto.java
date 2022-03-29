@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class BloggerInputDto {
 	
 	private int userId;
@@ -22,5 +21,7 @@ public class BloggerInputDto {
 	private int karma;
 	
 	private List<Integer> commentIds;
+	List<Integer> postIds;
+	private List<Integer> communityIds;
 
 }
