@@ -7,43 +7,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.example.demo.bean.CommunityErrorResponse;
+import com.example.demo.bean.ErrorResponse;
 
 
 
 @ControllerAdvice
 public class CommunityExceptionHandler {
 	@ExceptionHandler
-	public ResponseEntity<CommunityErrorResponse> handleException(CommunityNotFoundException exception)
+	public ResponseEntity<ErrorResponse> handleException(CommunityNotFoundException exception)
 	{
-		//Create CommunityErrorResponse Object
-		CommunityErrorResponse error = new CommunityErrorResponse();
-		//Set error Status,Message,TimeStamp
-		error.setStatus(HttpStatus.NOT_FOUND.value());
-		error.setMessage(exception.getMessage());
-		error.setTimeStamp(LocalDateTime.now());
-		
-		return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
-	}
-	
-	@ExceptionHandler
-	public ResponseEntity<CommunityErrorResponse> handleException(CommunityFoundException exception)
-	{
-		//Create CommunityErrorResponse Object
-		CommunityErrorResponse error = new CommunityErrorResponse();
-		//Set error Status,Message,TimeStamp
-		error.setStatus(HttpStatus.NOT_FOUND.value());
-		error.setMessage(exception.getMessage());
-		error.setTimeStamp(LocalDateTime.now());
-		
-		return new ResponseEntity<>(error,HttpStatus.UNPROCESSABLE_ENTITY);
-	}
-	
-	@ExceptionHandler
-	public ResponseEntity<CommunityErrorResponse> handleException(ComDescriptionNotFoundException exception)
-	{
-		//Create CommunityErrorResponse Object
-		CommunityErrorResponse error = new CommunityErrorResponse();
+		//Create ErrorResponse Object
+		ErrorResponse error = new ErrorResponse();
 		//Set error Status,Message,TimeStamp
 		error.setStatus(HttpStatus.NOT_FOUND.value());
 		error.setMessage(exception.getMessage());
