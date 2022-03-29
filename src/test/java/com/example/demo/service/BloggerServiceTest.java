@@ -109,5 +109,4 @@ class BloggerServiceTest {
 		
 		assertEquals(1, bloggers.size());
 	}
-
 }

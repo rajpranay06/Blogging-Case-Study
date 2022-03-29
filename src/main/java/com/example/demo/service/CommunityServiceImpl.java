@@ -21,6 +21,7 @@ import com.example.demo.repository.IPostRepository;
 @Service
 public class CommunityServiceImpl implements ICommunityService {
 
+	
 	@Autowired
 	ICommunityRepository comRepo;
 
