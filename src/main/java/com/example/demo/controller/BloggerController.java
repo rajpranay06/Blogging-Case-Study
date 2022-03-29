@@ -17,15 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.BloggerInputDto;
 import com.example.demo.dto.BloggerOutputDto;
+import com.example.demo.dto.PostOutputDto;
 import com.example.demo.bean.Blogger;
 import com.example.demo.exception.IdNotFoundException;
 import com.example.demo.service.IBloggerService;
+import com.example.demo.service.IPostService;
 
 @RestController
 public class BloggerController {
 
 	@Autowired
 	IBloggerService blogServ;
+	
 
 	// Add new blogger
 	@PostMapping("/bloggers")
@@ -70,5 +73,8 @@ public class BloggerController {
 		return blogServ.viewBlogger(bloggerId);
 
 	}
+	
+
+	
 
 }

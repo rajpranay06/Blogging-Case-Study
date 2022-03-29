@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import java.util.List;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -17,5 +19,5 @@ public class BloggerInputDto {
 	@Size(min=3, max=50, message="Min 3 characters required")
 	private String bloggerName;
 	private int karma;
-
+	List<Integer> postIds;
 }

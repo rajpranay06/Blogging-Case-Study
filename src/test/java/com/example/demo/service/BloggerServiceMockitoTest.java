@@ -43,7 +43,13 @@ class BloggerServiceMockitoTest {
 
 	@Test
 	void addBloggerDtoTest() {
-		BloggerInputDto bloggerInput = new BloggerInputDto("Mockadd", 4);
+		
+		List<Integer> list=new ArrayList<>();
+		list.add(13);
+		list.add(17);
+		list.add(19);
+		
+		BloggerInputDto bloggerInput = new BloggerInputDto("Kevin", 50, list);
 
 		Blogger blogger = new Blogger();
 		blogger.setBloggerName(bloggerInput.getBloggerName());
@@ -52,8 +58,8 @@ class BloggerServiceMockitoTest {
 		Mockito.when(blogRepo.save(blogger)).thenReturn(blogger);
 
 		BloggerOutputDto blogOutput = blogSer.addBloggerDto(bloggerInput);
-		assertEquals("Mockadd", blogOutput.getBloggerName());
-		assertEquals(4, blogOutput.getKarma());
+		assertEquals("Kevin", blogOutput.getBloggerName());
+		assertEquals(50, blogOutput.getKarma());
 
 	}
 
@@ -105,5 +111,7 @@ class BloggerServiceMockitoTest {
 		Blogger updateBlogger = blogRepo.save(blogger);
 		assertThat(updateBlogger.getBloggerName()).isNotNull();
 	}
+	
+	
 
 }

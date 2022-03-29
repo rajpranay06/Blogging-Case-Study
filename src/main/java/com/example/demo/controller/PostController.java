@@ -59,4 +59,12 @@ public class PostController {
 	void upVote(@PathVariable("postId") int postId, boolean isUpVote) {
 		postServ.upVote(postId, isUpVote);
 	}
+	
+	@GetMapping("/blogger/allPosts/{bloggerId}")
+	ResponseEntity<List<PostOutputDto>> getPostsByBlogger(@PathVariable("bloggerId") int id){
+		List<PostOutputDto> posts = postServ.getPostsByBlogger(id);
+		return new ResponseEntity<>(posts,HttpStatus.OK);
+		
+	}
+
 }

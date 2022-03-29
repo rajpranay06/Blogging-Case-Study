@@ -9,12 +9,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import lombok.Data;
 
 @Entity       
 @Data          // Used to create all getter setter constructors and tostring methods
+//@Table(name="Blogger")
 public class Post {
 	
 	@Id                  // Making postId as primary key

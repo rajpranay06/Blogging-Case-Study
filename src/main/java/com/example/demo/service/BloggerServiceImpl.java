@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,16 +9,23 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.BloggerInputDto;
 import com.example.demo.dto.BloggerOutputDto;
+import com.example.demo.dto.PostOutputDto;
 import com.example.demo.bean.Blogger;
+import com.example.demo.bean.Comment;
 import com.example.demo.bean.Community;
+import com.example.demo.bean.Post;
 import com.example.demo.exception.IdNotFoundException;
 import com.example.demo.repository.IBloggerRepository;
+import com.example.demo.repository.IPostRepository;
 
 @Service
 public class BloggerServiceImpl implements IBloggerService {
 
 	@Autowired
 	IBloggerRepository blogRepo;
+	
+	@Autowired
+	IPostRepository postRepo;
 
 	@Override
 	public Blogger addBlogger(Blogger blogger) {
@@ -30,11 +38,23 @@ public class BloggerServiceImpl implements IBloggerService {
 		Blogger blog = new Blogger();
 		blog.setBloggerName(bloggerInputDto.getBloggerName());
 		blog.setKarma(bloggerInputDto.getKarma());
+		
+		// Creating a list of posts
+		List<Post> posts = new ArrayList<>();
+						
+		// Getting posts from the Post Entity by using ids
+		for(Integer id : bloggerInputDto.getPostIds()) {
+			posts.add(postRepo.findById(id).get());
+		}
+						
+		blog.setPosts(posts);	
+		
 		Blogger newBlog = blogRepo.save(blog);
 		BloggerOutputDto bloggerOutputDto = new BloggerOutputDto();
 		bloggerOutputDto.setUserId(newBlog.getUserId());
 		bloggerOutputDto.setBloggerName(newBlog.getBloggerName());
 		bloggerOutputDto.setKarma(newBlog.getKarma());
+		bloggerOutputDto.setPost(newBlog.getPosts());
 		return bloggerOutputDto;
 	}
 
@@ -79,5 +99,7 @@ public class BloggerServiceImpl implements IBloggerService {
 		
 		return null;
 	}
+	
+
 
 }
