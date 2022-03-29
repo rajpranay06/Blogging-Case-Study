@@ -163,7 +163,5 @@ class BloggerServiceTest {
 		assertEquals(1, bloggers.size());
 	}
 
-	// public List<Customer> viewCustomerList(int theatreid);
-
 
 }
