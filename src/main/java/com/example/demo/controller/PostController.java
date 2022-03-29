@@ -62,18 +62,21 @@ public class PostController {
 		postServ.upVote(postId, isUpVote);
 	}
 	
+	//Get posts with BloggerId
 	@GetMapping("/blogger/allPosts/{bloggerId}")
 	ResponseEntity<List<PostOutputDto>> getPostsByBlogger(@PathVariable("bloggerId") int id){
 		List<PostOutputDto> posts = postServ.getPostsByBlogger(id);
 		return new ResponseEntity<>(posts,HttpStatus.OK);
 		
 	}
+	
+	// Get posts with AwardId
 	@GetMapping("/posts/awards/{id}")
 	ResponseEntity<List<PostOutputDto>> getPostByAwardId(@PathVariable("id") int id){
 		List<PostOutputDto> posts = postServ.getPostByawardId(id);
 		return new ResponseEntity<>(posts, HttpStatus.OK);
     
-	//GetPosts With CommunityId
+	//Get posts with CommunityId
 	@GetMapping("/posts/byCommunityId/{communityId}")
 	ResponseEntity<List<Post>> listPostsByCommunityId(@PathVariable("communityId") int communityId)
 	{
@@ -81,7 +84,7 @@ public class PostController {
 		return new ResponseEntity<>(posts,HttpStatus.OK);
 	}
 
-	// Get post by Comment id
+	// Get posts with CommentId
 	@GetMapping("/posts/byComment/{commentId}")
 	ResponseEntity<PostOutputDto> getPostByCommentId(@PathVariable("commentId") int commentId){
 		PostOutputDto post = postServ.getPostByCommentId(commentId);
