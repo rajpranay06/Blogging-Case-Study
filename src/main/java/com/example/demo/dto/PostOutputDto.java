@@ -22,6 +22,5 @@ public class PostOutputDto {
     private boolean spoiler;
     private boolean originalContent;
     private String flair;
-    List<Comment> comments;
-    List<Award> awards;
+    
 }

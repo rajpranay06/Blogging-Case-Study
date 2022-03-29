@@ -176,7 +176,7 @@ public class PostServiceMockitoTest {
 		// Sending post object when save function is called
 		Mockito.when(postRepo.save(post)).thenReturn(post);
 		
-		PostOutputDto addedPost = postServ.addPost(newPost);
+		Post addedPost = postServ.addPost(newPost);
 		
 		// checking if the added post values are equal to the post or not
 		assertEquals(100, addedPost.getPostId());
@@ -271,7 +271,7 @@ public class PostServiceMockitoTest {
 		Mockito.when(postRepo.findById(59)).thenReturn(Optional.of(post));
 		Mockito.when(postRepo.save(post)).thenReturn(post);
 		
-		PostOutputDto updatedPostOutput = postServ.updatePost(updatedPost);
+		Post updatedPostOutput = postServ.updatePost(updatedPost);
 		
 		// checking if the updated post values are equal to the post or not
 		assertEquals(59, updatedPostOutput.getPostId());
@@ -349,7 +349,7 @@ public class PostServiceMockitoTest {
 		// delete has void return type so do nothing is used
 		doNothing().when(postRepo).delete(post);
 		
-		PostOutputDto deletedPostOutput = postServ.deletePost(100);
+		Post deletedPostOutput = postServ.deletePost(100);
 		
 		// checking if the added post values are equal to the post or not
 		assertEquals(100, deletedPostOutput.getPostId());

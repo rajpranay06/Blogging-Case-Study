@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.example.demo.bean.Post;
 import com.example.demo.bean.PostType;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
@@ -50,7 +51,7 @@ public class PostServiceTest {
 		awardIds.add(88);
 		newPost.setAwardIds(awardIds);
 		// Adding the post
-		PostOutputDto post = postServ.addPost(newPost);
+		Post post = postServ.addPost(newPost);
 		
 		
 		// checking if the added post values are equal to the post or not
@@ -98,7 +99,7 @@ public class PostServiceTest {
 		updatedPost.setAwardIds(awardIds);
 		
 		// Updating the post
-		PostOutputDto post = postServ.updatePost(updatedPost);
+		Post post = postServ.updatePost(updatedPost);
 		
 		// checking if the added post values are equal to the post or not
 		assertEquals(94, post.getPostId());
@@ -119,7 +120,7 @@ public class PostServiceTest {
 	void deletePostTest() {
 		
 		// Deleting the post
-		PostOutputDto deletedPost = postServ.deletePost(13);
+		Post deletedPost = postServ.deletePost(13);
 
 		// checking if the deleted post values are equal to the post or not
 		assertEquals(13, deletedPost.getPostId());
@@ -141,7 +142,7 @@ public class PostServiceTest {
 	void getPostsBySearchStringTest() {
 		
 		// Getting the posts
-		List<PostOutputDto> posts = postServ.getPostBySearchString("of");
+		List<Post> posts = postServ.getPostBySearchString("of");
 		
 		// checking the no of posts
 		assertEquals(1, posts.size());
