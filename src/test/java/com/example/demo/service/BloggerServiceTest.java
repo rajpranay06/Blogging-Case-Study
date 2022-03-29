@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Disabled;
@@ -23,6 +24,7 @@ class BloggerServiceTest {
 	@Test
 	@Disabled
 	void addBloggerTest() {
+		
 		Blogger blogger = new Blogger();
 		blogger.setUserId(12);
 		blogger.setBloggerName("TestDemo");
@@ -37,38 +39,73 @@ class BloggerServiceTest {
 	@Test
 	@Disabled
 	void addBloggerDtoTest() {
+		// Creating BloggerInputDto object
 		BloggerInputDto blogInputDto = new BloggerInputDto();
+		
+		// Setting the values
 		blogInputDto.setBloggerName("TestdemoDto");
 		blogInputDto.setKarma(3);
 
-		BloggerOutputDto blogOutputDto = bloggerSer.addBloggerDto(blogInputDto);
+		// Adding commentIds to the list
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(26);
+		commentIds.add(27);
+		
+		blogInputDto.setCommentIds(commentIds);
+		
+		// Adding the blogger
+		Blogger blogOutputDto = bloggerSer.addBloggerDto(blogInputDto);
+		
+		// Checking if the added blogger values are equal to the blogger or not
 		assertEquals("TestdemoDto", blogOutputDto.getBloggerName());
 		assertEquals(3, blogOutputDto.getKarma());
+		assertEquals(2,blogOutputDto.getComments().size());
 	}
 
 	@Test
 	@Disabled
 	void updateBloggerTest() throws IdNotFoundException {
-		Blogger blogger = new Blogger();
-		blogger.setUserId(38);
+		BloggerInputDto blogger = new BloggerInputDto();
+		blogger.setUserId(69);
 		blogger.setBloggerName("updateTestDemo");
-		blogger.setKarma(3);
+		blogger.setKarma(30);
+		
+		// Storing comment ids in a list of integers
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(62);
+		
+		blogger.setCommentIds(commentIds);
+		
 		Blogger updatedBlog = bloggerSer.updateBlogger(blogger);
-		assertEquals(38, updatedBlog.getUserId());
+		
+		assertEquals(69, updatedBlog.getUserId());
 		assertEquals("updateTestDemo", updatedBlog.getBloggerName());
-		assertEquals(3, updatedBlog.getKarma());
-
+		assertEquals(30, updatedBlog.getKarma());
+		assertEquals(1, updatedBlog.getComments().size());
+		
 	}
 
 	@Test
 	@Disabled
 	void deleteBloggerTest() throws IdNotFoundException {
 
-		Blogger blogger = bloggerSer.viewBlogger(38);
+		BloggerInputDto blogger = new BloggerInputDto();
+		blogger.setUserId(69);
+		blogger.setBloggerName("updateTestDemo");
+		blogger.setKarma(30);
+		
+		// Storing comment ids in a list of integers
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(62);
+		
+		blogger.setCommentIds(commentIds);
+		
 		Blogger deletedBlogger = bloggerSer.deleteBlogger(blogger);
-		assertEquals(38, deletedBlogger.getUserId());
+		
+		assertEquals(69, deletedBlogger.getUserId());
 		assertEquals("updateTestDemo", deletedBlogger.getBloggerName());
-		assertEquals(3, deletedBlogger.getKarma());
+		assertEquals(30, deletedBlogger.getKarma());
+		
 
 	}
 

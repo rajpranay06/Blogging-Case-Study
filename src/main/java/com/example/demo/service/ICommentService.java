@@ -15,4 +15,5 @@ public interface ICommentService {
 	public void upVote(int commentId, boolean upVote);
 	public Comment getCommentById(int id);
 	public List<Comment> listAllCommentsOfPost(int postId);
+	public List<Comment> listAllCommentsOfBlogger(int userId);
 }

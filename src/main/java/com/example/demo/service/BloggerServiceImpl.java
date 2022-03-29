@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,15 +10,22 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dto.BloggerInputDto;
 import com.example.demo.dto.BloggerOutputDto;
 import com.example.demo.bean.Blogger;
+import com.example.demo.bean.Comment;
 import com.example.demo.bean.Community;
+import com.example.demo.exception.BloggerIdNotFoundException;
+import com.example.demo.exception.CommentNotFoundException;
 import com.example.demo.exception.IdNotFoundException;
 import com.example.demo.repository.IBloggerRepository;
+import com.example.demo.repository.ICommentRepository;
 
 @Service
 public class BloggerServiceImpl implements IBloggerService {
 
 	@Autowired
 	IBloggerRepository blogRepo;
+	
+	@Autowired
+	ICommentRepository commentRepo;
 
 	@Override
 	public Blogger addBlogger(Blogger blogger) {
@@ -25,38 +33,62 @@ public class BloggerServiceImpl implements IBloggerService {
 	}
 
 	@Override
-	public BloggerOutputDto addBloggerDto(BloggerInputDto bloggerInputDto) {
-
+	public Blogger addBloggerDto(BloggerInputDto bloggerInputDto) {
+		// Creating blogger object
 		Blogger blog = new Blogger();
+		
+		//Setting blogger variables by bloggerInputDto values
 		blog.setBloggerName(bloggerInputDto.getBloggerName());
 		blog.setKarma(bloggerInputDto.getKarma());
-		Blogger newBlog = blogRepo.save(blog);
-		BloggerOutputDto bloggerOutputDto = new BloggerOutputDto();
-		bloggerOutputDto.setUserId(newBlog.getUserId());
-		bloggerOutputDto.setBloggerName(newBlog.getBloggerName());
-		bloggerOutputDto.setKarma(newBlog.getKarma());
-		return bloggerOutputDto;
+		
+		// Creating a list of comments
+		List<Comment> comments = new ArrayList<>();
+		
+		// Getting comments from the Comment Entity by using ids
+		for(Integer id : bloggerInputDto.getCommentIds()) {
+			Comment comment = commentRepo.findById(id).get();
+			comments.add(comment);
+		}
+		blog.setComments(comments);
+				
+		// Saving the blogger in database
+		return blogRepo.save(blog);
 	}
 
 	@Override
-	public Blogger updateBlogger(Blogger blogger) throws IdNotFoundException {
+	public Blogger updateBlogger(BloggerInputDto blogger) throws IdNotFoundException {
 		Optional<Blogger> opt = blogRepo.findById(blogger.getUserId());
 		if (!opt.isPresent()) {
 			throw new IdNotFoundException("Blogger not found with the given id:" + blogger.getUserId());
 		}
-		return blogRepo.save(blogger);
+		Blogger updateBlogger = opt.get();
+		
+		// Setting values to updateBlogger
+		updateBlogger.setBloggerName(blogger.getBloggerName());
+		updateBlogger.setKarma(blogger.getKarma());
+		
+		// Creating a list of comments
+		List<Comment> comments = new ArrayList<>();
+		// Getting comments from the Comment Entity by using ids
+		for(Integer id : blogger.getCommentIds() ) {
+			comments.add(commentRepo.findById(id).get());
+		}
+		updateBlogger.setComments(comments);
+		
+		return blogRepo.save(updateBlogger);
 
 	}
 
 	@Override
-	public Blogger deleteBlogger(Blogger blogger) throws IdNotFoundException {
-		Optional<Blogger> opt = blogRepo.findById(blogger.getUserId());
+	public Blogger deleteBlogger(BloggerInputDto bloggerInput) throws IdNotFoundException {
+		Optional<Blogger> opt = blogRepo.findById(bloggerInput.getUserId());
 		if (!opt.isPresent()) {
-			throw new IdNotFoundException("Blogger not found with the given id:" + blogger.getUserId());
+			throw new IdNotFoundException("Blogger not found with the given id:" + bloggerInput.getUserId());
 		}
-		blogRepo.deleteById(blogger.getUserId());
+		blogRepo.deleteById(bloggerInput.getUserId());
 		return opt.get();
 	}
+	
 
 	@Override
 	public Blogger viewBlogger(int bloggerId) throws IdNotFoundException {
@@ -75,9 +107,23 @@ public class BloggerServiceImpl implements IBloggerService {
 	}
 
 	@Override
-	public List<Blogger> viewBloggerList(Community community) {
+	public BloggerOutputDto getBloggerByCommentId(int commentId) {
+		Blogger blog = blogRepo.getBloggerByCommentId(commentId);
+		if(blog == null) {
+			throw new BloggerIdNotFoundException("No post found with comment id: " + commentId);
+		}
+
+		// Creating PostOutputDto object
+		BloggerOutputDto bloggerOutputDto = new BloggerOutputDto();
+					
+		// Setting values for bloggerOutputDto by deletedBlogger values
+		bloggerOutputDto.setUserId(blog.getUserId());
+		bloggerOutputDto.setBloggerName(blog.getBloggerName());
+		bloggerOutputDto.setKarma(blog.getKarma());
 		
-		return null;
+		return bloggerOutputDto;
 	}
+
+
 
 }

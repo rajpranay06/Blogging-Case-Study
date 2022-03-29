@@ -18,23 +18,33 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.example.demo.dto.BloggerInputDto;
 import com.example.demo.dto.BloggerOutputDto;
+import com.example.demo.dto.CommentInputDto;
 import com.example.demo.bean.Blogger;
+import com.example.demo.bean.Comment;
 import com.example.demo.exception.IdNotFoundException;
 import com.example.demo.repository.IBloggerRepository;
+import com.example.demo.repository.ICommentRepository;
+
 import org.mockito.BDDMockito;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 class BloggerServiceMockitoTest {
-
+	
+	// @InjectMocks - Creates instance of a class and injects mocks that are created with @Mock
 	@InjectMocks
 	BloggerServiceImpl blogSer;
 
+	// @MockBean - Creates Mock of a class or interface
 	@MockBean
 	IBloggerRepository blogRepo;
+
+	@MockBean
+	ICommentRepository comRepo;
 
 	@BeforeEach
 	void init() {
@@ -42,19 +52,108 @@ class BloggerServiceMockitoTest {
 	}
 
 	@Test
-	void addBloggerDtoTest() {
-		BloggerInputDto bloggerInput = new BloggerInputDto("Mockadd", 4);
-
+	void addBlogger() {
+		// Creating blogger object
 		Blogger blogger = new Blogger();
+		
+		// Setting the values
+		blogger.setUserId(1);
+		blogger.setBloggerName("Abc");
+		blogger.setKarma(20);
+		
+		Comment comment1 = new Comment();
+		comment1.setCommentId(26);
+		comment1.setCommentDescription("Awesome");
+		comment1.setVotes(10);
+		
+		// Sending comment when getCommentById is called
+		Mockito.when(comRepo.findById(26)).thenReturn(Optional.of(comment1));
+		
+		Comment comment2 = new Comment();
+		comment2.setCommentId(27);
+		comment2.setCommentDescription("Fab");
+		comment2.setVotes(10);
+		
+		// Sending comment when getCommentById is called
+		Mockito.when(comRepo.findById(27)).thenReturn(Optional.of(comment2));
+		
+		List<Comment> comments = new ArrayList<>();
+		comments.add(comment1);
+		comments.add(comment2);
+		
+		blogger.setComments(comments);
+		
+		// Sending post object when save function is called
+		Mockito.when(blogRepo.save(blogger)).thenReturn(blogger);
+		
+		Blogger newBlog = blogSer.addBlogger(blogger);	
+
+		// checking if the added post values are equal to the post or not
+		assertEquals(1, newBlog.getUserId());
+		assertEquals("Abc", newBlog.getBloggerName());
+		assertEquals(20,newBlog.getKarma());
+		assertEquals(2, newBlog.getComments().size());
+	}
+	
+	@Test
+	void addBloggerDtoTest() {
+		// Creating BloggerInputDto object
+		BloggerInputDto bloggerInput = new BloggerInputDto();
+		
+		// Setting the values
+		bloggerInput.setUserId(140);
+		bloggerInput.setBloggerName("Abcde");
+		bloggerInput.setKarma(24);
+		
+		// Adding commentIds to the list
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(19);
+		commentIds.add(20);
+		
+		bloggerInput.setCommentIds(commentIds);
+		
+		// Creating blogger object
+		Blogger blogger = new Blogger();
+		
+		// Setting the values
+		blogger.setUserId(bloggerInput.getUserId());
 		blogger.setBloggerName(bloggerInput.getBloggerName());
 		blogger.setKarma(bloggerInput.getKarma());
+		
+		Comment comment1 = new Comment();
+		comment1.setCommentId(26);
+		comment1.setCommentDescription("Awesome");
+		comment1.setVotes(10);
+		
+		// Sending comment when getCommentById is called
+		Mockito.when(comRepo.findById(19)).thenReturn(Optional.of(comment1));
+		
+		Comment comment2 = new Comment();
+		comment2.setCommentId(27);
+		comment2.setCommentDescription("Fab");
+		comment2.setVotes(10);
+		
+		// Sending comment when getCommentById is called
+		Mockito.when(comRepo.findById(20)).thenReturn(Optional.of(comment2));
 
+		// List to store comments 
+		List<Comment> comments = new ArrayList<>();
+		comments.add(comment1);
+		comments.add(comment2);
+
+		blogger.setComments(comments);
+		System.out.println(blogger);
+		
+		// Sending blogger object when save function is called
 		Mockito.when(blogRepo.save(blogger)).thenReturn(blogger);
 
-		BloggerOutputDto blogOutput = blogSer.addBloggerDto(bloggerInput);
-		assertEquals("Mockadd", blogOutput.getBloggerName());
-		assertEquals(4, blogOutput.getKarma());
-
+		Blogger blogOutput = blogSer.addBloggerDto(bloggerInput);		
+		
+		// checking if the added blogger values are equal to the blogger or not
+		assertEquals(140, blogOutput.getUserId());
+		assertEquals("Abcde", blogOutput.getBloggerName());
+		assertEquals(24,blogOutput.getKarma());
+		assertEquals(2, blogOutput.getComments().size());
 	}
 
 	@Test
@@ -83,27 +182,103 @@ class BloggerServiceMockitoTest {
 
 	@Test
 	public void deleteBloggerTest() throws IdNotFoundException {
+		
+		BloggerInputDto bloggerInput = new BloggerInputDto();
+		
+		// Setting the values
+		bloggerInput.setUserId(100);
+		bloggerInput.setBloggerName("Abc");
+		bloggerInput.setKarma(20);
+		
+		// Adding commentIds to the list
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(16);
+		
+		bloggerInput.setCommentIds(commentIds);
+		
 		Blogger blogger = new Blogger();
-		blogger.setBloggerName("Test Name");
-		blogger.setUserId(1);
-		blogger.setKarma(2);
-		when(blogRepo.findById(blogger.getUserId())).thenReturn(Optional.of(blogger));
+		blogger.setBloggerName(bloggerInput.getBloggerName());
+		blogger.setUserId(bloggerInput.getUserId());
+		blogger.setKarma(bloggerInput.getKarma());
+		
+		// List to store comments 
+		List<Comment> comments = new ArrayList<>();
+		for(Integer id : bloggerInput.getCommentIds()) {
+			
+			// Creating comment object and setting values
+			Comment newComment = new Comment();
+			newComment.setCommentId(26);
+			newComment.setCommentDescription("Awesome");
+			newComment.setVotes(10);
+			
+			// adding new comments top comment list
+		    comments.add(newComment);
+		    
+			// Returning newComment when findById is called
+			Mockito.when(comRepo.findById(id)).thenReturn(Optional.of(newComment));
+		}
+		
+		blogger.setComments(comments);
+		Mockito.when(blogRepo.findById(100)).thenReturn(Optional.of(blogger));
 
-		blogSer.deleteBlogger((blogger));
-		verify(blogRepo).deleteById(blogger.getUserId());
+		// delete has void return type so do nothing is used
+		doNothing().when(blogRepo).deleteById(blogger.getUserId());
+		
+		Blogger deletedBlogger = blogSer.deleteBlogger(bloggerInput);
+
+		assertEquals(100, deletedBlogger.getUserId());
+		assertEquals("Abc", deletedBlogger.getBloggerName());
+		assertEquals(20, deletedBlogger.getKarma());
+		assertEquals(1, deletedBlogger.getComments().size());
 	}
 
 	@Test
 	public void updateBloggerTest() {
+		
+		BloggerInputDto bloggerInput = new BloggerInputDto();
+		
+		// Setting the values
+		bloggerInput.setUserId(1001);
+		bloggerInput.setBloggerName("Abc");
+		bloggerInput.setKarma(20);
+		
+		// Adding commentIds to the list
+		List<Integer> commentIds = new ArrayList<>();
+		commentIds.add(16);
+		
+		bloggerInput.setCommentIds(commentIds);
+		
 		Blogger blogger = new Blogger();
-		blogger.setUserId(38);
-		blogger.setBloggerName("updateTestDemo");
-		blogger.setKarma(3);
+		blogger.setBloggerName(bloggerInput.getBloggerName());
+		blogger.setUserId(bloggerInput.getUserId());
+		blogger.setKarma(bloggerInput.getKarma());
+		
+		// List to store comments 
+		List<Comment> comments = new ArrayList<>();
+		for(Integer id : bloggerInput.getCommentIds()) {
+			
+			// Creating comment object and setting values
+			Comment newComment = new Comment();
+			newComment.setCommentId(26);
+			newComment.setCommentDescription("Awesome");
+			newComment.setVotes(10);
+			
+			// adding new comments top comment list
+		    comments.add(newComment);
+		    
+			// Returning newComment when findById is called
+			Mockito.when(comRepo.findById(id)).thenReturn(Optional.of(newComment));
+		}
+		
+		blogger.setComments(comments);
+		Mockito.when(blogRepo.save(blogger)).thenReturn(blogger);
 
-		when(blogRepo.save(any(Blogger.class))).thenReturn(blogger);
+		Blogger updatedBlogger = blogRepo.save(blogger);
 
-		Blogger updateBlogger = blogRepo.save(blogger);
-		assertThat(updateBlogger.getBloggerName()).isNotNull();
+		assertEquals(1001, updatedBlogger.getUserId());
+		assertEquals("Abc", updatedBlogger.getBloggerName());
+		assertEquals(20, updatedBlogger.getKarma());
+		assertEquals(1, updatedBlogger.getComments().size());
 	}
 
 }

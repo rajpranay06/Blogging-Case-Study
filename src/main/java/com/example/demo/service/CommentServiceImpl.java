@@ -6,12 +6,15 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.bean.Blogger;
 import com.example.demo.bean.Comment;
 import com.example.demo.bean.Post;
 import com.example.demo.dto.CommentInputDto;
 import com.example.demo.dto.CommentOutputDto;
+import com.example.demo.exception.BloggerIdNotFoundException;
 import com.example.demo.exception.CommentNotFoundException;
 import com.example.demo.exception.PostIdNotFoundException;
+import com.example.demo.repository.IBloggerRepository;
 import com.example.demo.repository.ICommentRepository;
 import com.example.demo.repository.IPostRepository;
 
@@ -20,6 +23,9 @@ public class CommentServiceImpl implements ICommentService{
 
 	@Autowired
 	IPostRepository postRepo;
+	
+	@Autowired
+	IBloggerRepository blogRepo;
 	
 	@Autowired
 	ICommentRepository comRepo;
@@ -92,6 +98,17 @@ public class CommentServiceImpl implements ICommentService{
 		}
 		Post postById = opt.get();
 		return postById.getComments();
+	}
+	
+	public List<Comment> listAllCommentsOfBlogger(int userId) {
+		
+		Optional<Blogger> opt = blogRepo.findById(userId);
+		if(!opt.isPresent()) {
+			 // If blogger is not present throw an error
+			 throw new BloggerIdNotFoundException("No blogger with id: " + userId);
+		}
+		Blogger bloggerById = opt.get();
+		return bloggerById.getComments();
 	}
 	
 }
