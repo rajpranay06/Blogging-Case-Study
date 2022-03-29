@@ -19,6 +19,7 @@ public class BloggerInputDto {
 	@Size(min=3, max=50, message="Min 3 characters required")
 	private String bloggerName;
 	private int karma;
+	List<Integer> postIds;
 	private List<Integer> communityIds;
 
 }

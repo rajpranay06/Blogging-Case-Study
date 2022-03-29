@@ -223,6 +223,34 @@ public class PostServiceImpl implements IPostService {
 		postRepo.save(post);
 		
 	}
+	
+	@Override
+	public List<PostOutputDto> getPostsByBlogger(int bloggerId) {
+		
+List<PostOutputDto> allPosts = new ArrayList<>();
+		System.out.println(postRepo.getPostsByBlogger(bloggerId));
+		for(Post post : postRepo.getPostsByBlogger(bloggerId)) {
+			
+			// Creating PostOutputDto object
+			PostOutputDto postOutputDto = new PostOutputDto();
+			
+			// Setting values for postOutputDto
+			postOutputDto.setPostId(post.getPostId());
+			postOutputDto.setTitle(post.getTitle());
+			postOutputDto.setContent(post.getContent());
+			postOutputDto.setCreatedDateTime(post.getCreatedDateTime());
+			postOutputDto.setFlair(post.getFlair().substring(1));
+			postOutputDto.setNotSafeForWork(post.isNotSafeForWork());
+			postOutputDto.setOriginalContent(post.isOriginalContent());
+			postOutputDto.setVotes(post.getVotes());
+			postOutputDto.setVoteUp(post.isVoteUp());
+			postOutputDto.setSpoiler(post.isSpoiler());
+			postOutputDto.setComments(post.getComments());
+			
+			allPosts.add(postOutputDto);
+		}
+		return allPosts;
+		
 	@Override
 	public List<PostOutputDto> getPostByawardId(int id) {
 		List<Post> posts = postRepo.getAllPostsByAwardId(id);

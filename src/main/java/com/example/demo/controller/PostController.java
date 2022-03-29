@@ -61,10 +61,18 @@ public class PostController {
 	void upVote(@PathVariable("postId") int postId, boolean isUpVote) {
 		postServ.upVote(postId, isUpVote);
 	}
+	
+	@GetMapping("/blogger/allPosts/{bloggerId}")
+	ResponseEntity<List<PostOutputDto>> getPostsByBlogger(@PathVariable("bloggerId") int id){
+		List<PostOutputDto> posts = postServ.getPostsByBlogger(id);
+		return new ResponseEntity<>(posts,HttpStatus.OK);
+		
+	}
 	@GetMapping("/posts/awards/{id}")
 	ResponseEntity<List<PostOutputDto>> getPostByAwardId(@PathVariable("id") int id){
 		List<PostOutputDto> posts = postServ.getPostByawardId(id);
 		return new ResponseEntity<>(posts, HttpStatus.OK);
+    
 	//GetPosts With CommunityId
 	@GetMapping("/posts/byCommunityId/{communityId}")
 	ResponseEntity<List<Post>> listPostsByCommunityId(@PathVariable("communityId") int communityId)

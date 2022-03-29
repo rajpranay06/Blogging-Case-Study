@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -18,6 +19,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity       
+@Data          // Used to create all getter setter constructors and tostring methods
+//@Table(name="Blogger")
 @Data         // Used to create all getter setter constructors and tostring methods
 public class Post {
 	

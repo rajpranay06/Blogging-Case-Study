@@ -58,6 +58,14 @@ class BloggerServiceMockitoTest {
 
 	@Test
 	void addBloggerDtoTest() {
+
+		
+		List<Integer> list=new ArrayList<>();
+		list.add(13);
+		list.add(17);
+		list.add(19);
+		
+		BloggerInputDto bloggerInput = new BloggerInputDto("Kevin", 50, list);
 		// Storing community ids
 		List<Integer> communityIds = new ArrayList<>();
 		communityIds.add(61);
@@ -138,7 +146,9 @@ class BloggerServiceMockitoTest {
 		
 		// Returning blogger when save is called
 		Mockito.when(blogRepo.save(blogger)).thenReturn(blogger);
-
+		BloggerOutputDto blogOutput = blogSer.addBloggerDto(bloggerInput);
+		assertEquals("Kevin", blogOutput.getBloggerName());
+		assertEquals(50, blogOutput.getKarma());
 		Blogger blogOutput = blogSer.addBloggerDto(bloggerInput);
 		
 		assertEquals(89, blogOutput.getUserId());
@@ -462,5 +472,7 @@ class BloggerServiceMockitoTest {
 		
 		assertEquals(2, allBloggers.size());
 	}
+	
+	
 
 }
