@@ -35,20 +35,20 @@ public class UserController {
 	@Autowired
 	IUserRepository userRepo;
 	
-	//get all users
-		@GetMapping("/users")
-		List<UserEntity> getAllTrainees(){
-			return userServ.getAllUsers();
-		}
+	// Get all users
+	@GetMapping("/users")
+	List<UserEntity> getAllTrainees(){
+		return userServ.getAllUsers();
+	}
 	
-	//adding new user
+	// Adding new user
 	@PostMapping("/users")
 	ResponseEntity<UserEntity> addNewUser(@Valid @RequestBody UserEntity user) {
 		UserEntity newUser=userServ.addNewUser(user);
 		return new ResponseEntity<>(newUser,HttpStatus.CREATED);
 	}
 	
-	//sign in
+	// Sign in
 	@PostMapping("/usersLogin")
 	ResponseEntity<UserEntity> signIn(@RequestBody UserInputDto user) {
 		UserEntity userDto=new UserEntity();
@@ -60,26 +60,25 @@ public class UserController {
 		return new ResponseEntity<>(userDto,HttpStatus.OK);
 	}
 	
-	//logout
+	// Logout
 	@GetMapping("/users/{id}")
 	ResponseEntity<UserEntity> signOut(@PathVariable int id) {
 		UserEntity logout=userServ.signOut(id);
 		return new ResponseEntity<>(logout,HttpStatus.OK);
 	}
 	
-	//add admin
+	// Add admin
 	@PostMapping("/users/byRole/{id}")
 	ResponseEntity<Admin> addAdmin(@PathVariable int id, @Valid @RequestBody Admin admin){
 		if(!userRepo.getById(id).getRole().equals("Admin")) {
 			throw new UserNotFoundException("This user is not an admin"); 
 		}
 		else {
-		Admin ad=adminServ.addAdmin(admin);
-		UserEntity user=new UserEntity();
-		user.setAdmin(ad);
-	//s	user.setRole(role);
-		
-		return new ResponseEntity<>(ad,HttpStatus.CREATED);
+			Admin ad=adminServ.addAdmin(admin);
+			UserEntity user=new UserEntity();
+			user.setAdmin(ad);
+
+			return new ResponseEntity<>(ad,HttpStatus.CREATED);
 		}
 		
 	}
