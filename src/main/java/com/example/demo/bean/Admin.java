@@ -2,6 +2,7 @@ package com.example.demo.bean;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.Data;
@@ -14,7 +15,7 @@ public class Admin {
 	private int userId;
 	@Size(min=3,message="Minimum 3 characters required")
 	private String adminName;
-	@Size(min=10,max=10,message="Minimum 10 number required")
+	@Pattern(regexp="^[6-9]{1}[0-9]{9}$", message = "Enter a valid mobile number")
 	private String adminContact;
 	
 }

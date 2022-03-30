@@ -49,14 +49,9 @@ public class UserController {
 	
 	// Sign in
 	@PostMapping("/usersLogin")
-	ResponseEntity<UserEntity> signIn(@RequestBody UserInputDto user) {
-		UserEntity userDto=new UserEntity();
-		userDto.setUserId(user.getUserId());
-		userDto.setEmail(user.getEmail());
-		userDto.setPassword(user.getPassword());
-		userDto.setLoginStatus(true);
-		//UserEntity log=userServ.signIn(userDto);
-		return new ResponseEntity<>(userDto,HttpStatus.OK);
+	ResponseEntity<UserEntity> signIn(@Valid @RequestBody UserInputDto user) {
+		UserEntity log=userServ.signIn(user);
+		return new ResponseEntity<>(log,HttpStatus.OK);
 	}
 	
 	// Logout
