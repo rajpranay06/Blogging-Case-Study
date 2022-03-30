@@ -39,11 +39,6 @@ public class Blogger{
 		this.karma = karma;
 	}
 	
-	//OneToMany-One Blogger can comment many times
-	@OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "user_id")
-	private List<Comment> comments;
-	
 	//ManyToMany-Many Bloggers can be a part of many communities
 	@ManyToMany(cascade=CascadeType.MERGE)
 	@JoinTable(

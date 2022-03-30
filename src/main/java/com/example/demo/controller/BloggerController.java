@@ -31,7 +31,7 @@ public class BloggerController {
 
 	// Add new blogger
 	@PostMapping("/bloggers")
-	ResponseEntity<Blogger> addBlogger(@RequestBody Blogger blogger) {
+	 ResponseEntity<Blogger> addBlogger(@RequestBody Blogger blogger) {
 		Blogger newBlog = blogServ.addBlogger(blogger);
 		return new ResponseEntity<>(newBlog, HttpStatus.CREATED);
 
@@ -73,6 +73,7 @@ public class BloggerController {
 		return blogServ.viewBlogger(bloggerId);
 
 	}
+	
 	// Get Blogger by Comment Id
 	@GetMapping("/bloggers/byCommentId/{commentId}")
 	BloggerOutputDto getBloggerByCommentId(@PathVariable("commentId") int commentId) throws IdNotFoundException {

@@ -54,5 +54,9 @@ public class Post {
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "user_id")
 	private Blogger blogger;
+	//OneToMany-One Community can have many posts, One post Belongs to one Community
+	@ManyToOne(cascade=CascadeType.MERGE)
+	@JoinColumn(name="CommunityId")
+	private Community community;
     
 }

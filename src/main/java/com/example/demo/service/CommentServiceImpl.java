@@ -7,13 +7,17 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.bean.Blogger;
 import com.example.demo.bean.Comment;
+import com.example.demo.bean.Moderator;
 import com.example.demo.bean.Post;
+import com.example.demo.dto.BloggerOutputDto;
 import com.example.demo.dto.CommentDto;
 import com.example.demo.dto.CommentInputDto;
 import com.example.demo.dto.CommentOutputDto;
 import com.example.demo.dto.PostOutputDto;
 import com.example.demo.exception.CommentNotFoundException;
+import com.example.demo.exception.ModeratorApprovalException;
 import com.example.demo.exception.PostIdNotFoundException;
 import com.example.demo.repository.IBloggerRepository;
 import com.example.demo.repository.ICommentRepository;
@@ -30,11 +34,14 @@ public class CommentServiceImpl implements ICommentService{
 	
 	@Autowired
 	IBloggerRepository blogRepo;
+	
+	Moderator moderator = new Moderator();
 
 	@Override
 	public CommentDto addComment(Comment comment) {
 		
 		Comment com = comRepo.save(comment);
+		
 		// Setting comment variables by commentOutputDto values
 		CommentDto comDto = new CommentDto();
 		comDto.setCommentId(com.getCommentId());
@@ -58,8 +65,22 @@ public class CommentServiceImpl implements ICommentService{
 		postOutputDto.setVotes(post.getVotes());
 		postOutputDto.setVoteUp(post.isVoteUp());
 		postOutputDto.setSpoiler(post.isSpoiler());
+		postOutputDto.setAwards(post.getAwards());
 		
 		comDto.setPost(postOutputDto);
+		
+		// Creating Blogger object
+		Blogger blogger = comment.getBlogger();
+		
+		// Creating BloggerOutputDto
+		BloggerOutputDto bloggerOutputDto = new BloggerOutputDto();
+		
+		// Setting values for BloggerOutputDto
+		bloggerOutputDto.setUserId(blogger.getUserId());
+		bloggerOutputDto.setBloggerName(blogger.getBloggerName());
+		bloggerOutputDto.setKarma(blogger.getKarma());
+		
+		comDto.setBlogger(bloggerOutputDto);
 		
 		return comDto;
 	}
@@ -91,6 +112,12 @@ public class CommentServiceImpl implements ICommentService{
 
 	@Override
 	public CommentDto addCommentDto(CommentInputDto commentInputDto) {
+		
+		// Checking for moderator approval
+		if(!moderator.moderatesPostsAndComments(commentInputDto.isFlag())) {
+			throw new ModeratorApprovalException("Comment is not approved");
+		}
+		
 		// Creating Comment object
 		Comment com = new Comment();
 		
@@ -106,6 +133,14 @@ public class CommentServiceImpl implements ICommentService{
 		}
 		Post post = opt1.get();
 		com.setPost(post);
+		
+		//Get the Blogger with the id
+		Optional<Blogger> opt2 = blogRepo.findById(commentInputDto.getBloggerId());
+		if(!opt1.isPresent()) {
+			throw new PostIdNotFoundException("No blogger is found with id:" + commentInputDto.getBloggerId());
+		}
+		Blogger blogger = opt2.get();
+		com.setBlogger(blogger);
 		
 		//save the comment in DB
 		Comment newCom = comRepo.save(com);
@@ -124,6 +159,15 @@ public class CommentServiceImpl implements ICommentService{
 		postOutputDto.setVotes(post.getVotes());
 		postOutputDto.setVoteUp(post.isVoteUp());
 		postOutputDto.setSpoiler(post.isSpoiler());
+		postOutputDto.setAwards(post.getAwards());
+		
+		// Creating BloggerOutputDto
+		BloggerOutputDto bloggerOutputDto = new BloggerOutputDto();
+		
+		// Setting values for BloggerOutputDto
+		bloggerOutputDto.setUserId(blogger.getUserId());
+		bloggerOutputDto.setBloggerName(blogger.getBloggerName());
+		bloggerOutputDto.setKarma(blogger.getKarma());
 		
 		CommentDto comDto = new CommentDto();
 		comDto.setCommentId(newCom.getCommentId());
@@ -131,6 +175,7 @@ public class CommentServiceImpl implements ICommentService{
 		comDto.setVotes(newCom.getVotes());
 		comDto.setVoteUp(newCom.isVoteUp());
 		comDto.setPost(postOutputDto);
+		comDto.setBlogger(bloggerOutputDto);
 		
 		return comDto;
 	}
@@ -214,6 +259,12 @@ public class CommentServiceImpl implements ICommentService{
 
 	@Override
 	public CommentOutputDto updateComment(CommentInputDto comment) {
+		
+		// Checking for moderator approval
+		if(!moderator.moderatesPostsAndComments(comment.isFlag())) {
+			throw new ModeratorApprovalException("Comment is not approved");
+		}
+				
 		// Creating Comment object
 		Optional<Comment> opt = comRepo.findById(comment.getCommentId());
 		if(!opt.isPresent()) {
@@ -234,6 +285,15 @@ public class CommentServiceImpl implements ICommentService{
 		}
 		Post post = opt1.get();
 		com.setPost(post);
+		
+
+		//Get the Blogger with the id
+		Optional<Blogger> opt2 = blogRepo.findById(comment.getBloggerId());
+		if(!opt1.isPresent()) {
+			throw new PostIdNotFoundException("No blogger is found with id:" + comment.getBloggerId());
+		}
+		Blogger blogger = opt2.get();
+		com.setBlogger(blogger);
 		
 		//save the comment in DB
 		Comment newCom = comRepo.save(com);

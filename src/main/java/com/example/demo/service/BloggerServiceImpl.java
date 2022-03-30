@@ -53,19 +53,6 @@ public class BloggerServiceImpl implements IBloggerService {
 		
 		//Setting blogger variables by bloggerInputDto values
 		blog.setBloggerName(bloggerInputDto.getBloggerName());
-		
-		// Creating a list of comments
-		List<Comment> comments = new ArrayList<>();
-		
-		// Getting comments from the Comment Entity by using ids
-		for(Integer id : bloggerInputDto.getCommentIds()) {
-			Optional<Comment> opt = commentRepo.findById(id);
-			if(!opt.isPresent()) {
-				throw new CommentNotFoundException("No comment found with id: " + id);
-			}
-			comments.add(opt.get());
-		}
-		blog.setComments(comments);
 
 		// Creating a list of posts
 		List<Post> posts = new ArrayList<>();
@@ -135,23 +122,7 @@ public class BloggerServiceImpl implements IBloggerService {
 		}
 		
 		bloggerDto.setCommunities(newCommunities);
-		
-		List<CommentOutputDto> newComments = new ArrayList<>();
-		
-		for(Comment comment : newBlogger.getComments()) {
-			
-			CommentOutputDto com = new CommentOutputDto();
-			
-			com.setCommentId(comment.getCommentId());
-			com.setCommentDescription(comment.getCommentDescription());
-			com.setVotes(comment.getVotes());
-			com.setVoteUp(comment.isVoteUp());
-			
-			newComments.add(com);
-		}
-		
-		bloggerDto.setComments(newComments);
-		
+
 		return bloggerDto;
 		
 	}
@@ -168,17 +139,6 @@ public class BloggerServiceImpl implements IBloggerService {
 		// Setting values to updateBlogger
 		updateBlogger.setBloggerName(blogger.getBloggerName());
 		
-		// Creating a list of comments
-		List<Comment> comments = new ArrayList<>();
-		// Getting comments from the Comment Entity by using ids
-		for(Integer id : blogger.getCommentIds() ) {
-			Optional<Comment> opt = commentRepo.findById(id);
-			if(!opt.isPresent()) {
-				throw new CommentNotFoundException("No comment found with id: " + id);
-			}
-			comments.add(opt.get());
-		}
-		updateBlogger.setComments(comments);
 
 		// List to store communities
 		List<Community> communities = new ArrayList<>();
@@ -187,11 +147,12 @@ public class BloggerServiceImpl implements IBloggerService {
 		if(!communityIds.isEmpty()) {
 			for(Integer id : communityIds) {
 				Optional<Community> opt = commRepo.findById(id);
-				if(!opt1.isPresent()) {
+				if(opt.isPresent()) {
+					communities.add(opt.get());
+				}
+				else {
 					throw new CommunityNotFoundException("No community is for with given id: "+ id);
 				}
-				
-				communities.add(opt.get());
 			}
 		}
 		updateBlogger.setCommunities(communities);
@@ -202,10 +163,12 @@ public class BloggerServiceImpl implements IBloggerService {
 		// Getting posts from the Post Entity by using ids
 		for(Integer id : blogger.getPostIds()) {
 			Optional<Post> opt = postRepo.findById(id);
-			if(!opt.isPresent()) {
-				throw new PostIdNotFoundException("No comment found with id: " + id);
+			if(opt.isPresent()) {
+				posts.add(opt.get());
 			}
-			posts.add(opt.get());
+			else {
+				throw new PostIdNotFoundException("No comment found with id: " + id);
+			}	
 		}
 						
 		
@@ -243,22 +206,6 @@ public class BloggerServiceImpl implements IBloggerService {
 		}
 		
 		bloggerDto.setCommunities(newCommunities);
-		
-		List<CommentOutputDto> newComments = new ArrayList<>();
-		
-		for(Comment comment : newBlogger.getComments()) {
-			
-			CommentOutputDto com = new CommentOutputDto();
-			
-			com.setCommentId(comment.getCommentId());
-			com.setCommentDescription(comment.getCommentDescription());
-			com.setVotes(comment.getVotes());
-			com.setVoteUp(comment.isVoteUp());
-			
-			newComments.add(com);
-		}
-		
-		bloggerDto.setComments(newComments);
 		
 		return bloggerDto;
 

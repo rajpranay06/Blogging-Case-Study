@@ -19,8 +19,11 @@ public class BloggerInputDto {
 	@Size(min=3, max=50, message="Min 3 characters required")
 	private String bloggerName;
 	
+
 	private List<Integer> commentIds;
 	private List<Integer> postIds;
+	// private List<Integer> commentIds;
+	List<Integer> postIds;
 	private List<Integer> communityIds;
 
 }
