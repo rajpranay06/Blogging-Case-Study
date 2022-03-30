@@ -1,6 +1,6 @@
 package com.example.demo.exception;
 
-public class IdNotFoundException extends Exception {
+public class IdNotFoundException extends RuntimeException {
 
 	public IdNotFoundException() {
 		super();

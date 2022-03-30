@@ -17,7 +17,7 @@ public interface ICommunityRepository extends JpaRepository<Community, Integer> 
 	public List<Community> listAllCommunitiesByDescription(@Param("searchString") String searchString);
 
 	// JPQL Query to get all communities by blogger
-	@Query(value = "SELECT c.* from blogger b join blogger_and_communities bc on b.user_id = bc.user_id join community c on bc.community_id = c.community_id where b.user_id = :bloggerId", nativeQuery = true)
+	@Query(value = "SELECT c.* from blogger b join blogger_and_communities bc on b.blogger_id = bc.blogger_id join community c on bc.community_id = c.community_id where b.blogger_id = :bloggerId", nativeQuery = true)
 	public List<Community> listAllCommunitiesByBloggerId(@Param("bloggerId") int bloggerId);
 
 	//JPQL Query to get community by using postId

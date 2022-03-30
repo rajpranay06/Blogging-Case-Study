@@ -7,9 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 public class Blogger{
 	@Id
 	@GeneratedValue
-	private int userId;
+	private int bloggerId;
 	
 	@NotEmpty(message="Name shouldn't be empty")
 	@Size(min=3, max=50, message="Min 3 characters required")
@@ -34,25 +34,30 @@ public class Blogger{
 	
 	public Blogger(int userId,@NotEmpty(message = "Name shouldn't be empty") @Size(min = 3, max = 50, message = "Min 3 characters required") String bloggerName,int karma) {
 		super();
-		this.userId = userId;
+		this.bloggerId = userId;
 		this.bloggerName = bloggerName;
 		this.karma = karma;
 	}
 	
-	//ManyToMany-Many Bloggers can be a part of many communities
+	//ManyToMany -Many Bloggers can be a part of many communities
 	@ManyToMany(cascade=CascadeType.MERGE)
 	@JoinTable(
 			name = "blogger_and_communities",
-			joinColumns = { @JoinColumn(name="userId")},
+			joinColumns = { @JoinColumn(name="bloggerId")},
 			inverseJoinColumns = { @JoinColumn(name="communityId")})
 	private List<Community> communities;
 	
+	// Many to many - many bloggers can receive many awards
+	@ManyToMany(cascade = CascadeType.MERGE)
+	@JoinTable(
+			name = "blogger_and_award", 
+			joinColumns = { @JoinColumn(name = "bloggerId") }, 
+			inverseJoinColumns = { @JoinColumn(name = "awardId")})
+	private List<Award> awards;
 	
-  /*  //OneToMany-One Blogger can have many posts
-	@OneToMany(cascade = CascadeType.MERGE)
+	// OneToOne between blogger and user - A user can be a blogger
+	@OneToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name = "user_id")
-	private List<Post> posts;*/
-
-	
+	private UserEntity user;
 	
 }

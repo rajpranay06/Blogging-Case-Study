@@ -26,7 +26,6 @@ public class CommunityServiceTest {
 	{
 		//Create community object
 		Community com = new Community();
-		com.setCommunityId(1);
 		com.setCommunityDescription("Humans");
 		com.setTotalMembers(120);
 		com.setOnlineMembers(110);
@@ -79,10 +78,11 @@ public class CommunityServiceTest {
 	}
 	
 	@Test
+	@Disabled
 	void updateCommunityTest()
 	{
 		Community com = new Community();
-		com.setCommunityId(32);
+		com.setCommunityId(11);
 		com.setCommunityDescription("World");
 		com.setTotalMembers(120);
 		com.setOnlineMembers(110);
@@ -123,7 +123,7 @@ public class CommunityServiceTest {
 		Community c = comServ.updateCommunityWithoutDto(com);
 		
 		//Validate details
-		assertEquals(32,c.getCommunityId());
+		assertEquals(11,c.getCommunityId());
 		assertEquals("World",c.getCommunityDescription());
 		assertEquals(120,c.getTotalMembers());
 		assertEquals(110,c.getOnlineMembers());
@@ -136,23 +136,30 @@ public class CommunityServiceTest {
 	}
 	
 	@Test
-	@Disabled
 	void listAllCommunitiesTest()
 	{
 		List<CommunityOutputDto> comList = comServ.listAllCommunitiesByDescription("Test");
 		int noOfCommunities = comList.size();
-		assertEquals(3,noOfCommunities);
+		assertEquals(4,noOfCommunities);
 	}
 	
 	@Test
-	void getCommunityByPostId()
+	void getCommunityByPostIdTest()
 	{	
-		CommunityOutputDto com = comServ.getCommunityByPostId(17);
+		CommunityOutputDto com = comServ.getCommunityByPostId(16);
 		
-		assertEquals(19,com.getCommunityId());
-		assertEquals("Community Test 3",com.getCommunityDescription());
+		assertEquals(13,com.getCommunityId());
+		assertEquals("Community Test 4",com.getCommunityDescription());
 		assertEquals(100,com.getTotalMembers());
 		
+	}
+	
+	@Test
+	void getCommunityByBloggerIdTest()
+	{	
+		List<CommunityOutputDto> com = comServ.listAllCommunitiesByBloggerId(15);
+		
+		assertEquals(2,com.size());
 		
 	}
 }

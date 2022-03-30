@@ -9,4 +9,5 @@ public interface IAwardService {
 	public Award addAward(Award award);
 	public void deleteAwardById(int awardId);
 	public List<Award> getAwardByPostId(int id);
+	public List<Award> getAwardsByBlogId(int id);
 }

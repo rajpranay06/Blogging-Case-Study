@@ -32,8 +32,14 @@ class AwardServiceTest {
 	@Test
 	void getAwardByPostId() {
 		
-		List<Award> awards = awardServ.getAwardByPostId(10);
+		List<Award> awards = awardServ.getAwardByPostId(16);
 		
+		assertEquals(2, awards.size());
+	}
+	
+	@Test
+	void getAwardsByBlogId() {
+		List<Award> awards = awardServ.getAwardsByBlogId(15);
 		assertEquals(2, awards.size());
 	}
 

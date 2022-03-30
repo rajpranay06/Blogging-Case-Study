@@ -67,5 +67,26 @@ class AwardServiceMockitoTest {
 		
 		assertEquals(2, list.size());
 	}
+	
+	@Test
+	void getAwardByBloggerIdTest() {
+		Award awards1 = new Award();
+		awards1.setAwardId(12);
+		awards1.setCoin(Coin.GOLD);
+	    
+		Award awards2 = new Award();
+		awards2.setAwardId(13);
+		awards2.setCoin(Coin.PLATINUM);
+		
+		List<Award> allAwards = new ArrayList<>();
+		allAwards.add(awards1);
+		allAwards.add(awards2);
+		
+		Mockito.when(awardRepo.getAwardsByBlogId(12)).thenReturn(allAwards);
+		
+		List<Award> list = awardService.getAwardsByBlogId(12);
+		
+		assertEquals(2, list.size());
+	}
 
 }

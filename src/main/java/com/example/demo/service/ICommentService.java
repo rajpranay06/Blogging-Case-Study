@@ -15,6 +15,6 @@ public interface ICommentService {
 	public void upVote(int commentId, boolean upVote);
 	public CommentOutputDto getCommentById(int id);
 	public List<CommentOutputDto> listAllCommentsOfPost(int postId);
-	public List<CommentOutputDto> listAllCommentsOfBlogger(int userId);
+	public List<CommentOutputDto> listAllCommentsOfBlogger(int bloggerId);
 	public CommentOutputDto updateComment(CommentInputDto comment);
 }

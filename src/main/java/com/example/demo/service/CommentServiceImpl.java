@@ -17,6 +17,7 @@ import com.example.demo.dto.CommentInputDto;
 import com.example.demo.dto.CommentOutputDto;
 import com.example.demo.dto.PostOutputDto;
 import com.example.demo.exception.CommentNotFoundException;
+import com.example.demo.exception.IdNotFoundException;
 import com.example.demo.exception.ModeratorApprovalException;
 import com.example.demo.exception.PostIdNotFoundException;
 import com.example.demo.repository.IBloggerRepository;
@@ -76,7 +77,7 @@ public class CommentServiceImpl implements ICommentService{
 		BloggerOutputDto bloggerOutputDto = new BloggerOutputDto();
 		
 		// Setting values for BloggerOutputDto
-		bloggerOutputDto.setUserId(blogger.getUserId());
+		bloggerOutputDto.setBloggerId(blogger.getBloggerId());
 		bloggerOutputDto.setBloggerName(blogger.getBloggerName());
 		bloggerOutputDto.setKarma(blogger.getKarma());
 		
@@ -136,10 +137,12 @@ public class CommentServiceImpl implements ICommentService{
 		
 		//Get the Blogger with the id
 		Optional<Blogger> opt2 = blogRepo.findById(commentInputDto.getBloggerId());
-		if(!opt1.isPresent()) {
-			throw new PostIdNotFoundException("No blogger is found with id:" + commentInputDto.getBloggerId());
+		if(!opt2.isPresent()) {
+			throw new IdNotFoundException("No blogger is found with id:" + commentInputDto.getBloggerId());
 		}
 		Blogger blogger = opt2.get();
+		
+		// Set the blogger to comment
 		com.setBlogger(blogger);
 		
 		//save the comment in DB
@@ -165,7 +168,7 @@ public class CommentServiceImpl implements ICommentService{
 		BloggerOutputDto bloggerOutputDto = new BloggerOutputDto();
 		
 		// Setting values for BloggerOutputDto
-		bloggerOutputDto.setUserId(blogger.getUserId());
+		bloggerOutputDto.setBloggerId(blogger.getBloggerId());
 		bloggerOutputDto.setBloggerName(blogger.getBloggerName());
 		bloggerOutputDto.setKarma(blogger.getKarma());
 		
@@ -230,13 +233,13 @@ public class CommentServiceImpl implements ICommentService{
 		return allComments;
 	}
 	
-	public List<CommentOutputDto> listAllCommentsOfBlogger(int userId) {
+	public List<CommentOutputDto> listAllCommentsOfBlogger(int bloggerId) {
 		
-		List<Comment> comments = comRepo.getCommentsByBlogger(userId);
+		List<Comment> comments = comRepo.getCommentsByBlogger(bloggerId);
 		
 		if(comments.isEmpty()) {
 			 // No comments are found for post
-			throw new CommentNotFoundException("No comments for the blogger with blogger id: " + userId);
+			throw new CommentNotFoundException("No comments for the blogger with blogger id: " + bloggerId);
 		}
 		
 		List<CommentOutputDto> allComments = new ArrayList<>();
@@ -289,8 +292,8 @@ public class CommentServiceImpl implements ICommentService{
 
 		//Get the Blogger with the id
 		Optional<Blogger> opt2 = blogRepo.findById(comment.getBloggerId());
-		if(!opt1.isPresent()) {
-			throw new PostIdNotFoundException("No blogger is found with id:" + comment.getBloggerId());
+		if(!opt2.isPresent()) {
+			throw new IdNotFoundException("No blogger is found with id:" + comment.getBloggerId());
 		}
 		Blogger blogger = opt2.get();
 		com.setBlogger(blogger);

@@ -12,21 +12,16 @@ import com.example.demo.bean.Post;
 import com.example.demo.dto.BloggerOutputDto;
 import com.example.demo.bean.Community;
 import com.example.demo.bean.Moderator;
-import com.example.demo.bean.Post;
 import com.example.demo.dto.PostDto;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
 import com.example.demo.exception.AwardNotFoundException;
-import com.example.demo.exception.BloggerIdNotFoundException;
+import com.example.demo.exception.IdNotFoundException;
 import com.example.demo.exception.PostIdNotFoundException;
 import com.example.demo.repository.IPostRepository;
 import com.example.demo.repository.IAwardRepository;
 import com.example.demo.repository.IBloggerRepository;
-import com.example.demo.repository.ICommentRepository;
 import com.example.demo.exception.ModeratorApprovalException;
-import com.example.demo.exception.PostIdNotFoundException;
-import com.example.demo.repository.IPostRepository;
-import com.example.demo.repository.IAwardRepository;
 import com.example.demo.repository.ICommunityRepository;
 @Service
 public class PostServiceImpl implements IPostService {
@@ -42,6 +37,7 @@ public class PostServiceImpl implements IPostService {
 	
 	@Autowired
 	IBloggerRepository blogRepo;
+	
 	// Creating Moderator object
 	Moderator moderator = new Moderator();
 	@Override
@@ -86,30 +82,39 @@ public class PostServiceImpl implements IPostService {
 		// Setting the awards to the post
 		newPost.setAwards(awards);
 		
-		//getting bloggerId
-		Blogger blogger=new Blogger();
+		// Getting blogger
 		Optional<Blogger> opt = blogRepo.findById(post.getBloggerId());
 		
 		if(!opt.isPresent())
 		{
-			throw new BloggerIdNotFoundException("Blogger not found");
+			throw new PostIdNotFoundException("Blogger not found");
 		}
-		//setting bloggerId to post
-		newPost.setBlogger(opt.get());
-		// Getting community by id
-		Optional<Community> opt = comRepo.findById(post.getCommunityId());
 		
-		if(!opt.isPresent()) {
+		//setting blogger to post
+		newPost.setBlogger(opt.get());
+		
+		// Getting community by id
+		Optional<Community> community = comRepo.findById(post.getCommunityId());
+		
+		if(!community.isPresent()) {
 			throw new PostIdNotFoundException("No Community with id: " + post.getCommunityId());
 		}
-		newPost.setCommunity(opt.get());
+		newPost.setCommunity(community.get());
 
 		// Saving the post in database
 		Post addedPost = postRepo.save(newPost);
 		
+		// Creating BloggerOutputDto
+		Blogger newBlogger = addedPost.getBlogger();	
+		
+		BloggerOutputDto bloggerDto = new BloggerOutputDto();
+		bloggerDto.setBloggerId(newBlogger.getBloggerId());
+		bloggerDto.setBloggerName(newBlogger.getBloggerName());
+		bloggerDto.setKarma(newBlogger.getKarma());
+				
 		// Creating PostDto object
 		PostDto postDto = new PostDto();
-		
+				
 		// Setting values for postOutputDto
 		postDto.setPostId(addedPost.getPostId());
 		postDto.setTitle(addedPost.getTitle());
@@ -122,6 +127,7 @@ public class PostServiceImpl implements IPostService {
 		postDto.setVoteUp(addedPost.isVoteUp());
 		postDto.setSpoiler(addedPost.isSpoiler());
 		postDto.setCommunity(addedPost.getCommunity());
+		postDto.setBlogger(bloggerDto);
 		
 		return postDto;
 	}
@@ -170,17 +176,15 @@ public class PostServiceImpl implements IPostService {
 		// Setting the awards
 		oldPost.setAwards(awards);
 		
-		//getting bloggerId
-		Blogger blogger=new Blogger();
-		Optional<Blogger> opt1 = blogRepo.findById(post.getBloggerId());
-		if(!opt1.isPresent())
+		// Getting bloggerId
+		Optional<Blogger> blog = blogRepo.findById(post.getBloggerId());
+		if(!blog.isPresent())
 		{
-			throw new BloggerIdNotFoundException("Blogger not found");
+			throw new IdNotFoundException("Blogger not found");
 		}
-		//setting bloggerId to post
-		oldPost.setBlogger(opt1.get());
-		
-		return postRepo.save(oldPost);
+		// Setting bloggerId to post
+		oldPost.setBlogger(blog.get());
+	
 		// Getting community by id
 		Optional<Community> community = comRepo.findById(post.getCommunityId());
 		
@@ -193,6 +197,14 @@ public class PostServiceImpl implements IPostService {
 		
 		// Saving the post in database
 		Post updatedPost = postRepo.save(oldPost);
+		
+		// Creating BloggerOutputDto
+		Blogger newBlogger = updatedPost.getBlogger();	
+		
+		BloggerOutputDto bloggerDto = new BloggerOutputDto();
+		bloggerDto.setBloggerId(newBlogger.getBloggerId());
+		bloggerDto.setBloggerName(newBlogger.getBloggerName());
+		bloggerDto.setKarma(newBlogger.getKarma());
 		
 		// Creating PostDto object
 		PostDto postDto = new PostDto();
@@ -209,6 +221,7 @@ public class PostServiceImpl implements IPostService {
 		postDto.setVoteUp(updatedPost.isVoteUp());
 		postDto.setSpoiler(updatedPost.isSpoiler());
 		postDto.setCommunity(updatedPost.getCommunity());
+		postDto.setBlogger(bloggerDto);
 		
 		return postDto;
 	}
@@ -288,11 +301,11 @@ public class PostServiceImpl implements IPostService {
 	}
 	
 	@Override
-	public List<PostDto> getPostsByBloggerId(int bloggerId) {
+	public List<PostOutputDto> getPostsByBlogger(int bloggerId) {
 		
-		List<PostDto> allPosts = new ArrayList<>();
+		List<PostOutputDto> allPosts = new ArrayList<>();
 		
-		List<Post> posts = postRepo.getPostsByBloggerId(bloggerId);
+		List<Post> posts = postRepo.getPostsByBlogger(bloggerId);
 		
 		if(posts.isEmpty())
 		{
@@ -302,7 +315,7 @@ public class PostServiceImpl implements IPostService {
 		for(Post post : posts) {
 			
 			// Creating PostOutputDto object
-			PostDto postOutputDto = new PostDto();
+			PostOutputDto postOutputDto = new PostOutputDto();
 			
 			// Setting values for postOutputDto
 			postOutputDto.setPostId(post.getPostId());
@@ -323,14 +336,14 @@ public class PostServiceImpl implements IPostService {
 	}
 		
 	@Override
-	public List<PostOutputDto> getPostByawardId(int id) {
+	public List<PostOutputDto> getPostByawardId(int awardId) {
 		
 		// Getting all the posts with award id
-		List<Post> posts = postRepo.getAllPostsByAwardId(id);
+		List<Post> posts = postRepo.getAllPostsByAwardId(awardId);
 		
 		if(posts.isEmpty())
 		{
-			throw new PostIdNotFoundException("No post found for the award with id: "+ id);
+			throw new PostIdNotFoundException("No post found for the award with id: "+ awardId);
 		}
 		
 		// Creating a list of postOutputDto object
