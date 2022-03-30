@@ -2,17 +2,18 @@ package com.example.demo.dto;
 
 import java.util.List;
 
-import com.example.demo.bean.Post;
+import com.example.demo.bean.Award;
+import com.example.demo.bean.UserEntity;
 
 import lombok.Data;
 
 @Data
 public class BloggerDto {
 
-	private int userId;
+	private int bloggerId;
 	private String bloggerName;
 	private int karma;
-	private List<Post> posts;
 	private List<CommunityOutputDto> communities;
-	private List<CommentOutputDto> comments;
+	private List<Award> awards;
+	private UserOutputDto user;
 }

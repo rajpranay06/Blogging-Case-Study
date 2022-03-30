@@ -20,66 +20,66 @@ class CommentServiceTest {
 	ICommentService comServ;
 
 	@Test
-	//@Disabled
+	@Disabled
 	void addCommentTest() {
 		CommentInputDto comment = new CommentInputDto();
-		comment.setCommentDescription("Test 1");
-		comment.setVotes(9);
-		comment.setPostId(43);
-		comment.setBloggerId(40);
+		comment.setCommentDescription("Comment Test 2");
+		comment.setVotes(90);
+		comment.setPostId(16);
+		comment.setBloggerId(24);
 		
 		CommentDto comDto = comServ.addCommentDto(comment);
-		assertEquals("Test 1", comDto.getCommentDescription());
-		assertEquals(9, comDto.getVotes());
-		assertEquals(43, comDto.getPost().getPostId());
-		assertEquals(40, comDto.getBlogger().getUserId());
+		assertEquals("Comment Test 2", comDto.getCommentDescription());
+		assertEquals(90, comDto.getVotes());
+		assertEquals(16, comDto.getPost().getPostId());
+		assertEquals(24, comDto.getBlogger().getBloggerId());
 	}
 	
 	@Test
-	//@Disabled
+	@Disabled
 	void updateCommentTest() {
 		CommentInputDto comment = new CommentInputDto();
-		comment.setCommentId(41);
+		comment.setCommentId(17);
 		comment.setCommentDescription("Updated Test 1");
-		comment.setVotes(9);
-		comment.setPostId(43);
-		comment.setBloggerId(40);
+		comment.setVotes(90);
+		comment.setPostId(16);
+		comment.setBloggerId(24);
 		
 		CommentOutputDto comDto = comServ.updateComment(comment);
-		assertEquals(41, comDto.getCommentId());
+		assertEquals(17, comDto.getCommentId());
 		assertEquals("Updated Test 1", comDto.getCommentDescription());
-		assertEquals(9, comDto.getVotes());
+		assertEquals(90, comDto.getVotes());
 	}
 	
 	
 	@Test
-	//@Disabled
+	@Disabled
 	void getCommentByIdTest() {
 		
-		CommentOutputDto comment = comServ.getCommentById(49);
+		CommentOutputDto comment = comServ.getCommentById(18);
 		
-		assertEquals("First Comment",comment.getCommentDescription());
+		assertEquals("Updated Comment 1",comment.getCommentDescription());
 		assertEquals(true,comment.isVoteUp());
-		assertEquals(10,comment.getVotes());
+		assertEquals(19,comment.getVotes());
 	}
 	
 	@Test
-	//@Disabled
+	@Disabled
 	void getCommentsByPostIdTest() {
 		
 		// Calling listAllCommentsByPost Function
-		List<CommentOutputDto> comments = comServ.listAllCommentsOfPost(47);
+		List<CommentOutputDto> comments = comServ.listAllCommentsOfPost(16);
 		
 		// Comapring the number of comments
-		assertEquals(1, comments.size());
+		assertEquals(3, comments.size());
 	}
 	
 	@Test
-	//@Disabled
+	@Disabled
 	void getCommentsByBloggerIdTest() {
 		
 		// Calling listAllCommentsByPost Function
-		List<CommentOutputDto> comments = comServ.listAllCommentsOfBlogger(48);
+		List<CommentOutputDto> comments = comServ.listAllCommentsOfBlogger(15);
 		
 		// Comapring the number of comments
 		assertEquals(1, comments.size());

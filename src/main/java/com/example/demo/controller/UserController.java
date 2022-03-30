@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.bean.Admin;
 import com.example.demo.bean.UserEntity;
 import com.example.demo.dto.UserInputDto;
+import com.example.demo.dto.UserOutputDto;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.IUserRepository;
 import com.example.demo.service.IAdminService;
@@ -36,28 +37,28 @@ public class UserController {
 	
 	// Get all users
 	@GetMapping("/users")
-	List<UserEntity> getAllTrainees(){
+	List<UserOutputDto> getAllTrainees(){
 		return userServ.getAllUsers();
 	}
 	
 	// Adding new user
 	@PostMapping("/users")
-	ResponseEntity<UserEntity> addNewUser(@Valid @RequestBody UserEntity user) {
-		UserEntity newUser=userServ.addNewUser(user);
+	ResponseEntity<UserOutputDto> addNewUser(@Valid @RequestBody UserEntity user) {
+		UserOutputDto newUser=userServ.addNewUser(user);
 		return new ResponseEntity<>(newUser,HttpStatus.CREATED);
 	}
 	
 	// Sign in
 	@PostMapping("/usersLogin")
-	ResponseEntity<UserEntity> signIn(@Valid @RequestBody UserInputDto user) {
-		UserEntity log=userServ.signIn(user);
+	ResponseEntity<UserOutputDto> signIn(@Valid @RequestBody UserInputDto user) {
+		UserOutputDto log=userServ.signIn(user);
 		return new ResponseEntity<>(log,HttpStatus.OK);
 	}
 	
 	// Logout
 	@GetMapping("/users/{id}")
-	ResponseEntity<UserEntity> signOut(@PathVariable int id) {
-		UserEntity logout=userServ.signOut(id);
+	ResponseEntity<UserOutputDto> signOut(@PathVariable int id) {
+		UserOutputDto logout=userServ.signOut(id);
 		return new ResponseEntity<>(logout,HttpStatus.OK);
 	}
 	
@@ -73,8 +74,14 @@ public class UserController {
 			user.setAdmin(ad);
 
 			return new ResponseEntity<>(ad,HttpStatus.CREATED);
-		}
-		
+		}	
+	}
+	
+	// Get User by Blogger Id
+	@GetMapping("/users/byBlogger/{bloggerId}")
+	ResponseEntity<UserOutputDto> getUserByBloggerId(@PathVariable("bloggerId") int bloggerId){
+		UserOutputDto userEntity = userServ.getUserByBloggerId(bloggerId);
+		return new ResponseEntity<>(userEntity, HttpStatus.OK);
 	}
 	
 	

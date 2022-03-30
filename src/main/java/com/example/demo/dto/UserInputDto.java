@@ -17,6 +17,9 @@ public class UserInputDto {
 	private String email;
 	@Size(min=8,max=15, message="Min 8 characters required")
 	private String password;
+	private String role;
+	private boolean loginStatus;
+	
 	public UserInputDto(int userId, String email, String password) {
 		super();
 		this.userId = userId;

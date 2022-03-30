@@ -201,4 +201,56 @@ public class CommunityServiceMockitoTest {
 		assertEquals(f,community.getFlairs());
 		
 	}
+	
+	@Test
+	void getCommunityByBloggerIdTest()
+	{
+		File fw = new File("abc.jpg");
+		
+		List<String> glist = new ArrayList<String>();
+		glist.add("Adults");
+		glist.add("Kids");
+		glist.add("Teenage");
+		
+		List<String> galist = new ArrayList<String>();
+		galist.add("Buildings");
+		galist.add("Furniture");
+		galist.add("Houses");
+		
+		List<String> bp = new ArrayList<String>();
+		bp.add("Cheating");
+		bp.add("Drugs");
+		bp.add("Misuse");
+		
+		List<String> f = new ArrayList<String>();
+		f.add("Relationship");
+		
+		// Creating CommunityInputDto Object
+		CommunityInputDto com1 = new CommunityInputDto(12,"Science",430,230,fw,LocalDate.parse("2014-09-13"),glist,galist,bp,f);
+		
+		// Setting values to community 
+		Community newCommunity = new Community();
+		newCommunity.setCommunityId(com1.getCommunityId());
+		newCommunity.setCommunityDescription(com1.getCommunityDescription());
+		newCommunity.setTotalMembers(com1.getTotalMembers());
+		newCommunity.setOnlineMembers(com1.getOnlineMembers());
+		newCommunity.setImage(com1.getImage());
+		newCommunity.setCreatedOn(com1.getCreatedOn());
+		newCommunity.setPostRulesAllowed(com1.getPostRulesAllowed());
+		newCommunity.setPostRulesDisAllowed(com1.getPostRulesDisAllowed());
+		newCommunity.setBanningPolicy(com1.getBanningPolicy());
+		newCommunity.setFlairs(com1.getFlairs());
+		 
+		Mockito.when(comRepo.save(newCommunity)).thenReturn(newCommunity);
+		comServ.addCommunity(com1);
+		
+		List<Community> communities = new ArrayList<>();
+		communities.add(newCommunity);
+		
+		Mockito.when(comRepo.listAllCommunitiesByBloggerId(12)).thenReturn(communities);
+		List<CommunityOutputDto> community = comServ.listAllCommunitiesByBloggerId(12);
+		
+		assertEquals(1, community.size());
+		
+	}
 }

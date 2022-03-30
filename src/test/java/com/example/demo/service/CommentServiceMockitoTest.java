@@ -2,13 +2,14 @@ package com.example.demo.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,8 +20,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.example.demo.bean.Blogger;
 import com.example.demo.bean.Comment;
+import com.example.demo.bean.Community;
 import com.example.demo.bean.Post;
 import com.example.demo.bean.PostType;
+import com.example.demo.bean.UserEntity;
 import com.example.demo.dto.CommentDto;
 import com.example.demo.dto.CommentInputDto;
 import com.example.demo.dto.CommentOutputDto;
@@ -72,14 +75,48 @@ class CommentServiceMockitoTest {
 		
 		comment.setPost(newPost);
 		
-		Blogger newBlogger = new Blogger();
+		// Creating blogger object
+		Blogger blogger = new Blogger();
+		
 		// Setting the values
-		newBlogger.setUserId(40);
-		newBlogger.setBloggerName("string");
-		newBlogger.setKarma(50);
+		blogger.setBloggerId(1);
+		blogger.setBloggerName("Abc");
+		blogger.setKarma(20);
 		
-		comment.setBlogger(newBlogger);
+		// Community 
+		File fw = new File("abc.jpg");
 		
+		List<String> glist = new ArrayList<String>();
+		glist.add("Hockey");
+		glist.add("Cricket");
+		glist.add("Tennis");
+		
+		List<String> galist = new ArrayList<String>();
+		galist.add("Tours");
+		galist.add("Furniture");
+		galist.add("Houses");
+		
+		List<String> bp = new ArrayList<String>();
+		bp.add("Cheating");
+		bp.add("Drugs");
+		bp.add("Misuse");
+		
+		List<String> f = new ArrayList<String>();
+		f.add("SportsNews");
+		
+		// Creating community using constructor
+		Community com = new Community(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f);
+	
+		List<Community> communities = new ArrayList<>();
+		communities.add(com);
+		
+		blogger.setCommunities(communities);
+		
+		// Creating and setting the user
+		UserEntity user = new UserEntity(5,"ram@gmail.com","ram@1234","Trader",false);
+		blogger.setUser(user);
+		
+		comment.setBlogger(blogger);
 		
 		Mockito.when(comRepo.save(comment)).thenReturn(comment);
 		
@@ -90,7 +127,7 @@ class CommentServiceMockitoTest {
 		assertEquals(10, newComment.getVotes());
 		assertEquals(true, newComment.isVoteUp());
 		assertEquals(100, newComment.getPost().getPostId());
-		assertEquals(40, newComment.getBlogger().getUserId());
+		assertEquals(1, newComment.getBlogger().getBloggerId());
 	}
 	
 	
@@ -101,7 +138,7 @@ class CommentServiceMockitoTest {
 		com.setCommentId(10);
 		com.setCommentDescription("test1");
 		com.setPostId(100);
-		com.setBloggerId(40);
+		com.setBloggerId(1);
 		com.setVotes(10);
 		com.setVoteUp(true);
 		
@@ -126,19 +163,54 @@ class CommentServiceMockitoTest {
 		
 		comment.setPost(newPost);
 		
-		Blogger newBlogger = new Blogger();
-		// Setting the values
-		newBlogger.setUserId(40);
-		newBlogger.setBloggerName("string");
-		newBlogger.setKarma(50);
+		// Creating blogger object
+		Blogger blogger = new Blogger();
 		
-		comment.setBlogger(newBlogger);
+		// Setting the values
+		blogger.setBloggerId(1);
+		blogger.setBloggerName("Abc");
+		blogger.setKarma(20);
+		
+		// Community 
+		File fw = new File("abc.jpg");
+		
+		List<String> glist = new ArrayList<String>();
+		glist.add("Hockey");
+		glist.add("Cricket");
+		glist.add("Tennis");
+		
+		List<String> galist = new ArrayList<String>();
+		galist.add("Tours");
+		galist.add("Furniture");
+		galist.add("Houses");
+		
+		List<String> bp = new ArrayList<String>();
+		bp.add("Cheating");
+		bp.add("Drugs");
+		bp.add("Misuse");
+		
+		List<String> f = new ArrayList<String>();
+		f.add("SportsNews");
+		
+		// Creating community using constructor
+		Community community = new Community(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f);
+	
+		List<Community> communities = new ArrayList<>();
+		communities.add(community);
+		
+		blogger.setCommunities(communities);
+		
+		// Creating and setting the user
+		UserEntity user = new UserEntity(5,"ram@gmail.com","ram@1234","Trader",false);
+		blogger.setUser(user);
+		
+		comment.setBlogger(blogger);
 		
 		Mockito.when(comRepo.findById(10)).thenReturn(Optional.of(comment));
 		
 		Mockito.when(postRepo.findById(100)).thenReturn(Optional.of(newPost));
 		
-		Mockito.when(blogRepo.findById(40)).thenReturn(Optional.of(newBlogger));
+		Mockito.when(blogRepo.findById(1)).thenReturn(Optional.of(blogger));
 
 		Mockito.when(comRepo.save(comment)).thenReturn(comment);
 		
@@ -173,18 +245,48 @@ class CommentServiceMockitoTest {
 		
 		comment.setPost(newPost);
 		
-		Blogger newBlogger = new Blogger();
+		// Creating blogger object
+		Blogger blogger = new Blogger();
+		
 		// Setting the values
-		newBlogger.setUserId(40);
-		newBlogger.setBloggerName("string");
-		newBlogger.setKarma(50);
+		blogger.setBloggerId(1);
+		blogger.setBloggerName("Abc");
+		blogger.setKarma(20);
 		
-		comment.setBlogger(newBlogger);
+		// Community 
+		File fw = new File("abc.jpg");
 		
+		List<String> glist = new ArrayList<String>();
+		glist.add("Hockey");
+		glist.add("Cricket");
+		glist.add("Tennis");
 		
-		Mockito.when(comRepo.save(comment)).thenReturn(comment);
+		List<String> galist = new ArrayList<String>();
+		galist.add("Tours");
+		galist.add("Furniture");
+		galist.add("Houses");
 		
-		CommentDto newComment = comService.addComment(comment);
+		List<String> bp = new ArrayList<String>();
+		bp.add("Cheating");
+		bp.add("Drugs");
+		bp.add("Misuse");
+		
+		List<String> f = new ArrayList<String>();
+		f.add("SportsNews");
+		
+		// Creating community using constructor
+		Community community = new Community(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f);
+	
+		List<Community> communities = new ArrayList<>();
+		communities.add(community);
+		
+		blogger.setCommunities(communities);
+		
+		// Creating and setting the user
+		UserEntity user = new UserEntity(5,"ram@gmail.com","ram@1234","Trader",false);
+		blogger.setUser(user);
+		
+		comment.setBlogger(blogger);
 		
 		Mockito.when(comRepo.findById(10)).thenReturn(Optional.of(comment));
 		
@@ -220,18 +322,48 @@ class CommentServiceMockitoTest {
 		
 		comment.setPost(newPost);
 		
-		Blogger newBlogger = new Blogger();
+		// Creating blogger object
+		Blogger blogger = new Blogger();
+		
 		// Setting the values
-		newBlogger.setUserId(40);
-		newBlogger.setBloggerName("string");
-		newBlogger.setKarma(50);
+		blogger.setBloggerId(1);
+		blogger.setBloggerName("Abc");
+		blogger.setKarma(20);
 		
-		comment.setBlogger(newBlogger);
+		// Community 
+		File fw = new File("abc.jpg");
 		
+		List<String> glist = new ArrayList<String>();
+		glist.add("Hockey");
+		glist.add("Cricket");
+		glist.add("Tennis");
 		
-		Mockito.when(comRepo.save(comment)).thenReturn(comment);
+		List<String> galist = new ArrayList<String>();
+		galist.add("Tours");
+		galist.add("Furniture");
+		galist.add("Houses");
 		
-		CommentDto newComment = comService.addComment(comment);
+		List<String> bp = new ArrayList<String>();
+		bp.add("Cheating");
+		bp.add("Drugs");
+		bp.add("Misuse");
+		
+		List<String> f = new ArrayList<String>();
+		f.add("SportsNews");
+		
+		// Creating community using constructor
+		Community com = new Community(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f);
+	
+		List<Community> communities = new ArrayList<>();
+		communities.add(com);
+		
+		blogger.setCommunities(communities);
+		
+		// Creating and setting the user
+		UserEntity user = new UserEntity(5,"ram@gmail.com","ram@1234","Trader",false);
+		blogger.setUser(user);
+		
+		comment.setBlogger(blogger);
 		
 		List<Comment> clist = new ArrayList<>();
 		
@@ -269,26 +401,13 @@ class CommentServiceMockitoTest {
 		
 		comment.setPost(newPost);
 		
-		Blogger newBlogger = new Blogger();
-		// Setting the values
-		newBlogger.setUserId(40);
-		newBlogger.setBloggerName("string");
-		newBlogger.setKarma(50);
-		
-		comment.setBlogger(newBlogger);
-		
-		
-		Mockito.when(comRepo.save(comment)).thenReturn(comment);
-		
-		CommentDto newComment = comService.addComment(comment);
-		
 		List<Comment> clist = new ArrayList<>();
 		
 		clist.add(comment);
 		
-		Mockito.when(comRepo.getCommentsByBlogger(40)).thenReturn(clist);
+		Mockito.when(comRepo.getCommentsByBlogger(1)).thenReturn(clist);
 		
-		List<CommentOutputDto> comList = comService.listAllCommentsOfBlogger(40);
+		List<CommentOutputDto> comList = comService.listAllCommentsOfBlogger(1);
 		
 		assertEquals(1, comList.size());
 	}

@@ -36,7 +36,16 @@ public class AwardServiceImpl implements IAwardService{
 	public List<Award> getAwardByPostId(int id) {
 		List<Award> awards = awardRepo.getAllAwardsByPostId(id);
 		if(awards.isEmpty()) {
-			throw new AwardNotFoundException("award not found with given post id");
+			throw new AwardNotFoundException("award not found with given Blog id");
+		}
+		return  awards;
+	}
+	
+	@Override
+	public List<Award> getAwardsByBlogId(int id) {
+		List<Award> awards = awardRepo.getAwardsByBlogId(id);
+		if(awards.isEmpty()) {
+			throw new AwardNotFoundException("award not found with given Blog id");
 		}
 		return  awards;
 	}

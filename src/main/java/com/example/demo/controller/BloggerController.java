@@ -28,13 +28,11 @@ public class BloggerController {
 	@Autowired
 	IBloggerService blogServ;
 	
-
 	// Add new blogger
 	@PostMapping("/bloggers")
 	 ResponseEntity<Blogger> addBlogger(@RequestBody Blogger blogger) {
 		Blogger newBlog = blogServ.addBlogger(blogger);
 		return new ResponseEntity<>(newBlog, HttpStatus.CREATED);
-
 	}
 
 	// Get all Bloggers
@@ -68,14 +66,14 @@ public class BloggerController {
 	}
 	
 	//Get Blogger by Id
-	@GetMapping("/bloggers/{userId}")
-	BloggerOutputDto viewBlogger(@PathVariable("userId") int bloggerId) throws IdNotFoundException {
+	@GetMapping("/blogger/{bloggerId}")
+	BloggerOutputDto viewBlogger(@PathVariable("bloggerId") int bloggerId) throws IdNotFoundException {
 		return blogServ.viewBlogger(bloggerId);
 
 	}
 	
 	// Get Blogger by Comment Id
-	@GetMapping("/bloggers/byCommentId/{commentId}")
+	@GetMapping("/blogger/byCommentId/{commentId}")
 	BloggerOutputDto getBloggerByCommentId(@PathVariable("commentId") int commentId) throws IdNotFoundException {
 		return blogServ.getBloggerByCommentId(commentId);
 	}
@@ -92,6 +90,20 @@ public class BloggerController {
 	@GetMapping("/blogger/byPost/{postId}")
 	ResponseEntity<BloggerOutputDto> getBloggerByPostId(@PathVariable("postId") int postId) throws IdNotFoundException{
 		BloggerOutputDto blogger = blogServ.getBloggerByPostId(postId);
+		return new ResponseEntity<>(blogger, HttpStatus.OK);
+	}
+	
+	// Get Blogger by Award Id
+	@GetMapping("/bloggers/awardId/{awardId}")
+	ResponseEntity<List<BloggerOutputDto>> getBloggerByAwardId(@PathVariable("awardId") int awardId) throws IdNotFoundException {
+		List<BloggerOutputDto> bloggers =blogServ.getBloggerByAwardId(awardId);
+		return new ResponseEntity<>(bloggers, HttpStatus.OK);
+	}
+	
+	// Get Blogger by userId
+	@GetMapping("/blogger/byUser/{userId}")
+	ResponseEntity<BloggerOutputDto> getBloggerByUserId(@PathVariable("userId") int id){
+		BloggerOutputDto blogger = blogServ.getBloggerByUserId(id);
 		return new ResponseEntity<>(blogger, HttpStatus.OK);
 	}
 }

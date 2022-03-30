@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import com.example.demo.bean.Post;
 import com.example.demo.dto.PostDto;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
@@ -64,9 +62,9 @@ public class PostController {
 	}
 	
 	//Get posts with BloggerId
-	@GetMapping("/Posts/{bloggerId}")
-	ResponseEntity<List<PostDto>> getPostsByBloggerId(@PathVariable("bloggerId") int id){
-		List<PostDto> posts = postServ.getPostsByBloggerId(id);
+	@GetMapping("/Posts/byBlogger/{bloggerId}")
+	ResponseEntity<List<PostOutputDto>> getPostsByBloggerId(@PathVariable("bloggerId") int id){
+		List<PostOutputDto> posts = postServ.getPostsByBlogger(id);
 		return new ResponseEntity<>(posts,HttpStatus.OK);
 		
 	}

@@ -69,8 +69,8 @@ public class CommentController {
 	}
 	
 	// Get Comments by Blogger
-	@GetMapping("/comments/byBloggerId/{userId}")
-	public ResponseEntity<List<CommentOutputDto>> listAllCommentsOfBlogger(@PathVariable("userId") int userId){
+	@GetMapping("/comments/byBloggerId/{bloggerId}")
+	public ResponseEntity<List<CommentOutputDto>> listAllCommentsOfBlogger(@PathVariable("bloggerId") int userId){
 		List<CommentOutputDto> comments = comServ.listAllCommentsOfBlogger(userId);
 		return new ResponseEntity<>(comments, HttpStatus.OK);
 	}

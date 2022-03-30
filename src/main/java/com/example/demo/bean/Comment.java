@@ -43,6 +43,6 @@ public class Comment {
 	// MantToOne Relationship with Blogger
 	// One blogger can have many comments
 	@ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "blogger_id")
 	private Blogger blogger;
 }

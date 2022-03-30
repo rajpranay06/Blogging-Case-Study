@@ -19,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.example.demo.bean.Award;
+import com.example.demo.bean.Blogger;
 import com.example.demo.bean.Coin;
 import com.example.demo.bean.Community;
 import com.example.demo.bean.Post;
@@ -27,6 +28,7 @@ import com.example.demo.dto.PostDto;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
 import com.example.demo.repository.IAwardRepository;
+import com.example.demo.repository.IBloggerRepository;
 import com.example.demo.repository.ICommunityRepository;
 import com.example.demo.repository.IPostRepository;
 
@@ -49,6 +51,10 @@ public class PostServiceMockitoTest {
 	
 	@MockBean
 	ICommunityRepository communityRepo;
+	
+	@MockBean
+	IBloggerRepository blogRepo;
+	
 	// Initialization of mock objects
 	@BeforeEach
 	void init() {
@@ -107,6 +113,16 @@ public class PostServiceMockitoTest {
 		// Setting community to post
 		newPost.setCommunity(com);
 		
+		// Creating Blogger
+		Blogger blogger = new Blogger();
+		
+		// Setting the values
+		blogger.setBloggerId(13);
+		blogger.setBloggerName("Abc");
+		blogger.setKarma(20);
+		
+		newPost.setBlogger(blogger);
+		
 		// Sending post object when save function is called
 		Mockito.when(postRepo.save(newPost)).thenReturn(newPost);
 		
@@ -124,6 +140,7 @@ public class PostServiceMockitoTest {
 		assertEquals(false, addedPost.isVoteUp());
 		assertEquals(1, addedPost.getAwards().size());
 		assertEquals(com, addedPost.getCommunity());
+		assertEquals(13, addedPost.getBlogger().getBloggerId());
 	}
 	
 	@Test
@@ -151,6 +168,8 @@ public class PostServiceMockitoTest {
 		
 		// Setting community Id
 		updatedPost.setCommunityId(12);
+		
+		updatedPost.setBloggerId(13);
 		
 		// Creating post object
 		Post post = new Post();
@@ -207,6 +226,18 @@ public class PostServiceMockitoTest {
 		
 		// Setting community to post
 		post.setCommunity(com);
+		
+		// Creating Blogger
+		Blogger blogger = new Blogger();
+		
+		// Setting the values
+		blogger.setBloggerId(13);
+		blogger.setBloggerName("Abc");
+		blogger.setKarma(20);
+		
+		Mockito.when(blogRepo.findById(13)).thenReturn(Optional.of(blogger));
+		
+		post.setBlogger(blogger);
 
 		// Sending the post object when the following functions are called instead of using database
 		Mockito.when(postRepo.findById(59)).thenReturn(Optional.of(post));
@@ -225,6 +256,7 @@ public class PostServiceMockitoTest {
 		assertEquals(true, updatedPostOutput.isSpoiler());
 		assertEquals(true, updatedPostOutput.isVoteUp());
 		assertEquals(com, updatedPostOutput.getCommunity());
+		assertEquals(13, updatedPostOutput.getBlogger().getBloggerId());
 	}
 	
 	@Test
@@ -321,6 +353,64 @@ public class PostServiceMockitoTest {
 		
 		List<PostOutputDto> postslist = postServ.getPostByawardId(10);
 		assertEquals(1,postslist.size());
+		
+	}
+	
+	@Test
+	void listPostsByBloggerIdTest()
+	{
+		List<Post> posts = new ArrayList<Post>();
+		
+		Post post1 = new Post();
+		post1.setPostId(100);
+		post1.setTitle("Lucifer");
+		post1.setContent(PostType.VIDEO_IMAGE);
+		post1.setCreatedDateTime(LocalDateTime.now());
+		post1.setFlair("Deckerstar");
+		post1.setNotSafeForWork(false);
+		post1.setOriginalContent(true);
+		post1.setVotes(10000);
+		post1.setVoteUp(false);
+		post1.setSpoiler(true);
+		
+		posts.add(post1);
+		
+		Mockito.when(postRepo.getPostsByBlogger(12)).thenReturn(posts);
+		
+		List<PostOutputDto> postslist = postServ.getPostsByBlogger(12);
+		assertEquals(1,postslist.size());
+		
+	}
+	
+	@Test
+	void getPostByCommentId()
+	{	
+		Post post1 = new Post();
+		post1.setPostId(100);
+		post1.setTitle("Lucifer");
+		post1.setContent(PostType.VIDEO_IMAGE);
+		post1.setCreatedDateTime(LocalDateTime.now());
+		post1.setFlair("Deckerstar");
+		post1.setNotSafeForWork(false);
+		post1.setOriginalContent(true);
+		post1.setVotes(10000);
+		post1.setVoteUp(false);
+		post1.setSpoiler(true);
+		
+		Mockito.when(postRepo.getPostByCommentId(15)).thenReturn(post1);
+		
+		PostOutputDto post = postServ.getPostByCommentId(15);
+		
+		// comparing the values
+		assertEquals(100, post.getPostId());
+		assertEquals("Lucifer", post.getTitle());
+		assertEquals(PostType.VIDEO_IMAGE, post.getContent());
+		assertEquals("eckerstar", post.getFlair());
+		assertEquals(10000, post.getVotes());
+		assertEquals(false, post.isNotSafeForWork());
+		assertEquals(true, post.isOriginalContent());
+		assertEquals(true, post.isSpoiler());
+		assertEquals(false, post.isVoteUp());
 		
 	}
 }

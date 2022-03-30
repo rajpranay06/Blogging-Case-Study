@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.bean.Admin;
 import com.example.demo.bean.UserEntity;
 import com.example.demo.dto.UserInputDto;
+import com.example.demo.dto.UserOutputDto;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.IAdminRepository;
 import com.example.demo.repository.IUserRepository;
@@ -23,13 +25,22 @@ public class UserServiceImpl implements IUserService{
 	IAdminRepository adminRepo;
 	
 	@Override
-	public UserEntity addNewUser(UserEntity user) {
+	public UserOutputDto addNewUser(UserEntity user) {
 	
-		return userRepo.save(user);
+		UserEntity newUser = userRepo.save(user);
+		
+		// Creating UserOutputDto
+		UserOutputDto userOutput = new UserOutputDto();
+		userOutput.setEmail(newUser.getEmail());
+		userOutput.setUserId(newUser.getUserId());
+		userOutput.setLoginStatus(newUser.isLoginStatus());
+		userOutput.setRole(newUser.getRole());
+		
+		return userOutput;
 	}
 
 	@Override
-	public UserEntity signIn(UserInputDto user) {
+	public UserOutputDto signIn(UserInputDto user) {
 		
 		Optional<UserEntity> opt = userRepo.findById(user.getUserId());
 		
@@ -42,37 +53,84 @@ public class UserServiceImpl implements IUserService{
 		//compare login and dblogin details
 		if(user.getEmail().equals(dbuser.getEmail()) && user.getPassword().equals(dbuser.getPassword())) {
 			dbuser.setLoginStatus(true);
-			userRepo.save(dbuser);
-			return dbuser;
+			UserEntity updatedUser = userRepo.save(dbuser);
+			
+			// Creating UserOutputDto
+			UserOutputDto userOutput = new UserOutputDto();
+			userOutput.setEmail(updatedUser.getEmail());
+			userOutput.setUserId(updatedUser.getUserId());
+			userOutput.setLoginStatus(updatedUser.isLoginStatus());
+			userOutput.setRole(updatedUser.getRole());
+			
+			return userOutput;
 		}
-		
 		throw new UserNotFoundException("Invalid Credentials");
-		
 	}
 
 	@Override
-	public UserEntity signOut(int id) {
+	public UserOutputDto signOut(int id) {
 
-		
-		UserEntity user=new UserEntity();
-		Optional<UserEntity> opt=userRepo.findById(id);
+		Optional<UserEntity> opt = userRepo.findById(id);
 		if(!opt.isPresent()) {
 			throw new UserNotFoundException("User not found with id: "+ id);
 		}
+		
+		// Getting the User
+		UserEntity user = opt.get();
 		user.setLoginStatus(false);
+		
+		UserEntity signOutUser = userRepo.save(user);
 	
-		return opt.get();
+		// Creating UserOutputDto
+		UserOutputDto userOutput = new UserOutputDto();
+		userOutput.setEmail(signOutUser.getEmail());
+		userOutput.setUserId(signOutUser.getUserId());
+		userOutput.setLoginStatus(signOutUser.isLoginStatus());
+		userOutput.setRole(signOutUser.getRole());
+		
+		return userOutput;
 	}
 
 	@Override
-	public List<UserEntity> getAllUsers() {
-		return userRepo.findAll();
+	public List<UserOutputDto> getAllUsers() {
+		// Creating list of userOutputDto
+		List<UserOutputDto> users = new ArrayList<>();
+		
+		for(UserEntity user : userRepo.findAll()) {
+			
+			// Creating UserOutputDto
+			UserOutputDto userOutput = new UserOutputDto();
+			userOutput.setEmail(user.getEmail());
+			userOutput.setUserId(user.getUserId());
+			userOutput.setLoginStatus(user.isLoginStatus());
+			userOutput.setRole(user.getRole());
+			
+			users.add(userOutput);
+		}
+		
+		return users;
 	}
 
 	@Override
 	public Admin addAdmin(Admin admin) {
 	
 		return adminRepo.save(admin);
+	}
+	
+	@Override
+	public UserOutputDto getUserByBloggerId(int bloggerId) {
+		UserEntity user = userRepo.getUserByBloggerId(bloggerId);
+		if(user == null) {
+			throw new UserNotFoundException("No blogger found with blogger id:" + bloggerId);
+		}
+		// Creating UserOutputDto
+		UserOutputDto userOutput = new UserOutputDto();
+		userOutput.setEmail(user.getEmail());
+		userOutput.setUserId(user.getUserId());
+		userOutput.setLoginStatus(user.isLoginStatus());
+		userOutput.setRole(user.getRole());
+		
+		return userOutput;
 	}
 
 }

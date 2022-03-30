@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,10 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.example.demo.dto.BloggerOutputDto;
-import com.example.demo.bean.Award;
 import com.example.demo.bean.Blogger;
-import com.example.demo.bean.Coin;
-import com.example.demo.bean.Comment;
 import com.example.demo.exception.IdNotFoundException;
 import com.example.demo.repository.IBloggerRepository;
 import com.example.demo.repository.ICommentRepository;
@@ -30,8 +26,7 @@ import com.example.demo.repository.ICommentRepository;
 import org.mockito.BDDMockito;
 
 import com.example.demo.bean.Community;
-import com.example.demo.bean.Post;
-import com.example.demo.bean.PostType;
+import com.example.demo.bean.UserEntity;
 import com.example.demo.repository.ICommunityRepository;
 import com.example.demo.repository.IPostRepository;
 
@@ -68,37 +63,9 @@ class BloggerServiceMockitoTest {
 		Blogger blogger = new Blogger();
 		
 		// Setting the values
-		blogger.setUserId(1);
+		blogger.setBloggerId(1);
 		blogger.setBloggerName("Abc");
 		blogger.setKarma(20);
-		
-		// Post
-		Post newPost = new Post();
-		// Setting the values
-		newPost.setPostId(100);
-		newPost.setTitle("Lucifer");
-		newPost.setContent(PostType.VIDEO_IMAGE);
-		newPost.setCreatedDateTime(LocalDateTime.now());
-		newPost.setFlair("Deckerstar");
-		newPost.setNotSafeForWork(false);
-		newPost.setOriginalContent(true);
-		newPost.setVotes(10000);
-		newPost.setVoteUp(false);
-		newPost.setSpoiler(true);
-		
-		List<Award> awards = new ArrayList<>();
-		Award award = new Award();
-		award.setAwardId(5);
-		award.setCoin(Coin.GOLD);
-		
-		awards.add(award);
-		
-		newPost.setAwards(awards);
-		
-		List<Post> posts = new ArrayList<>();
-		posts.add(newPost);
-		
-		
 		
 		// Community 
 		File fw = new File("abc.jpg");
@@ -121,24 +88,17 @@ class BloggerServiceMockitoTest {
 		List<String> f = new ArrayList<String>();
 		f.add("SportsNews");
 		
+		// Creating community using constructor
 		Community com = new Community(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f);
-		
-		Community newCommunity = new Community();
-		newCommunity.setCommunityId(com.getCommunityId());
-		newCommunity.setCommunityDescription(com.getCommunityDescription());
-		newCommunity.setTotalMembers(com.getTotalMembers());
-		newCommunity.setOnlineMembers(com.getOnlineMembers());
-		newCommunity.setImage(com.getImage());
-		newCommunity.setCreatedOn(com.getCreatedOn());
-		newCommunity.setPostRulesAllowed(com.getPostRulesAllowed());
-		newCommunity.setPostRulesDisAllowed(com.getPostRulesDisAllowed());
-		newCommunity.setBanningPolicy(com.getBanningPolicy());
-		newCommunity.setFlairs(com.getFlairs());
-		
+	
 		List<Community> communities = new ArrayList<>();
-		communities.add(newCommunity);
+		communities.add(com);
 		
 		blogger.setCommunities(communities);
+		
+		// Creating and setting the user
+		UserEntity user = new UserEntity(5,"ram@gmail.com","ram@1234","Trader",false);
+		blogger.setUser(user);
 		
 		// Sending post object when save function is called
 		Mockito.when(blogRepo.save(blogger)).thenReturn(blogger);
@@ -146,13 +106,11 @@ class BloggerServiceMockitoTest {
 		Blogger newBlog = blogSer.addBlogger(blogger);
 
 		// checking if the added blogger values are equal to the newBlog or not
-		assertEquals(1, newBlog.getUserId());
+		assertEquals(1, newBlog.getBloggerId());
 		assertEquals("Abc", newBlog.getBloggerName());
 		assertEquals(20,newBlog.getKarma());
-		assertEquals(2, newBlog.getComments().size());
-	
-		assertEquals(1, newBlog.getPosts().size());
 		assertEquals(1, newBlog.getCommunities().size());
+		assertEquals(5, newBlog.getUser().getUserId());
 	}
 
 	@Test
@@ -160,37 +118,9 @@ class BloggerServiceMockitoTest {
 		Blogger blogger = new Blogger();
 		
 		// Setting the values
-		blogger.setUserId(1);
+		blogger.setBloggerId(1);
 		blogger.setBloggerName("Abc");
 		blogger.setKarma(20);
-		
-		// Post
-		Post newPost = new Post();
-		// Setting the values
-		newPost.setPostId(100);
-		newPost.setTitle("Lucifer");
-		newPost.setContent(PostType.VIDEO_IMAGE);
-		newPost.setCreatedDateTime(LocalDateTime.now());
-		newPost.setFlair("Deckerstar");
-		newPost.setNotSafeForWork(false);
-		newPost.setOriginalContent(true);
-		newPost.setVotes(10000);
-		newPost.setVoteUp(false);
-		newPost.setSpoiler(true);
-		
-		List<Award> awards = new ArrayList<>();
-		Award award = new Award();
-		award.setAwardId(5);
-		award.setCoin(Coin.GOLD);
-		
-		awards.add(award);
-		
-		newPost.setAwards(awards);
-		
-		List<Post> posts = new ArrayList<>();
-		posts.add(newPost);
-		
-		
 		
 		// Community 
 		File fw = new File("abc.jpg");
@@ -215,22 +145,14 @@ class BloggerServiceMockitoTest {
 		
 		Community com = new Community(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f);
 		
-		Community newCommunity = new Community();
-		newCommunity.setCommunityId(com.getCommunityId());
-		newCommunity.setCommunityDescription(com.getCommunityDescription());
-		newCommunity.setTotalMembers(com.getTotalMembers());
-		newCommunity.setOnlineMembers(com.getOnlineMembers());
-		newCommunity.setImage(com.getImage());
-		newCommunity.setCreatedOn(com.getCreatedOn());
-		newCommunity.setPostRulesAllowed(com.getPostRulesAllowed());
-		newCommunity.setPostRulesDisAllowed(com.getPostRulesDisAllowed());
-		newCommunity.setBanningPolicy(com.getBanningPolicy());
-		newCommunity.setFlairs(com.getFlairs());
-		
 		List<Community> communities = new ArrayList<>();
-		communities.add(newCommunity);
+		communities.add(com);
 		
 		blogger.setCommunities(communities);
+		
+		// Creating and setting the user
+		UserEntity user = new UserEntity(5,"ram@gmail.com","ram@1234","Trader",false);
+		blogger.setUser(user);
 		
 		// Sending post object when save function is called
 		Mockito.when(blogRepo.findById(1)).thenReturn(Optional.of(blogger));
@@ -238,7 +160,7 @@ class BloggerServiceMockitoTest {
 		BloggerOutputDto newBlog = blogSer.viewBlogger(1);
 
 		// checking if the added blogger values are equal to the newBlog or not
-		assertEquals(1, newBlog.getUserId());
+		assertEquals(1, newBlog.getBloggerId());
 		assertEquals("Abc", newBlog.getBloggerName());
 		assertEquals(20,newBlog.getKarma());
 	}
@@ -259,5 +181,24 @@ class BloggerServiceMockitoTest {
 		verify(blogRepo).findAll();
 	}
 
+	@Test
+	public void getBloggerByUserId() {
+		
+		Blogger blogger = new Blogger();
+		
+		// Setting the values
+		blogger.setBloggerId(1);
+		blogger.setBloggerName("Abc");
+		blogger.setKarma(20);
+		
+		Mockito.when(blogRepo.getBloggerByUserId(10)).thenReturn(blogger);
+		
+		BloggerOutputDto blog = blogSer.getBloggerByUserId(10);
+		
+		// checking if the blogger values are equal to the blog or not
+		assertEquals(1, blog.getBloggerId());
+		assertEquals("Abc", blog.getBloggerName());
+		assertEquals(20, blog.getKarma());
+	}
 	
 }
