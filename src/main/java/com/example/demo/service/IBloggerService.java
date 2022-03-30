@@ -15,9 +15,9 @@ public interface IBloggerService {
 	public void deleteBlogger(int bloggerId) throws IdNotFoundException;
 	public BloggerOutputDto viewBlogger(int bloggerId) throws IdNotFoundException;
 	public List<BloggerOutputDto> viewAllBloggers();
-	public BloggerOutputDto getBloggerByCommentId(int commentId);
+	public BloggerOutputDto getBloggerByCommentId(int commentId) throws IdNotFoundException;
 	public List<BloggerOutputDto> viewBloggerListByCommunityId(int communityId) throws IdNotFoundException;
-	public BloggerDto addBloggerDto(BloggerInputDto blogger);
-	public BloggerOutputDto getBloggerByPostId(int postId);
+	public BloggerDto addBloggerDto(BloggerInputDto blogger) throws IdNotFoundException;
+	public BloggerOutputDto getBloggerByPostId(int postId) throws IdNotFoundException;
 
 }

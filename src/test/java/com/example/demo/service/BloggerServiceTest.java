@@ -23,12 +23,11 @@ class BloggerServiceTest {
 
 	@Test
 	@Disabled
-	void addBloggerTest() {
+	void addBloggerTest() throws IdNotFoundException {
 		
 		// Creating blogger object and setting values
 		BloggerInputDto blogger = new BloggerInputDto();
 		blogger.setBloggerName("TestDemo");
-		blogger.setKarma(3);
 		
 		List<Integer> communityIds = new ArrayList<>();
 		communityIds.add(19);
@@ -46,7 +45,6 @@ class BloggerServiceTest {
 		
 		// Comparing both the blogger values
 		assertEquals("TestDemo", newBlog.getBloggerName());
-		assertEquals(3, newBlog.getKarma());
 		assertEquals(1, newBlog.getComments().size());
 		assertEquals(1, newBlog.getCommunities().size());
 		assertEquals(1, newBlog.getPosts().size());
@@ -58,7 +56,6 @@ class BloggerServiceTest {
 		BloggerInputDto blogger = new BloggerInputDto();
 		blogger.setUserId(27);
 		blogger.setBloggerName("updateTestDemo");
-		blogger.setKarma(30);
 		
 		// Storing comment ids in a list of integers
 		List<Integer> commentIds = new ArrayList<>();
@@ -80,7 +77,6 @@ class BloggerServiceTest {
 		
 		assertEquals(27, updatedBlog.getUserId());
 		assertEquals("updateTestDemo", updatedBlog.getBloggerName());
-		assertEquals(30, updatedBlog.getKarma());
 		assertEquals(1, updatedBlog.getComments().size());
 		assertEquals(1, updatedBlog.getPosts().size());
 		assertEquals(1, updatedBlog.getCommunities().size());

@@ -159,7 +159,14 @@ public class PostServiceImpl implements IPostService {
 		
 		List<PostOutputDto> allPosts = new ArrayList<>();
 		
-		for(Post post : postRepo.getPostsByBlogger(bloggerId)) {
+		List<Post> posts = postRepo.getPostsByBlogger(bloggerId);
+		
+		if(posts.isEmpty())
+		{
+			throw new PostIdNotFoundException("No post found for the blogger with id: "+ bloggerId);
+		}
+		
+		for(Post post : posts) {
 			
 			// Creating PostOutputDto object
 			PostOutputDto postOutputDto = new PostOutputDto();
@@ -186,6 +193,11 @@ public class PostServiceImpl implements IPostService {
 		
 		// Getting all the posts with award id
 		List<Post> posts = postRepo.getAllPostsByAwardId(id);
+		
+		if(posts.isEmpty())
+		{
+			throw new PostIdNotFoundException("No post found for the award with id: "+ id);
+		}
 		
 		// Creating a list of postOutputDto object
 		List<PostOutputDto> allPosts = new ArrayList<>();

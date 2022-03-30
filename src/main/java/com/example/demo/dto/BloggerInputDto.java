@@ -18,7 +18,6 @@ public class BloggerInputDto {
 	@NotEmpty(message="Name shouldn't be empty")
 	@Size(min=3, max=50, message="Min 3 characters required")
 	private String bloggerName;
-	private int karma;
 	
 	private List<Integer> commentIds;
 	List<Integer> postIds;
