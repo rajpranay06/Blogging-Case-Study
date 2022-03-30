@@ -9,4 +9,5 @@ public class CommentDto {
 	private int votes;
 	private boolean voteUp;
 	private PostOutputDto post;
+	private BloggerOutputDto blogger;
 }

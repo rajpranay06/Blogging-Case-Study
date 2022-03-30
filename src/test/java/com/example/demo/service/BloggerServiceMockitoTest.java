@@ -72,22 +72,6 @@ class BloggerServiceMockitoTest {
 		blogger.setBloggerName("Abc");
 		blogger.setKarma(20);
 		
-		Comment comment1 = new Comment();
-		comment1.setCommentId(26);
-		comment1.setCommentDescription("Awesome");
-		comment1.setVotes(10);
-		
-		Comment comment2 = new Comment();
-		comment2.setCommentId(27);
-		comment2.setCommentDescription("Fab");
-		comment2.setVotes(10);
-		
-		List<Comment> comments = new ArrayList<>();
-		comments.add(comment1);
-		comments.add(comment2);
-		
-		blogger.setComments(comments);
-		
 		// Post
 		Post newPost = new Post();
 		// Setting the values
@@ -165,7 +149,6 @@ class BloggerServiceMockitoTest {
 		assertEquals(1, newBlog.getUserId());
 		assertEquals("Abc", newBlog.getBloggerName());
 		assertEquals(20,newBlog.getKarma());
-		assertEquals(2, newBlog.getComments().size());
 		assertEquals(1, newBlog.getPosts().size());
 		assertEquals(1, newBlog.getCommunities().size());
 	}
@@ -178,22 +161,6 @@ class BloggerServiceMockitoTest {
 		blogger.setUserId(1);
 		blogger.setBloggerName("Abc");
 		blogger.setKarma(20);
-		
-		Comment comment1 = new Comment();
-		comment1.setCommentId(26);
-		comment1.setCommentDescription("Awesome");
-		comment1.setVotes(10);
-		
-		Comment comment2 = new Comment();
-		comment2.setCommentId(27);
-		comment2.setCommentDescription("Fab");
-		comment2.setVotes(10);
-		
-		List<Comment> comments = new ArrayList<>();
-		comments.add(comment1);
-		comments.add(comment2);
-		
-		blogger.setComments(comments);
 		
 		// Post
 		Post newPost = new Post();
