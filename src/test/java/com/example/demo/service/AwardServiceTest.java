@@ -13,7 +13,7 @@ import com.example.demo.bean.Award;
 
 @SpringBootTest
 class AwardServiceTest {
-	
+
 	@Autowired
 	IAwardService awardServ;
 
@@ -23,15 +23,20 @@ class AwardServiceTest {
 		Award awards = new Award();
 		awards.setAwardId(107);
 		awards.setAwardId(1);
-		
+
 		Award award = awardServ.addAward(awards);
 		assertEquals(107, award.getAwardId());
 	}
-	
+
 	@Test
 	void getAwardByPostId() {
 		List<Award> awards = awardServ.getAwardByPostId(94);
 		assertEquals(1, awards.size());
 	}
 
+	@Test
+	void getAwardsByBlogId() {
+		List<Award> awards = awardServ.getAwardsByBlogId(63);
+		assertEquals(1, awards.size());
+	}
 }

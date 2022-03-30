@@ -41,4 +41,11 @@ public class AwardController {
 		List<Award> aw = awardServ.getAwardByPostId(id);
 		return new ResponseEntity<>(aw, HttpStatus.OK);
 	}
+	// Get Awards by Blog id
+		@GetMapping("/awards/blog/{id}")
+		ResponseEntity<List<Award>> getAwardsByBlogId(@PathVariable("id") int id){
+			List<Award> aw = awardServ.getAwardsByBlogId(id);
+			return new ResponseEntity<>(aw, HttpStatus.OK);
+		}
+	
 }

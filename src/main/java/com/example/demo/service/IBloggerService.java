@@ -18,5 +18,7 @@ public interface IBloggerService {
 	public List<BloggerOutputDto> viewBloggerListByCommunityId(int communityId) throws IdNotFoundException;
 	public Blogger addBloggerDto(BloggerInputDto blogger);
 	public BloggerOutputDto getBloggerByPostId(int postId);
+	
+	public List<BloggerOutputDto> getBloggerByAwardId(int awardId)throws IdNotFoundException;
 
 }

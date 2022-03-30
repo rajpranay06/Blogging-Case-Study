@@ -23,5 +23,6 @@ public class BloggerInputDto {
 	private List<Integer> commentIds;
 	List<Integer> postIds;
 	private List<Integer> communityIds;
+	private List<Integer> awardsIds;
 
 }

@@ -39,4 +39,13 @@ public class AwardServiceImpl implements IAwardService{
 		return  awards;
 	}
 
+	@Override
+	public List<Award> getAwardsByBlogId(int id) {
+		List<Award> awards = awardRepo.getAwardsByBlogId(id);
+		if(awards.isEmpty()) {
+			throw new AwardNotFoundException("award not found with given Blog id");
+		}
+		return  awards;
+	}
+
 }

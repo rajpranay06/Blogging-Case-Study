@@ -92,4 +92,15 @@ public class BloggerController {
 		BloggerOutputDto blogger = blogServ.getBloggerByPostId(postId);
 		return new ResponseEntity<>(blogger, HttpStatus.OK);
 	}
+	
+	// Get Blogger by Award Id
+	@GetMapping("/bloggers/awardId/{awardId}")
+	ResponseEntity<List<BloggerOutputDto>> getBloggerByAwardId(@PathVariable("awardId") int awardId) throws IdNotFoundException {
+		List<BloggerOutputDto> bloggers =blogServ.getBloggerByAwardId(awardId);
+		return new ResponseEntity<>(bloggers, HttpStatus.OK);
+
+	}
+	
+	
+	
 }
