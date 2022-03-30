@@ -19,4 +19,5 @@ public interface IPostService {
 	public List<PostOutputDto> listPostsByCommunityId(int communityId);
 	public PostOutputDto getPostByCommentId(int commentId);
 	public List<PostOutputDto> getPostsByBlogger(int id);
+	public List<PostOutputDto> getUpvotedPostsOfBlogger(int bloggerId);
 }

@@ -90,4 +90,11 @@ public class PostController {
 		PostOutputDto post = postServ.getPostByCommentId(commentId);
 		return new ResponseEntity<>(post, HttpStatus.OK);
 	}
+	
+	// Get upvoted posts of blogger
+	@GetMapping("/posts/upvoted/{bloggerId}")
+	ResponseEntity<List<PostOutputDto>> getUpvotedPostsOfBlogger(@PathVariable("bloggerId") int id){
+		List<PostOutputDto> posts = postServ.getUpvotedPostsOfBlogger(id);
+		return new ResponseEntity<>(posts,HttpStatus.OK);
+	}
 }

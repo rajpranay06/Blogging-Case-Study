@@ -29,4 +29,8 @@ public class PostInputDto {
     private String flair;
     private List<Integer> awardIds;
     private Integer communityId;
+    
+    // Boolean flag to get the approval of moderator
+ 	// Flag should be false to add the comment to the database
+ 	private boolean flag;
 }

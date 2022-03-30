@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.example.demo.bean.ErrorResponse;
 
 @ControllerAdvice
-public class UserExceptionHandler {
-
+public class ModeratorApprovalExceptionHandler {
 	@ExceptionHandler
-	public ResponseEntity<ErrorResponse> handleException(UserNotFoundException exception) {
+	public ResponseEntity<ErrorResponse> handleException(ModeratorApprovalException exception) {
 		ErrorResponse error = new ErrorResponse();
 		
 		error.setStatus(HttpStatus.NOT_FOUND.value());
@@ -23,4 +22,3 @@ public class UserExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);  //404 Not found
 	}
 }
-

@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.bean.Award;
 import com.example.demo.bean.Community;
+import com.example.demo.bean.Moderator;
 import com.example.demo.bean.Post;
 import com.example.demo.dto.PostDto;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
 import com.example.demo.exception.AwardNotFoundException;
+import com.example.demo.exception.ModeratorApprovalException;
 import com.example.demo.exception.PostIdNotFoundException;
 import com.example.demo.repository.IPostRepository;
 import com.example.demo.repository.IAwardRepository;
@@ -31,12 +33,20 @@ public class PostServiceImpl implements IPostService {
 	@Autowired
 	IAwardRepository awardRepo;
 	
+	// Creating Moderator object
+	Moderator moderator = new Moderator();
+	
 	@Override
 	public Post addPostWithoutDto(Post post) {
 		return postRepo.save(post);
 	}
 	@Override
 	public PostDto addPost(PostInputDto post) {
+		
+		// Checking for Moderator Approval
+		if(!moderator.moderatesPostsAndComments(post.isFlag())) {
+			throw new ModeratorApprovalException("Post is not approved");
+		}
 		
 		// Creating post object
 		Post newPost = new Post();
@@ -56,9 +66,13 @@ public class PostServiceImpl implements IPostService {
 		List<Award> awards = new ArrayList<>();
 		for(Integer id : post.getAwardIds()) {
 			System.out.println(id);
-			Award award = awardRepo.findById(id).get();
-			System.out.println(award);
-			awards.add(award);
+			Optional<Award> opt = awardRepo.findById(id);
+			if(opt.isPresent()) {
+				awards.add(opt.get());
+			}
+			else {
+				throw new PostIdNotFoundException("Not found any award with id: " + id);
+			}
 		}
 		
 		// Setting the awards to the post
@@ -97,6 +111,11 @@ public class PostServiceImpl implements IPostService {
 	@Override
 	public PostDto updatePost(PostInputDto post) {
 		
+		// Checking for Moderator Approval
+		if(!moderator.moderatesPostsAndComments(post.isFlag())) {
+			throw new ModeratorApprovalException("Post is not approved");
+		}
+		
 		// Finding the post by id
 		Optional<Post> opt = postRepo.findById(post.getPostId());
 		if(!opt.isPresent()) {
@@ -123,11 +142,12 @@ public class PostServiceImpl implements IPostService {
 		for(Integer id: post.getAwardIds()) {
 			System.out.println(id);
 			Optional<Award> opt1 = awardRepo.findById(id);
-			if(!opt1.isPresent()) {
+			if(opt1.isPresent()) {
+				awards.add(opt1.get());
+			}
+			else {
 				throw new AwardNotFoundException("Not found any award with id: " + id);
 			}
-			awards.add(opt1.get());
-			
 		}
 		// Setting the awards
 		oldPost.setAwards(awards);
@@ -169,14 +189,16 @@ public class PostServiceImpl implements IPostService {
 		
 		// Finding the post by id
 		Optional<Post> opt = postRepo.findById(id);
-		if(!opt.isPresent()) {
-			 // If post is not present throw an error
-			 throw new PostIdNotFoundException("No post with id: " + id);
+		if(opt.isPresent()) {
+			Post deletedPost = opt.get();
+			// Calling delete function in postRepo
+			postRepo.delete(deletedPost);
 		}
-		Post deletedPost = opt.get();
+		else {
+			// If post is not present throw an error
+			throw new PostIdNotFoundException("No post with id: " + id);
+		}
 		
-		// Calling delete function in postRepo
-		postRepo.delete(deletedPost);
 	}
 
 	@Override
@@ -360,6 +382,42 @@ public class PostServiceImpl implements IPostService {
 		postOutputDto.setAwards(post.getAwards());
 		
 		return postOutputDto;
+	}
+	
+	@Override
+	public List<PostOutputDto> getUpvotedPostsOfBlogger(int bloggerId) {
+
+		// Creating a list of postOutputDto
+		List<PostOutputDto> allPosts = new ArrayList<>();
+		
+		List<Post> posts = postRepo.getUpvotedPostsOfBlogger(bloggerId);
+		
+		if(posts.isEmpty())
+		{
+			throw new PostIdNotFoundException("No upvoted post found for the blogger with id: "+ bloggerId);
+		}
+		
+		for(Post post : posts) {
+			
+			// Creating PostOutputDto object
+			PostOutputDto postOutputDto = new PostOutputDto();
+			
+			// Setting values for postOutputDto
+			postOutputDto.setPostId(post.getPostId());
+			postOutputDto.setTitle(post.getTitle());
+			postOutputDto.setContent(post.getContent());
+			postOutputDto.setCreatedDateTime(post.getCreatedDateTime());
+			postOutputDto.setFlair(post.getFlair().substring(1));
+			postOutputDto.setNotSafeForWork(post.isNotSafeForWork());
+			postOutputDto.setOriginalContent(post.isOriginalContent());
+			postOutputDto.setVotes(post.getVotes());
+			postOutputDto.setVoteUp(post.isVoteUp());
+			postOutputDto.setSpoiler(post.isSpoiler());
+			postOutputDto.setAwards(post.getAwards());
+			
+			allPosts.add(postOutputDto);
+		}
+		return allPosts;
 	}
 
 }
