@@ -149,11 +149,12 @@ public class BloggerServiceImpl implements IBloggerService {
 		if(!communityIds.isEmpty()) {
 			for(Integer id : communityIds) {
 				Optional<Community> opt = commRepo.findById(id);
-				if(!opt1.isPresent()) {
+				if(opt.isPresent()) {
+					communities.add(opt.get());
+				}
+				else {
 					throw new CommunityNotFoundException("No community is for with given id: "+ id);
 				}
-				
-				communities.add(opt.get());
 			}
 		}
 		updateBlogger.setCommunities(communities);
@@ -164,10 +165,12 @@ public class BloggerServiceImpl implements IBloggerService {
 		// Getting posts from the Post Entity by using ids
 		for(Integer id : blogger.getPostIds()) {
 			Optional<Post> opt = postRepo.findById(id);
-			if(!opt.isPresent()) {
-				throw new PostIdNotFoundException("No comment found with id: " + id);
+			if(opt.isPresent()) {
+				posts.add(opt.get());
 			}
-			posts.add(opt.get());
+			else {
+				throw new PostIdNotFoundException("No comment found with id: " + id);
+			}	
 		}
 						
 		updateBlogger.setPosts(posts);

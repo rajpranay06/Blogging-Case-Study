@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.File;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +20,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.example.demo.bean.Award;
 import com.example.demo.bean.Coin;
+import com.example.demo.bean.Community;
 import com.example.demo.bean.Post;
 import com.example.demo.bean.PostType;
+import com.example.demo.dto.PostDto;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
 import com.example.demo.repository.IAwardRepository;
-import com.example.demo.repository.ICommentRepository;
 import com.example.demo.repository.ICommunityRepository;
 import com.example.demo.repository.IPostRepository;
 
@@ -40,9 +43,6 @@ public class PostServiceMockitoTest {
 	// @MockBean - Creates Mock of a class or interface
 	@MockBean
 	IPostRepository postRepo;
-	
-	@MockBean
-	ICommentRepository comRepo;
 	
 	@MockBean
 	IAwardRepository awardRepo;
@@ -70,6 +70,7 @@ public class PostServiceMockitoTest {
 		newPost.setVoteUp(false);
 		newPost.setSpoiler(true);
 		
+		// Creating list of awards
 		List<Award> awards = new ArrayList<>();
 		Award award = new Award();
 		award.setAwardId(5);
@@ -77,7 +78,34 @@ public class PostServiceMockitoTest {
 		
 		awards.add(award);
 		
+		// Setting awards to post
 		newPost.setAwards(awards);
+		
+		// Creating Community
+		File fw = new File("abc.jpg");
+		
+		List<String> glist = new ArrayList<String>();
+		glist.add("Hockey");
+		glist.add("Cricket");
+		glist.add("Tennis");
+		
+		List<String> galist = new ArrayList<String>();
+		galist.add("Tours");
+		galist.add("Furniture");
+		galist.add("Houses");
+		
+		List<String> bp = new ArrayList<String>();
+		bp.add("Cheating");
+		bp.add("Drugs");
+		bp.add("Misuse");
+		
+		List<String> f = new ArrayList<String>();
+		f.add("SportsNews");
+		
+		Community com = new Community(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f);
+		
+		// Setting community to post
+		newPost.setCommunity(com);
 		
 		// Sending post object when save function is called
 		Mockito.when(postRepo.save(newPost)).thenReturn(newPost);
@@ -95,6 +123,7 @@ public class PostServiceMockitoTest {
 		assertEquals(true, addedPost.isSpoiler());
 		assertEquals(false, addedPost.isVoteUp());
 		assertEquals(1, addedPost.getAwards().size());
+		assertEquals(com, addedPost.getCommunity());
 	}
 	
 	@Test
@@ -120,6 +149,9 @@ public class PostServiceMockitoTest {
 		awardIds.add(88);
 		updatedPost.setAwardIds(awardIds);
 		
+		// Setting community Id
+		updatedPost.setCommunityId(12);
+		
 		// Creating post object
 		Post post = new Post();
 		
@@ -139,29 +171,60 @@ public class PostServiceMockitoTest {
 		awards.setAwardId(88);
 		awards.setCoin(Coin.PLATINUM);
 		
+		// Mockito when findById is called for getting award
 		Mockito.when(awardRepo.findById(88)).thenReturn(Optional.of(awards));
 		
 		List<Award> allAwards = new ArrayList<>();
 		allAwards.add(awards);
 		
 		post.setAwards(allAwards);
+		
+		// Creating Community
+		File fw = new File("abc.jpg");
+		
+		List<String> glist = new ArrayList<String>();
+		glist.add("Hockey");
+		glist.add("Cricket");
+		glist.add("Tennis");
+		
+		List<String> galist = new ArrayList<String>();
+		galist.add("Tours");
+		galist.add("Furniture");
+		galist.add("Houses");
+		
+		List<String> bp = new ArrayList<String>();
+		bp.add("Cheating");
+		bp.add("Drugs");
+		bp.add("Misuse");
+		
+		List<String> f = new ArrayList<String>();
+		f.add("SportsNews");
+		
+		Community com = new Community(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f);
+		
+		// Mockito when findById is called for getting community
+		Mockito.when(communityRepo.findById(12)).thenReturn(Optional.of(com));
+		
+		// Setting community to post
+		post.setCommunity(com);
+
 		// Sending the post object when the following functions are called instead of using database
 		Mockito.when(postRepo.findById(59)).thenReturn(Optional.of(post));
 		Mockito.when(postRepo.save(post)).thenReturn(post);
 		
-		Post updatedPostOutput = postServ.updatePost(updatedPost);
+		PostDto updatedPostOutput = postServ.updatePost(updatedPost);
 		
 		// checking if the updated post values are equal to the post or not
 		assertEquals(59, updatedPostOutput.getPostId());
 		assertEquals("Game of Thrones", updatedPostOutput.getTitle());
 		assertEquals(PostType.LINK, updatedPostOutput.getContent());
-		assertEquals("#GameOfThrones", updatedPostOutput.getFlair());
+		assertEquals("GameOfThrones", updatedPostOutput.getFlair());
 		assertEquals(234578, updatedPostOutput.getVotes());
 		assertEquals(false, updatedPostOutput.isNotSafeForWork());
 		assertEquals(true, updatedPostOutput.isOriginalContent());
 		assertEquals(true, updatedPostOutput.isSpoiler());
 		assertEquals(true, updatedPostOutput.isVoteUp());
-		assertEquals(1, updatedPostOutput.getAwards().size());
+		assertEquals(com, updatedPostOutput.getCommunity());
 	}
 	
 	@Test

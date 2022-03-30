@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.bean.Community;
-import com.example.demo.bean.Post;
 import com.example.demo.dto.CommunityInputDto;
 import com.example.demo.dto.CommunityOutputDto;
 import com.example.demo.exception.CommentNotFoundException;
@@ -55,18 +54,9 @@ public class CommunityServiceImpl implements ICommunityService {
 		newCommunity.setBanningPolicy(community.getBanningPolicy());
 		newCommunity.setFlairs(community.getFlairs());
 		
-		// Add posts to the community object
-		List<Post> posts = new ArrayList<>();
-
-		for (Integer id : community.getPostIds()) {
-			Post p = postRepo.findById(id).get();
-			posts.add(p);
-		}
-
-		newCommunity.setPost(posts);
-
 		// Saving Community Object to Repository
 		Community com = comRepo.save(newCommunity);
+		
 		return com;
 	}
 
@@ -87,16 +77,6 @@ public class CommunityServiceImpl implements ICommunityService {
 		newCommunity.setPostRulesDisAllowed(community.getPostRulesDisAllowed());
 		newCommunity.setBanningPolicy(community.getBanningPolicy());
 		newCommunity.setFlairs(community.getFlairs());
-
-		// Add posts to the community object
-		List<Post> posts = new ArrayList<>();
-
-		for (Integer id : community.getPostIds()) {
-			Post p = postRepo.findById(id).get();
-			posts.add(p);
-		}
-
-		newCommunity.setPost(posts);
 
 		// Save Updated Community to repository
 		Community com = comRepo.save(newCommunity);

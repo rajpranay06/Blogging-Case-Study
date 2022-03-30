@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
 
 import lombok.Data;
@@ -45,5 +46,10 @@ public class Post {
 		inverseJoinColumns = { @JoinColumn(name = "award_id") }
 	)
 	private List<Award> awards;
+	
+	//OneToMany-One Community can have many posts, One post Belongs to one Community
+	@ManyToOne(cascade=CascadeType.MERGE)
+	@JoinColumn(name="CommunityId")
+	private Community community;
     
 }
