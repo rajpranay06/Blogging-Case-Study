@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.bean.Comment;
+import com.example.demo.bean.Moderator;
 import com.example.demo.bean.Post;
 import com.example.demo.dto.CommentDto;
 import com.example.demo.dto.CommentInputDto;
 import com.example.demo.dto.CommentOutputDto;
 import com.example.demo.dto.PostOutputDto;
 import com.example.demo.exception.CommentNotFoundException;
+import com.example.demo.exception.ModeratorApprovalException;
 import com.example.demo.exception.PostIdNotFoundException;
 import com.example.demo.repository.IBloggerRepository;
 import com.example.demo.repository.ICommentRepository;
@@ -30,6 +32,8 @@ public class CommentServiceImpl implements ICommentService{
 	
 	@Autowired
 	IBloggerRepository blogRepo;
+	
+	Moderator moderator = new Moderator();
 
 	@Override
 	public CommentDto addComment(Comment comment) {
@@ -58,6 +62,7 @@ public class CommentServiceImpl implements ICommentService{
 		postOutputDto.setVotes(post.getVotes());
 		postOutputDto.setVoteUp(post.isVoteUp());
 		postOutputDto.setSpoiler(post.isSpoiler());
+		postOutputDto.setAwards(post.getAwards());
 		
 		comDto.setPost(postOutputDto);
 		
@@ -91,6 +96,12 @@ public class CommentServiceImpl implements ICommentService{
 
 	@Override
 	public CommentDto addCommentDto(CommentInputDto commentInputDto) {
+		
+		// Checking for moderator approval
+		if(!moderator.moderatesPostsAndComments(commentInputDto.isFlag())) {
+			throw new ModeratorApprovalException("Comment is not approved");
+		}
+		
 		// Creating Comment object
 		Comment com = new Comment();
 		
@@ -124,6 +135,7 @@ public class CommentServiceImpl implements ICommentService{
 		postOutputDto.setVotes(post.getVotes());
 		postOutputDto.setVoteUp(post.isVoteUp());
 		postOutputDto.setSpoiler(post.isSpoiler());
+		postOutputDto.setAwards(post.getAwards());
 		
 		CommentDto comDto = new CommentDto();
 		comDto.setCommentId(newCom.getCommentId());
@@ -214,6 +226,12 @@ public class CommentServiceImpl implements ICommentService{
 
 	@Override
 	public CommentOutputDto updateComment(CommentInputDto comment) {
+		
+		// Checking for moderator approval
+		if(!moderator.moderatesPostsAndComments(comment.isFlag())) {
+			throw new ModeratorApprovalException("Comment is not approved");
+		}
+				
 		// Creating Comment object
 		Optional<Comment> opt = comRepo.findById(comment.getCommentId());
 		if(!opt.isPresent()) {
