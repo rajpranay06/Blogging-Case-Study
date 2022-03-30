@@ -328,7 +328,10 @@ class BloggerServiceMockitoTest {
 		verify(blogRepo).findAll();
 	}
 
-	
+	@Test
+	void getBloggerByUserId() {
+		
+	}
 	
 	
 	
