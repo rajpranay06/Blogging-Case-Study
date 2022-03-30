@@ -7,8 +7,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.bean.Blogger;
 import com.example.demo.bean.Comment;
 import com.example.demo.bean.Post;
+import com.example.demo.dto.BloggerOutputDto;
 import com.example.demo.dto.CommentDto;
 import com.example.demo.dto.CommentInputDto;
 import com.example.demo.dto.CommentOutputDto;
@@ -35,6 +37,7 @@ public class CommentServiceImpl implements ICommentService{
 	public CommentDto addComment(Comment comment) {
 		
 		Comment com = comRepo.save(comment);
+		
 		// Setting comment variables by commentOutputDto values
 		CommentDto comDto = new CommentDto();
 		comDto.setCommentId(com.getCommentId());
@@ -60,6 +63,19 @@ public class CommentServiceImpl implements ICommentService{
 		postOutputDto.setSpoiler(post.isSpoiler());
 		
 		comDto.setPost(postOutputDto);
+		
+		// Creating Blogger object
+		Blogger blogger = comment.getBlogger();
+		
+		// Creating BloggerOutputDto
+		BloggerOutputDto bloggerOutputDto = new BloggerOutputDto();
+		
+		// Setting values for BloggerOutputDto
+		bloggerOutputDto.setUserId(blogger.getUserId());
+		bloggerOutputDto.setBloggerName(blogger.getBloggerName());
+		bloggerOutputDto.setKarma(blogger.getKarma());
+		
+		comDto.setBlogger(bloggerOutputDto);
 		
 		return comDto;
 	}
@@ -107,6 +123,14 @@ public class CommentServiceImpl implements ICommentService{
 		Post post = opt1.get();
 		com.setPost(post);
 		
+		//Get the Blogger with the id
+		Optional<Blogger> opt2 = blogRepo.findById(commentInputDto.getBloggerId());
+		if(!opt1.isPresent()) {
+			throw new PostIdNotFoundException("No blogger is found with id:" + commentInputDto.getBloggerId());
+		}
+		Blogger blogger = opt2.get();
+		com.setBlogger(blogger);
+		
 		//save the comment in DB
 		Comment newCom = comRepo.save(com);
 		
@@ -125,12 +149,21 @@ public class CommentServiceImpl implements ICommentService{
 		postOutputDto.setVoteUp(post.isVoteUp());
 		postOutputDto.setSpoiler(post.isSpoiler());
 		
+		// Creating BloggerOutputDto
+		BloggerOutputDto bloggerOutputDto = new BloggerOutputDto();
+		
+		// Setting values for BloggerOutputDto
+		bloggerOutputDto.setUserId(blogger.getUserId());
+		bloggerOutputDto.setBloggerName(blogger.getBloggerName());
+		bloggerOutputDto.setKarma(blogger.getKarma());
+		
 		CommentDto comDto = new CommentDto();
 		comDto.setCommentId(newCom.getCommentId());
 		comDto.setCommentDescription(newCom.getCommentDescription());
 		comDto.setVotes(newCom.getVotes());
 		comDto.setVoteUp(newCom.isVoteUp());
 		comDto.setPost(postOutputDto);
+		comDto.setBlogger(bloggerOutputDto);
 		
 		return comDto;
 	}
@@ -234,6 +267,15 @@ public class CommentServiceImpl implements ICommentService{
 		}
 		Post post = opt1.get();
 		com.setPost(post);
+		
+
+		//Get the Blogger with the id
+		Optional<Blogger> opt2 = blogRepo.findById(comment.getBloggerId());
+		if(!opt1.isPresent()) {
+			throw new PostIdNotFoundException("No blogger is found with id:" + comment.getBloggerId());
+		}
+		Blogger blogger = opt2.get();
+		com.setBlogger(blogger);
 		
 		//save the comment in DB
 		Comment newCom = comRepo.save(com);

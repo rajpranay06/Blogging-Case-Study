@@ -33,10 +33,7 @@ class BloggerServiceTest {
 		communityIds.add(19);
 		List<Integer> postIds = new ArrayList<>();
 		postIds.add(17);
-		List<Integer> commentIds = new ArrayList<>();
-		commentIds.add(21);
-		
-		blogger.setCommentIds(commentIds);
+
 		blogger.setCommunityIds(communityIds);
 		blogger.setPostIds(postIds);
 		
@@ -45,7 +42,6 @@ class BloggerServiceTest {
 		
 		// Comparing both the blogger values
 		assertEquals("TestDemo", newBlog.getBloggerName());
-		assertEquals(1, newBlog.getComments().size());
 		assertEquals(1, newBlog.getCommunities().size());
 		assertEquals(1, newBlog.getPosts().size());
 	}
@@ -57,11 +53,6 @@ class BloggerServiceTest {
 		blogger.setUserId(27);
 		blogger.setBloggerName("updateTestDemo");
 		
-		// Storing comment ids in a list of integers
-		List<Integer> commentIds = new ArrayList<>();
-		commentIds.add(21);
-		
-		blogger.setCommentIds(commentIds);
 		// Storing community ids in a list of integers
 		List<Integer> communityIds = new ArrayList<>();
 		communityIds.add(19);

@@ -22,4 +22,5 @@ public class CommentInputDto {
 	private int votes;
 	private boolean voteUp;
 	private Integer postId;
+	private Integer bloggerId;
 }

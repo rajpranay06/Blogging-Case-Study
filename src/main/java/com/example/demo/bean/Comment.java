@@ -1,11 +1,14 @@
 package com.example.demo.bean;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -36,4 +39,10 @@ public class Comment {
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "post_id")
 	private Post post;
+	
+	// MantToOne Relationship with Blogger
+	// One blogger can have many comments
+	@ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "user_id")
+	private Blogger blogger;
 }
