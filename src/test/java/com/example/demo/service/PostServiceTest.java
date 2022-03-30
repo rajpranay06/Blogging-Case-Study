@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.demo.bean.Post;
 import com.example.demo.bean.PostType;
+import com.example.demo.dto.PostDto;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
 
@@ -40,19 +40,16 @@ public class PostServiceTest {
 		newPost.setVoteUp(true);
 		newPost.setSpoiler(true);
 		
-		// Adding commentIds to the list
-		List<Integer> commentIds = new ArrayList<>();
-		commentIds.add(95);
-		commentIds.add(93);
-		
-		newPost.setCommentIds(commentIds);
-		
+		// Creating List of award ids
 		List<Integer> awardIds = new ArrayList<>();
-		awardIds.add(88);
+		awardIds.add(7);
 		newPost.setAwardIds(awardIds);
-		// Adding the post
-		Post post = postServ.addPost(newPost);
 		
+		// Setting community ID
+		newPost.setCommunityId(49);
+		
+		// Adding the post
+		PostDto post = postServ.addPost(newPost);
 		
 		// checking if the added post values are equal to the post or not
 		assertEquals("Game of Thrones", post.getTitle());
@@ -63,20 +60,19 @@ public class PostServiceTest {
 		assertEquals(true, post.isOriginalContent());
 		assertEquals(true, post.isSpoiler());
 		assertEquals(true, post.isVoteUp());
-		assertEquals(2,post.getComments().size());
-		assertEquals(1,post.getAwards().size());
+		assertEquals(49,post.getCommunity().getCommunityId());
 		
 	}
 	
 	
 	@Test
-	@Disabled
+//	@Disabled
 	void updatePostTest() {
 		// Creating PostInputDto object
 		PostInputDto updatedPost = new PostInputDto(); 
 		
 		// Setting the values
-		updatedPost.setPostId(94);
+		updatedPost.setPostId(52);
 		updatedPost.setTitle("Game of Thrones");
 		updatedPost.setContent(PostType.LINK);
 		updatedPost.setCreatedDateTime(LocalDateTime.now());
@@ -87,22 +83,19 @@ public class PostServiceTest {
 		updatedPost.setVoteUp(true);
 		updatedPost.setSpoiler(true);
 		
-		// Adding commentIds to the list
-		List<Integer> commentIds = new ArrayList<>();
-		commentIds.add(95);
-		commentIds.add(93);
-				
-		updatedPost.setCommentIds(commentIds);	
-		
+		// Setting list of award ids
 		List<Integer> awardIds = new ArrayList<>();
-		awardIds.add(88);
+		awardIds.add(7);
 		updatedPost.setAwardIds(awardIds);
 		
+		// Setting community ID
+		updatedPost.setCommunityId(49);
+		
 		// Updating the post
-		Post post = postServ.updatePost(updatedPost);
+		PostDto post = postServ.updatePost(updatedPost);
 		
 		// checking if the added post values are equal to the post or not
-		assertEquals(94, post.getPostId());
+		assertEquals(52, post.getPostId());
 		assertEquals("Game of Thrones", post.getTitle());
 		assertEquals(PostType.LINK, post.getContent());
 		assertEquals("GOTTheEpic", post.getFlair());
@@ -111,8 +104,7 @@ public class PostServiceTest {
 		assertEquals(true, post.isOriginalContent());
 		assertEquals(true, post.isSpoiler());
 		assertEquals(true, post.isVoteUp());
-		assertEquals(2,post.getComments().size());
-		assertEquals(1,post.getAwards().size());
+		assertEquals(49, post.getCommunity().getCommunityId());
 	}
 	
 	@Disabled
@@ -129,18 +121,20 @@ public class PostServiceTest {
 	void getPostsBySearchStringTest() {
 		
 		// Getting the posts
-		List<Post> posts = postServ.getPostBySearchString("of");
+		List<PostOutputDto> posts = postServ.getPostBySearchString("of");
 		
 		// checking the no of posts
 		assertEquals(1, posts.size());
 	}
 	
 	@Test
+	@Disabled
 	void getPostByawardIdTest() {
 		List<PostOutputDto> posts = postServ.getPostByawardId(88);
 		assertEquals(8, posts.size());
 	}
 	@Test
+	@Disabled
 	void listPostsByCommunityId()
 	{
 		List<PostOutputDto> posts = postServ.listPostsByCommunityId(362);

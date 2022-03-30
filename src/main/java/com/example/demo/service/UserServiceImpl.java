@@ -31,7 +31,13 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	public UserEntity signIn(UserInputDto user) {
 		
-		UserEntity dbuser= userRepo.getById(user.getUserId());
+		Optional<UserEntity> opt = userRepo.findById(user.getUserId());
+		
+		if(!opt.isPresent()) {
+			throw new UserNotFoundException("No user is found with id: " + user.getUserId());
+		}
+		
+		UserEntity dbuser = opt.get();
 		
 		//compare login and dblogin details
 		if(user.getEmail().equals(dbuser.getEmail()) && user.getPassword().equals(dbuser.getPassword())) {
@@ -39,7 +45,9 @@ public class UserServiceImpl implements IUserService{
 			userRepo.save(dbuser);
 			return dbuser;
 		}
-		return null;
+		
+		throw new UserNotFoundException("Invalid Credentials");
+		
 	}
 
 	@Override
@@ -61,13 +69,10 @@ public class UserServiceImpl implements IUserService{
 		return userRepo.findAll();
 	}
 
-
 	@Override
 	public Admin addAdmin(Admin admin) {
 	
 		return adminRepo.save(admin);
 	}
-
-	
 
 }

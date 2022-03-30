@@ -21,4 +21,10 @@ public class CommentInputDto {
 	private String commentDescription;
 	private int votes;
 	private boolean voteUp;
+	private Integer postId;
+	
+	// Boolean flag to get the approval of moderator
+	// Flag should be false to add the comment to the database
+	private boolean flag;
+  
 }

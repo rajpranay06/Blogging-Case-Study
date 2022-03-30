@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.example.demo.dto.BloggerDto;
 import com.example.demo.dto.BloggerInputDto;
 import com.example.demo.dto.BloggerOutputDto;
-import com.example.demo.bean.Blogger;
 import com.example.demo.exception.IdNotFoundException;
 
 @SpringBootTest
@@ -23,23 +23,43 @@ class BloggerServiceTest {
 
 	@Test
 	@Disabled
+
 	void addBloggerTest() {
 
+
+	void addBloggerTest() throws IdNotFoundException {
+
 		// Creating blogger object and setting values
-		Blogger blogger = new Blogger();
+		BloggerInputDto blogger = new BloggerInputDto();
 		blogger.setBloggerName("TestDemo");
+
 		blogger.setKarma(3);
 
 		// Calling addBlogger function in bloggerservice
 		Blogger newBlog = bloggerSer.addBlogger(blogger);
 
+
+		
+		List<Integer> communityIds = new ArrayList<>();
+		communityIds.add(19);
+		List<Integer> postIds = new ArrayList<>();
+		postIds.add(17);
+
+		blogger.setCommunityIds(communityIds);
+		blogger.setPostIds(postIds);
+		
+		// Calling addBlogger function in bloggerservice
+		BloggerDto newBlog = bloggerSer.addBloggerDto(blogger);
+		
+
 		// Comparing both the blogger values
 		assertEquals("TestDemo", newBlog.getBloggerName());
-		assertEquals(3, newBlog.getKarma());
-
+		assertEquals(1, newBlog.getCommunities().size());
+		assertEquals(1, newBlog.getPosts().size());
 	}
 
 	@Test
+
 	@Disabled
 	void addBloggerDtoTest() {
 		// Creating BloggerInputDto object
@@ -82,10 +102,14 @@ class BloggerServiceTest {
 
 	@Test
 	@Disabled
+=======
+
 	void updateBloggerTest() throws IdNotFoundException {
+		
 		BloggerInputDto blogger = new BloggerInputDto();
-		blogger.setUserId(69);
+		blogger.setUserId(27);
 		blogger.setBloggerName("updateTestDemo");
+
 		blogger.setKarma(30);
 
 		// Storing comment ids in a list of integers
@@ -102,15 +126,32 @@ class BloggerServiceTest {
 		Blogger updatedBlog = bloggerSer.updateBlogger(blogger);
 
 		assertEquals(69, updatedBlog.getUserId());
-		assertEquals("updateTestDemo", updatedBlog.getBloggerName());
-		assertEquals(30, updatedBlog.getKarma());
-		assertEquals(1, updatedBlog.getComments().size());
 
+		
+		// Storing community ids in a list of integers
+		List<Integer> communityIds = new ArrayList<>();
+		communityIds.add(19);
+		
+		blogger.setCommunityIds(communityIds);
+		
+		List<Integer> postIds = new ArrayList<>();
+		postIds.add(17);
+		
+		blogger.setPostIds(postIds);
+		
+		BloggerDto updatedBlog = bloggerSer.updateBlogger(blogger);
+		
+		assertEquals(27, updatedBlog.getUserId());
+
+		assertEquals("updateTestDemo", updatedBlog.getBloggerName());
+		assertEquals(1, updatedBlog.getComments().size());
+		assertEquals(1, updatedBlog.getPosts().size());
 		assertEquals(1, updatedBlog.getCommunities().size());
 
 	}
 
 	@Test
+
 	@Disabled
 	void deleteBloggerTest() throws IdNotFoundException {
 
@@ -136,23 +177,24 @@ class BloggerServiceTest {
 
 	@Test
 	@Disabled
+
 	void viewBloggerTest() throws IdNotFoundException {
-		Blogger blogger = bloggerSer.viewBlogger(36);
-		assertEquals("Tulsi", blogger.getBloggerName());
-		assertEquals(4, blogger.getKarma());
+		BloggerOutputDto blogger = bloggerSer.viewBlogger(13);
+		assertEquals("Blogger Test 1", blogger.getBloggerName());
+		assertEquals(80, blogger.getKarma());
 
 	}
 
 	@Test
-	@Disabled
 	void viewAllBloggersTest() {
-		List<Blogger> bloggers = bloggerSer.viewAllBloggers();
+		List<BloggerOutputDto> bloggers = bloggerSer.viewAllBloggers();
 		int noOfBloggers = bloggers.size();
-		assertEquals(8, noOfBloggers);
+		assertEquals(5, noOfBloggers);
 	}
 
 	@Test
 	void viewBloggerListByCommunityIdTest() throws IdNotFoundException {
+
 
 		List<BloggerOutputDto> bloggers = bloggerSer.viewBloggerListByCommunityId(61);
 
@@ -166,6 +208,13 @@ class BloggerServiceTest {
 
 		assertEquals(1, bloggers.size());
 
+	}
+
+
+		
+		List<BloggerOutputDto> bloggers = bloggerSer.viewBloggerListByCommunityId(18);
+		
+		assertEquals(1, bloggers.size());
 	}
 
 }

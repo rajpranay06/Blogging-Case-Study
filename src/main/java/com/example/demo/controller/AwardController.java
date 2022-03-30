@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,7 @@ public class AwardController {
 	
 	// Add Awards
 	@PostMapping("/awards")
-	ResponseEntity<Award> addAward(@RequestBody Award award){
+	ResponseEntity<Award> addAward(@Valid @RequestBody Award award){
 		Award aw = awardServ.addAward(award);
 		return new ResponseEntity<>(aw, HttpStatus.OK);
 	}

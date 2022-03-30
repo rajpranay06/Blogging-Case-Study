@@ -5,13 +5,17 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
+
+import com.example.demo.dto.BloggerOutputDto;
 
 import lombok.Data;
 
@@ -24,6 +28,8 @@ public class Post {
 	private int postId;
 	@Size(min = 3, max = 50, message = "Title should be of 3 to 50 characters")
 	private String title;
+	
+	@Enumerated(EnumType.ORDINAL)
 	private PostType content;
 	private LocalDateTime createdDateTime;
 	private int votes;
@@ -32,12 +38,6 @@ public class Post {
 	private boolean spoiler;
 	private boolean originalContent;
 	private String flair;
-
-	// OneToMany Relationship with Comments
-	// One post can have many comments
-	@OneToMany(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "post_id")
-	private List<Comment> comments;
 
 	// ManyToMany Relationship with awards
 	// Multiple posts can have multiple awards
@@ -48,5 +48,15 @@ public class Post {
 		inverseJoinColumns = { @JoinColumn(name = "award_id") }
 	)
 	private List<Award> awards;
+	
+	//ManytoOne Relationship with blogger
+	//One blogger can have many posts
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "user_id")
+	private Blogger blogger;
+	//OneToMany-One Community can have many posts, One post Belongs to one Community
+	@ManyToOne(cascade=CascadeType.MERGE)
+	@JoinColumn(name="CommunityId")
+	private Community community;
     
 }

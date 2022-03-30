@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -22,6 +23,7 @@ public class UserEntity {
 	private int userId;
 	
 	@NotEmpty
+	@Email(message = "enter a valid email")
 	private String email;
 	@Size(min=8,max=15, message="Min 8 characters required")
 	private String password;

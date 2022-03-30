@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,11 +9,15 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.bean.Blogger;
 import com.example.demo.bean.Comment;
+import com.example.demo.bean.Moderator;
 import com.example.demo.bean.Post;
+import com.example.demo.dto.BloggerOutputDto;
+import com.example.demo.dto.CommentDto;
 import com.example.demo.dto.CommentInputDto;
 import com.example.demo.dto.CommentOutputDto;
-import com.example.demo.exception.BloggerIdNotFoundException;
+import com.example.demo.dto.PostOutputDto;
 import com.example.demo.exception.CommentNotFoundException;
+import com.example.demo.exception.ModeratorApprovalException;
 import com.example.demo.exception.PostIdNotFoundException;
 import com.example.demo.repository.IBloggerRepository;
 import com.example.demo.repository.ICommentRepository;
@@ -25,21 +30,58 @@ public class CommentServiceImpl implements ICommentService{
 	IPostRepository postRepo;
 	
 	@Autowired
-	IBloggerRepository blogRepo;
+	ICommentRepository comRepo;
 	
 	@Autowired
-	ICommentRepository comRepo;
+	IBloggerRepository blogRepo;
+	
+	Moderator moderator = new Moderator();
 
 	@Override
-	public CommentOutputDto addComment(Comment comment) {
+	public CommentDto addComment(Comment comment) {
 		
 		Comment com = comRepo.save(comment);
+		
 		// Setting comment variables by commentOutputDto values
-		CommentOutputDto comDto = new CommentOutputDto();
+		CommentDto comDto = new CommentDto();
 		comDto.setCommentId(com.getCommentId());
 		comDto.setCommentDescription(com.getCommentDescription());
 		comDto.setVotes(com.getVotes());
 		comDto.setVoteUp(com.isVoteUp());
+		
+		Post post = comment.getPost();
+		
+		// Creating PostOutputDto object
+		PostOutputDto postOutputDto = new PostOutputDto();
+		
+		// Setting values for postOutputDto
+		postOutputDto.setPostId(post.getPostId());
+		postOutputDto.setTitle(post.getTitle());
+		postOutputDto.setContent(post.getContent());
+		postOutputDto.setCreatedDateTime(post.getCreatedDateTime());
+		postOutputDto.setFlair(post.getFlair().substring(1));
+		postOutputDto.setNotSafeForWork(post.isNotSafeForWork());
+		postOutputDto.setOriginalContent(post.isOriginalContent());
+		postOutputDto.setVotes(post.getVotes());
+		postOutputDto.setVoteUp(post.isVoteUp());
+		postOutputDto.setSpoiler(post.isSpoiler());
+		postOutputDto.setAwards(post.getAwards());
+		
+		comDto.setPost(postOutputDto);
+		
+		// Creating Blogger object
+		Blogger blogger = comment.getBlogger();
+		
+		// Creating BloggerOutputDto
+		BloggerOutputDto bloggerOutputDto = new BloggerOutputDto();
+		
+		// Setting values for BloggerOutputDto
+		bloggerOutputDto.setUserId(blogger.getUserId());
+		bloggerOutputDto.setBloggerName(blogger.getBloggerName());
+		bloggerOutputDto.setKarma(blogger.getKarma());
+		
+		comDto.setBlogger(bloggerOutputDto);
+		
 		return comDto;
 	}
 
@@ -69,7 +111,13 @@ public class CommentServiceImpl implements ICommentService{
 	}
 
 	@Override
-	public CommentOutputDto addCommentDto(CommentInputDto commentInputDto) {
+	public CommentDto addCommentDto(CommentInputDto commentInputDto) {
+		
+		// Checking for moderator approval
+		if(!moderator.moderatesPostsAndComments(commentInputDto.isFlag())) {
+			throw new ModeratorApprovalException("Comment is not approved");
+		}
+		
 		// Creating Comment object
 		Comment com = new Comment();
 		
@@ -77,50 +125,186 @@ public class CommentServiceImpl implements ICommentService{
 		com.setCommentDescription(commentInputDto.getCommentDescription());
 		com.setVotes(commentInputDto.getVotes());
 		com.setVoteUp(commentInputDto.isVoteUp());
+		
+		//Get the post with the id
+		Optional<Post> opt1 = postRepo.findById(commentInputDto.getPostId());
+		if(!opt1.isPresent()) {
+			throw new PostIdNotFoundException("No post is found with id:" + commentInputDto.getPostId());
+		}
+		Post post = opt1.get();
+		com.setPost(post);
+		
+		//Get the Blogger with the id
+		Optional<Blogger> opt2 = blogRepo.findById(commentInputDto.getBloggerId());
+		if(!opt1.isPresent()) {
+			throw new PostIdNotFoundException("No blogger is found with id:" + commentInputDto.getBloggerId());
+		}
+		Blogger blogger = opt2.get();
+		com.setBlogger(blogger);
+		
 		//save the comment in DB
 		Comment newCom = comRepo.save(com);
-		CommentOutputDto comOutputDto = new CommentOutputDto();
-		comOutputDto.setCommentDescription(newCom.getCommentDescription());
-		comOutputDto.setVotes(newCom.getVotes());
-		comOutputDto.setVoteUp(newCom.isVoteUp());
 		
-		return comOutputDto;
+		// Creating PostOutputDto object
+		PostOutputDto postOutputDto = new PostOutputDto();
+		
+		// Setting values for postOutputDto
+		postOutputDto.setPostId(post.getPostId());
+		postOutputDto.setTitle(post.getTitle());
+		postOutputDto.setContent(post.getContent());
+		postOutputDto.setCreatedDateTime(post.getCreatedDateTime());
+		postOutputDto.setFlair(post.getFlair().substring(1));
+		postOutputDto.setNotSafeForWork(post.isNotSafeForWork());
+		postOutputDto.setOriginalContent(post.isOriginalContent());
+		postOutputDto.setVotes(post.getVotes());
+		postOutputDto.setVoteUp(post.isVoteUp());
+		postOutputDto.setSpoiler(post.isSpoiler());
+		postOutputDto.setAwards(post.getAwards());
+		
+		// Creating BloggerOutputDto
+		BloggerOutputDto bloggerOutputDto = new BloggerOutputDto();
+		
+		// Setting values for BloggerOutputDto
+		bloggerOutputDto.setUserId(blogger.getUserId());
+		bloggerOutputDto.setBloggerName(blogger.getBloggerName());
+		bloggerOutputDto.setKarma(blogger.getKarma());
+		
+		CommentDto comDto = new CommentDto();
+		comDto.setCommentId(newCom.getCommentId());
+		comDto.setCommentDescription(newCom.getCommentDescription());
+		comDto.setVotes(newCom.getVotes());
+		comDto.setVoteUp(newCom.isVoteUp());
+		comDto.setPost(postOutputDto);
+		comDto.setBlogger(bloggerOutputDto);
+		
+		return comDto;
 	}
 
 	@Override
-	public Comment getCommentById(int id) {
+	public CommentOutputDto getCommentById(int id) {
 		//Check whether comment is available in DB or not by using Id
 		Optional<Comment> opt = comRepo.findById(id);
 		if(!opt.isPresent()) {
 			throw new CommentNotFoundException("Comment Not Found with the given id: " + id);
 		}
-		return opt.get();
+		
+		Comment com = opt.get();
+		
+		// Creating comment output dto object
+		CommentOutputDto commentOutput = new CommentOutputDto();
+		
+		// setting values
+		commentOutput.setCommentId(com.getCommentId());
+		commentOutput.setCommentDescription(com.getCommentDescription());
+		commentOutput.setVotes(com.getVotes());
+		commentOutput.setVoteUp(com.isVoteUp());
+		
+		return commentOutput;
 	}
 
 	@Override
-	public List<Comment> listAllCommentsOfPost(int postId) {
+	public List<CommentOutputDto> listAllCommentsOfPost(int postId) {
 		
-		Optional<Post> opt = postRepo.findById(postId);
-		if(!opt.isPresent()) {
-			 // If post is not present throw an error
-			 throw new PostIdNotFoundException("No post with id: " + postId);
-		}
-		Post postById = opt.get();
-		if(postById.getComments().isEmpty()) {
+		List<Comment> comments = comRepo.getAllCommentsOfPost(postId);
+		
+		if(comments.isEmpty()) {
+			 // No comments are found for post
 			throw new CommentNotFoundException("No comments for the post with post id: " + postId);
 		}
-		return postById.getComments();
+		
+		List<CommentOutputDto> allComments = new ArrayList<>();
+		
+		for(Comment comment : comments) {
+			
+			// Comment Object created
+			CommentOutputDto com = new CommentOutputDto();
+			
+			com.setCommentId(comment.getCommentId());
+			com.setCommentDescription(comment.getCommentDescription());
+			com.setVotes(comment.getVotes());
+			com.setVoteUp(comment.isVoteUp());
+			
+			allComments.add(com);
+		}
+		
+		return allComments;
 	}
 	
-	public List<Comment> listAllCommentsOfBlogger(int userId) {
+	public List<CommentOutputDto> listAllCommentsOfBlogger(int userId) {
 		
-		Optional<Blogger> opt = blogRepo.findById(userId);
-		if(!opt.isPresent()) {
-			 // If blogger is not present throw an error
-			 throw new BloggerIdNotFoundException("No blogger with id: " + userId);
+		List<Comment> comments = comRepo.getCommentsByBlogger(userId);
+		
+		if(comments.isEmpty()) {
+			 // No comments are found for post
+			throw new CommentNotFoundException("No comments for the blogger with blogger id: " + userId);
 		}
-		Blogger bloggerById = opt.get();
-		return bloggerById.getComments();
+		
+		List<CommentOutputDto> allComments = new ArrayList<>();
+		
+		for(Comment comment : comments) {
+			
+			// Comment Object created
+			CommentOutputDto com = new CommentOutputDto();
+			
+			com.setCommentId(comment.getCommentId());
+			com.setCommentDescription(comment.getCommentDescription());
+			com.setVotes(comment.getVotes());
+			com.setVoteUp(comment.isVoteUp());
+			
+			allComments.add(com);
+		}
+		
+		return allComments;
+	}
+
+	@Override
+	public CommentOutputDto updateComment(CommentInputDto comment) {
+		
+		// Checking for moderator approval
+		if(!moderator.moderatesPostsAndComments(comment.isFlag())) {
+			throw new ModeratorApprovalException("Comment is not approved");
+		}
+				
+		// Creating Comment object
+		Optional<Comment> opt = comRepo.findById(comment.getCommentId());
+		if(!opt.isPresent()) {
+			throw new CommentNotFoundException("No comments for the comment ID: " + comment.getCommentId());
+		}
+		
+		Comment com = opt.get();
+		
+		// Setting Comment variables by CommentInputDto values
+		com.setCommentDescription(comment.getCommentDescription());
+		com.setVotes(comment.getVotes());
+		com.setVoteUp(comment.isVoteUp());
+		
+		//Get the post with the id
+		Optional<Post> opt1 = postRepo.findById(comment.getPostId());
+		if(!opt1.isPresent()) {
+			throw new PostIdNotFoundException("No post is found with id:" + comment.getPostId());
+		}
+		Post post = opt1.get();
+		com.setPost(post);
+		
+
+		//Get the Blogger with the id
+		Optional<Blogger> opt2 = blogRepo.findById(comment.getBloggerId());
+		if(!opt1.isPresent()) {
+			throw new PostIdNotFoundException("No blogger is found with id:" + comment.getBloggerId());
+		}
+		Blogger blogger = opt2.get();
+		com.setBlogger(blogger);
+		
+		//save the comment in DB
+		Comment newCom = comRepo.save(com);
+		
+		CommentOutputDto comDto = new CommentOutputDto();
+		comDto.setCommentId(newCom.getCommentId());
+		comDto.setCommentDescription(newCom.getCommentDescription());
+		comDto.setVotes(newCom.getVotes());
+		comDto.setVoteUp(newCom.isVoteUp());
+		
+		return comDto;
 	}
 	
 }

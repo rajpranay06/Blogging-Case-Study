@@ -3,15 +3,12 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
 
@@ -60,12 +57,6 @@ public class Community {
 	@ElementCollection
 	@CollectionTable(name="flairs")
 	private List<String> flairs;
-	
-
-	//OneToMany-One Community can have many posts, One post Belongs to one Community
-	@OneToMany(cascade=CascadeType.MERGE)
-	@JoinColumn(name="CommunityId")
-	private List<Post> post;
 
 }
 

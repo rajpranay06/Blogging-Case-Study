@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.BloggerDto;
 import com.example.demo.dto.BloggerInputDto;
 import com.example.demo.dto.BloggerOutputDto;
 import com.example.demo.bean.Blogger;
@@ -30,7 +31,7 @@ public class BloggerController {
 
 	// Add new blogger
 	@PostMapping("/bloggers")
-	ResponseEntity<Blogger> addBlogger(@RequestBody Blogger blogger) {
+	 ResponseEntity<Blogger> addBlogger(@RequestBody Blogger blogger) {
 		Blogger newBlog = blogServ.addBlogger(blogger);
 		return new ResponseEntity<>(newBlog, HttpStatus.CREATED);
 
@@ -38,22 +39,22 @@ public class BloggerController {
 
 	// Get all Bloggers
 	@GetMapping("/bloggers")
-	List<Blogger> viewAllBloggers() {
+	List<BloggerOutputDto> viewAllBloggers() {
 		return blogServ.viewAllBloggers();
 	}
 
 	// Add new blogger with dto
 	@PostMapping("/bloggers/dto")
-	ResponseEntity<Blogger> addBloggerDto(@Valid @RequestBody BloggerInputDto blogger) {
-		Blogger newDtoBlog = blogServ.addBloggerDto(blogger);
+	ResponseEntity<BloggerDto> addBloggerDto(@Valid @RequestBody BloggerInputDto blogger) throws IdNotFoundException {
+		BloggerDto newDtoBlog = blogServ.addBloggerDto(blogger);
 		return new ResponseEntity<>(newDtoBlog, HttpStatus.CREATED);
 
 	}
 
 	// Update blogger
 	@PutMapping("/blogger")
-	ResponseEntity<Blogger> updateBlogger(@RequestBody BloggerInputDto blogger) throws IdNotFoundException {
-		Blogger updatedBlog = blogServ.updateBlogger(blogger);
+	ResponseEntity<BloggerDto> updateBlogger(@RequestBody BloggerInputDto blogger) throws IdNotFoundException {
+		BloggerDto updatedBlog = blogServ.updateBlogger(blogger);
 		return new ResponseEntity<>(updatedBlog, HttpStatus.CREATED);
 
 	}
@@ -68,13 +69,14 @@ public class BloggerController {
 	
 	//Get Blogger by Id
 	@GetMapping("/bloggers/{userId}")
-	Blogger viewBlogger(@PathVariable("userId") int bloggerId) throws IdNotFoundException {
+	BloggerOutputDto viewBlogger(@PathVariable("userId") int bloggerId) throws IdNotFoundException {
 		return blogServ.viewBlogger(bloggerId);
 
 	}
+	
 	// Get Blogger by Comment Id
 	@GetMapping("/bloggers/byCommentId/{commentId}")
-	BloggerOutputDto getBloggerByCommentId(@PathVariable("commentId") int commentId) {
+	BloggerOutputDto getBloggerByCommentId(@PathVariable("commentId") int commentId) throws IdNotFoundException {
 		return blogServ.getBloggerByCommentId(commentId);
 	}
 
@@ -88,7 +90,7 @@ public class BloggerController {
 	
 	//Get Blogger by Post Id
 	@GetMapping("/blogger/byPost/{postId}")
-	ResponseEntity<BloggerOutputDto> getBloggerByPostId(@PathVariable("postId") int postId){
+	ResponseEntity<BloggerOutputDto> getBloggerByPostId(@PathVariable("postId") int postId) throws IdNotFoundException{
 		BloggerOutputDto blogger = blogServ.getBloggerByPostId(postId);
 		return new ResponseEntity<>(blogger, HttpStatus.OK);
 	}

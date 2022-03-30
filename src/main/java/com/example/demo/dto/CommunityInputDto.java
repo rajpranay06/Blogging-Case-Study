@@ -21,5 +21,4 @@ public class CommunityInputDto {
 	private List<String> postRulesDisAllowed;
 	private List<String> banningPolicy;
 	private List<String> flairs;
-	private List<Integer> postIds;
 }

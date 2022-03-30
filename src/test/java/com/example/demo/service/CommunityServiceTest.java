@@ -3,7 +3,6 @@ package com.example.demo.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.File;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.demo.bean.Community;
-import com.example.demo.bean.Post;
-import com.example.demo.bean.PostType;
 import com.example.demo.dto.CommunityOutputDto;
 
 
@@ -66,31 +63,6 @@ public class CommunityServiceTest {
 		f.add("SportsNews");
 		com.setFlairs(f);
 		
-		//To set List of postIds &  Posts 
-		
-		//List of PostIds
-		List<Integer> p = new ArrayList<Integer>();
-		//List of posts
-		List<Post> posts = new ArrayList<Post>();
-		
-		//Creating post object
-		Post post1 = new Post();
-		//Adding data to post object
-		post1.setPostId(100);
-		post1.setTitle("Lucifer");
-		post1.setContent(PostType.VIDEO_IMAGE);
-		post1.setCreatedDateTime(LocalDateTime.now());
-		post1.setFlair("Deckerstar");
-		post1.setNotSafeForWork(false);
-		post1.setOriginalContent(true);
-		post1.setVotes(10000);
-		post1.setVoteUp(false);
-		post1.setSpoiler(true);
-		
-		posts.add(post1);
-		p.add(post1.getPostId());
-		com.setPost(posts);
-		
 		//Persist the community object to the DB using service implementation
 		Community c = comServ.addCommunityWithoutDto(com);
 		
@@ -104,16 +76,13 @@ public class CommunityServiceTest {
 		assertEquals(galist,c.getPostRulesDisAllowed());
 		assertEquals(bp,c.getBanningPolicy());
 		assertEquals(f,c.getFlairs());
-		assertEquals(1,c.getPost().size());
-//		assertEquals(1,c.getBlogger().size());
 	}
 	
 	@Test
-	@Disabled
 	void updateCommunityTest()
 	{
 		Community com = new Community();
-		com.setCommunityId(386);
+		com.setCommunityId(32);
 		com.setCommunityDescription("World");
 		com.setTotalMembers(120);
 		com.setOnlineMembers(110);
@@ -150,36 +119,11 @@ public class CommunityServiceTest {
 		f.add("DogsNews");
 		com.setFlairs(f);
 		
-		//To set List of postIds &  Posts 
-		
-		//List of PostIds
-		List<Integer> p = new ArrayList<Integer>();
-		//List of posts
-		List<Post> posts = new ArrayList<Post>();
-				
-		//Creating post object
-		Post post1 = new Post();
-		//Adding data to post object
-		post1.setPostId(100);
-		post1.setTitle("Documentry");
-		post1.setContent(PostType.VIDEO_IMAGE);
-		post1.setCreatedDateTime(LocalDateTime.now());
-		post1.setFlair("UrbanLiving");
-		post1.setNotSafeForWork(false);
-		post1.setOriginalContent(true);
-		post1.setVotes(10000);
-		post1.setVoteUp(false);
-		post1.setSpoiler(true);
-				
-		posts.add(post1);
-		p.add(post1.getPostId());
-		com.setPost(posts);
-		
 		//Update the community
 		Community c = comServ.updateCommunityWithoutDto(com);
 		
 		//Validate details
-		assertEquals(386,c.getCommunityId());
+		assertEquals(32,c.getCommunityId());
 		assertEquals("World",c.getCommunityDescription());
 		assertEquals(120,c.getTotalMembers());
 		assertEquals(110,c.getOnlineMembers());
@@ -189,70 +133,26 @@ public class CommunityServiceTest {
 		assertEquals(galist,c.getPostRulesDisAllowed());
 		assertEquals(bp,c.getBanningPolicy());
 		assertEquals(f,c.getFlairs());
-		assertEquals(1,c.getPost().size());
-	}
-	
-	@Test
-	@Disabled
-	void deleteCommunityTest()
-	{	
-		//Count before Delete operation
-		long beforeDeletecount = comServ.count();
-		
-		//Delete the community
-		comServ.deleteCommunity(382);
-		
-		//Count after delete operation
-		long afterDeleteCount = comServ.count();
-		
-		//Validate
-		assertEquals(beforeDeletecount,afterDeleteCount+1);
-		
 	}
 	
 	@Test
 	@Disabled
 	void listAllCommunitiesTest()
 	{
-		List<CommunityOutputDto> comList = comServ.listAllCommunities("Science");
+		List<CommunityOutputDto> comList = comServ.listAllCommunitiesByDescription("Test");
 		int noOfCommunities = comList.size();
-		assertEquals(1,noOfCommunities);
+		assertEquals(3,noOfCommunities);
 	}
 	
 	@Test
 	void getCommunityByPostId()
-	{
-		File fw = new File("abc.jpg");
+	{	
+		CommunityOutputDto com = comServ.getCommunityByPostId(17);
 		
-		List<String> glist = new ArrayList<String>();
-		glist.add("Hockey");
-		glist.add("Cricket");
-		glist.add("Tennis");
+		assertEquals(19,com.getCommunityId());
+		assertEquals("Community Test 3",com.getCommunityDescription());
+		assertEquals(100,com.getTotalMembers());
 		
-		List<String> galist = new ArrayList<String>();
-		galist.add("Tours");
-		galist.add("Furniture");
-		galist.add("Houses");
-		
-		List<String> bp = new ArrayList<String>();
-		bp.add("Cheating");
-		bp.add("Drugs");
-		bp.add("Misuse");
-		
-		List<String> f = new ArrayList<String>();
-		f.add("SportsNews");
-		
-		CommunityOutputDto com = comServ.getCommunityByPostId(379);
-		assertEquals(378,com.getCommunityId());
-		assertEquals("Humans",com.getCommunityDescription());
-		assertEquals(120,com.getTotalMembers());
-		assertEquals(110,com.getOnlineMembers());
-		assertEquals(fw,com.getImage());
-		assertEquals(LocalDate.parse("2019-02-07"),com.getCreatedOn());
-		assertEquals(glist,com.getPostRulesAllowed());
-		assertEquals(galist,com.getPostRulesDisAllowed());
-		assertEquals(bp,com.getBanningPolicy());
-		assertEquals(f,com.getFlairs());
 		
 	}
 }
