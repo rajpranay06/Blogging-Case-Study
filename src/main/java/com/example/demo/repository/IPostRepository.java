@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.repository.query.Param;
 
 import com.example.demo.bean.Post;
+import com.example.demo.dto.PostOutputDto;
 
 @Repository
 public interface IPostRepository extends JpaRepository<Post, Integer> {
@@ -16,8 +17,8 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
 	@Query(value = "SELECT * FROM post where title LIKE :searchStr", nativeQuery = true)
 	public List<Post> getPostBySearchString(@Param("searchStr") String searchStr);
 
-	@Query(value = " SELECT * FROM post p join blogger b on p.user_id=b.user_id where b.user_id=:user_id", nativeQuery = true)
-	public List<Post> getPostsByBlogger(@Param("user_id") int bloggerId);
+	@Query(value = " SELECT p.* FROM post p join blogger b on p.user_id=b.user_id where b.user_id=:user_id", nativeQuery = true)
+	public List<Post> getPostsByBloggerId(@Param("user_id") int bloggerId);
 	
 	@Query(value = "select p.* from post p join post_awards pa on p.post_id=pa.post_id join award a on pa.award_id= a.award_id where a.award_id=:id", nativeQuery = true)
 	public List<Post> getAllPostsByAwardId(@Param("id") int id);
@@ -28,4 +29,5 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
 	
 	@Query(value = "SELECT p.* FROM post p join community c on p.community_id = c.community_id where c.community_id = :communityId", nativeQuery = true)
 	public List<Post> getAllPostsByCommunityId(@Param("communityId") int communityId);
+
 }

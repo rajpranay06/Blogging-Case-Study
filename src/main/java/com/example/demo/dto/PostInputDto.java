@@ -28,4 +28,5 @@ public class PostInputDto {
     private boolean originalContent;
     private String flair;
     private List<Integer> awardIds;
+    private int bloggerId;
 }

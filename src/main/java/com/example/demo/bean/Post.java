@@ -12,7 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
+
+import com.example.demo.dto.BloggerOutputDto;
 
 import lombok.Data;
 
@@ -45,5 +48,11 @@ public class Post {
 		inverseJoinColumns = { @JoinColumn(name = "award_id") }
 	)
 	private List<Award> awards;
+	
+	//ManytoOne Relationship with blogger
+	//One blogger can have many posts
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "user_id")
+	private Blogger blogger;
     
 }

@@ -20,7 +20,7 @@ public class BloggerInputDto {
 	private String bloggerName;
 	
 	private List<Integer> commentIds;
-	List<Integer> postIds;
+	private List<Integer> postIds;
 	private List<Integer> communityIds;
 
 }

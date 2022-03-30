@@ -53,10 +53,10 @@ public class Blogger{
 	private List<Community> communities;
 	
 	
-    //OneToMany-One Blogger can have many posts
+  /*  //OneToMany-One Blogger can have many posts
 	@OneToMany(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "user_id")
-	private List<Post> posts;
+	private List<Post> posts;*/
 
 	
 	

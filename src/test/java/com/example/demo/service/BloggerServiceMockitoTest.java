@@ -114,7 +114,7 @@ class BloggerServiceMockitoTest {
 		List<Post> posts = new ArrayList<>();
 		posts.add(newPost);
 		
-		blogger.setPosts(posts);
+		
 		
 		// Community 
 		File fw = new File("abc.jpg");
@@ -185,7 +185,7 @@ class BloggerServiceMockitoTest {
 		assertEquals("Abc", newBlog.getBloggerName());
 		assertEquals(20,newBlog.getKarma());
 		assertEquals(2, newBlog.getComments().size());
-		assertEquals(1, newBlog.getPosts().size());
+	
 		assertEquals(1, newBlog.getCommunities().size());
 	}
 
@@ -240,7 +240,7 @@ class BloggerServiceMockitoTest {
 		List<Post> posts = new ArrayList<>();
 		posts.add(newPost);
 		
-		blogger.setPosts(posts);
+		
 		
 		// Community 
 		File fw = new File("abc.jpg");
