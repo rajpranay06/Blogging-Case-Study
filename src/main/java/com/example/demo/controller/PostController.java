@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.bean.Post;
+import com.example.demo.dto.PostDto;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
 import com.example.demo.service.IPostService;
@@ -29,15 +29,15 @@ public class PostController {
 	
 	// Adding Post
 	@PostMapping("/posts")
-	ResponseEntity<Post> addPost(@Valid @RequestBody PostInputDto post){
-		Post newPost = postServ.addPost(post);
+	ResponseEntity<PostDto> addPost(@Valid @RequestBody PostInputDto post){
+		PostDto newPost = postServ.addPost(post);
 		return new ResponseEntity<>(newPost, HttpStatus.ACCEPTED);
 	}
 	
 	// Updating Post
 	@PutMapping("/posts")
-	ResponseEntity<Post> updatePost(@Valid @RequestBody PostInputDto post){
-		Post updatedPost = postServ.updatePost(post);
+	ResponseEntity<PostDto> updatePost(@Valid @RequestBody PostInputDto post){
+		PostDto updatedPost = postServ.updatePost(post);
 		return new ResponseEntity<>(updatedPost, HttpStatus.ACCEPTED);
 	}
 	
@@ -50,8 +50,8 @@ public class PostController {
 	
 	// Get Posts by Searching
 	@GetMapping("/posts/bySearchString/{searchString}")
-	ResponseEntity<List<Post>> getPostsBySearchString(@PathVariable("searchString") String searchStr){
-		List<Post> posts = postServ.getPostBySearchString(searchStr);
+	ResponseEntity<List<PostOutputDto>> getPostsBySearchString(@PathVariable("searchString") String searchStr){
+		List<PostOutputDto> posts = postServ.getPostBySearchString(searchStr);
 		return new ResponseEntity<>(posts, HttpStatus.OK);
 	}
 	

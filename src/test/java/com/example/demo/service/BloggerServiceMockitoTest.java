@@ -137,25 +137,7 @@ class BloggerServiceMockitoTest {
 		List<String> f = new ArrayList<String>();
 		f.add("SportsNews");
 		
-		List<Post> communityPosts = new ArrayList<Post>();
-		
-		Post post1 = new Post();
-		post1.setPostId(100);
-		post1.setTitle("Lucifer");
-		post1.setContent(PostType.VIDEO_IMAGE);
-		post1.setCreatedDateTime(LocalDateTime.now());
-		post1.setFlair("Deckerstar");
-		post1.setNotSafeForWork(false);
-		post1.setOriginalContent(true);
-		post1.setVotes(10000);
-		post1.setVoteUp(false);
-		post1.setSpoiler(true);
-		
-		post1.setAwards(awards);
-		
-		communityPosts.add(post1);
-		
-		Community com = new Community(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f,posts);
+		Community com = new Community(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f);
 		
 		Community newCommunity = new Community();
 		newCommunity.setCommunityId(com.getCommunityId());
@@ -168,7 +150,6 @@ class BloggerServiceMockitoTest {
 		newCommunity.setPostRulesDisAllowed(com.getPostRulesDisAllowed());
 		newCommunity.setBanningPolicy(com.getBanningPolicy());
 		newCommunity.setFlairs(com.getFlairs());
-		newCommunity.setPost(posts);
 		
 		List<Community> communities = new ArrayList<>();
 		communities.add(newCommunity);
@@ -262,26 +243,8 @@ class BloggerServiceMockitoTest {
 		
 		List<String> f = new ArrayList<String>();
 		f.add("SportsNews");
-	
-		List<Post> communityPosts = new ArrayList<Post>();
 		
-		Post post1 = new Post();
-		post1.setPostId(100);
-		post1.setTitle("Lucifer");
-		post1.setContent(PostType.VIDEO_IMAGE);
-		post1.setCreatedDateTime(LocalDateTime.now());
-		post1.setFlair("Deckerstar");
-		post1.setNotSafeForWork(false);
-		post1.setOriginalContent(true);
-		post1.setVotes(10000);
-		post1.setVoteUp(false);
-		post1.setSpoiler(true);
-		
-		post1.setAwards(awards);
-		
-		communityPosts.add(post1);
-		
-		Community com = new Community(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f,posts);
+		Community com = new Community(12,"Dogs",400,123,fw,LocalDate.parse("2019-02-07"),glist,galist,bp,f);
 		
 		Community newCommunity = new Community();
 		newCommunity.setCommunityId(com.getCommunityId());
@@ -294,7 +257,6 @@ class BloggerServiceMockitoTest {
 		newCommunity.setPostRulesDisAllowed(com.getPostRulesDisAllowed());
 		newCommunity.setBanningPolicy(com.getBanningPolicy());
 		newCommunity.setFlairs(com.getFlairs());
-		newCommunity.setPost(posts);
 		
 		List<Community> communities = new ArrayList<>();
 		communities.add(newCommunity);
@@ -324,7 +286,7 @@ class BloggerServiceMockitoTest {
 
 		List<BloggerOutputDto> expected = blogSer.viewAllBloggers();
 
-		assertEquals(expected, allBloggers);
+		assertEquals(expected.size(), allBloggers.size());
 		verify(blogRepo).findAll();
 	}
 
