@@ -2,6 +2,7 @@ package com.example.demo.dto;
 
 import java.time.LocalDateTime;
 
+
 import com.example.demo.bean.Community;
 import com.example.demo.bean.PostType;
 
@@ -20,5 +21,6 @@ public class PostDto {
     private boolean spoiler;
     private boolean originalContent;
     private String flair;
+    private BloggerOutputDto blogger;
     private Community community;
 }

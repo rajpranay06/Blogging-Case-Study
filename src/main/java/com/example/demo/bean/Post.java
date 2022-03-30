@@ -15,6 +15,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
 
+import com.example.demo.dto.BloggerOutputDto;
+
 import lombok.Data;
 
 @Entity       
@@ -47,6 +49,11 @@ public class Post {
 	)
 	private List<Award> awards;
 	
+	//ManytoOne Relationship with blogger
+	//One blogger can have many posts
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "user_id")
+	private Blogger blogger;
 	//OneToMany-One Community can have many posts, One post Belongs to one Community
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="CommunityId")

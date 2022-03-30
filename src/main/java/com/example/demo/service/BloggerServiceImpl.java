@@ -66,7 +66,6 @@ public class BloggerServiceImpl implements IBloggerService {
 			posts.add(opt.get());
 		}
 						
-		blog.setPosts(posts);	
 
 		// List to store communities
 		List<Community> communities = new ArrayList<>();
@@ -98,7 +97,6 @@ public class BloggerServiceImpl implements IBloggerService {
 		bloggerDto.setUserId(newBlogger.getUserId());
 		bloggerDto.setBloggerName(newBlogger.getBloggerName());
 		bloggerDto.setKarma(newBlogger.getKarma());
-		bloggerDto.setPosts(newBlogger.getPosts());
 		
 		List<CommunityOutputDto> newCommunities = new ArrayList<>();
 		
@@ -173,7 +171,6 @@ public class BloggerServiceImpl implements IBloggerService {
 			}	
 		}
 						
-		updateBlogger.setPosts(posts);
 		
 		// Updating karma points
 		updateBlogger.setKarma(blogger.getPostIds().size() * 50);
@@ -184,7 +181,6 @@ public class BloggerServiceImpl implements IBloggerService {
 		bloggerDto.setUserId(newBlogger.getUserId());
 		bloggerDto.setBloggerName(newBlogger.getBloggerName());
 		bloggerDto.setKarma(newBlogger.getKarma());
-		bloggerDto.setPosts(newBlogger.getPosts());
 		
 		List<CommunityOutputDto> newCommunities = new ArrayList<>();
 		

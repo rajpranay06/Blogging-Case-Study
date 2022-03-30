@@ -6,8 +6,10 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.example.demo.bean.Award;
+import com.example.demo.bean.Blogger;
+import com.example.demo.bean.Post;
+import com.example.demo.dto.BloggerOutputDto;
 import com.example.demo.bean.Community;
 import com.example.demo.bean.Moderator;
 import com.example.demo.bean.Post;
@@ -15,12 +17,17 @@ import com.example.demo.dto.PostDto;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
 import com.example.demo.exception.AwardNotFoundException;
+import com.example.demo.exception.BloggerIdNotFoundException;
+import com.example.demo.exception.PostIdNotFoundException;
+import com.example.demo.repository.IPostRepository;
+import com.example.demo.repository.IAwardRepository;
+import com.example.demo.repository.IBloggerRepository;
+import com.example.demo.repository.ICommentRepository;
 import com.example.demo.exception.ModeratorApprovalException;
 import com.example.demo.exception.PostIdNotFoundException;
 import com.example.demo.repository.IPostRepository;
 import com.example.demo.repository.IAwardRepository;
 import com.example.demo.repository.ICommunityRepository;
-
 @Service
 public class PostServiceImpl implements IPostService {
 	
@@ -33,9 +40,10 @@ public class PostServiceImpl implements IPostService {
 	@Autowired
 	IAwardRepository awardRepo;
 	
+	@Autowired
+	IBloggerRepository blogRepo;
 	// Creating Moderator object
 	Moderator moderator = new Moderator();
-	
 	@Override
 	public Post addPostWithoutDto(Post post) {
 		return postRepo.save(post);
@@ -78,6 +86,16 @@ public class PostServiceImpl implements IPostService {
 		// Setting the awards to the post
 		newPost.setAwards(awards);
 		
+		//getting bloggerId
+		Blogger blogger=new Blogger();
+		Optional<Blogger> opt = blogRepo.findById(post.getBloggerId());
+		
+		if(!opt.isPresent())
+		{
+			throw new BloggerIdNotFoundException("Blogger not found");
+		}
+		//setting bloggerId to post
+		newPost.setBlogger(opt.get());
 		// Getting community by id
 		Optional<Community> opt = comRepo.findById(post.getCommunityId());
 		
@@ -152,6 +170,17 @@ public class PostServiceImpl implements IPostService {
 		// Setting the awards
 		oldPost.setAwards(awards);
 		
+		//getting bloggerId
+		Blogger blogger=new Blogger();
+		Optional<Blogger> opt1 = blogRepo.findById(post.getBloggerId());
+		if(!opt1.isPresent())
+		{
+			throw new BloggerIdNotFoundException("Blogger not found");
+		}
+		//setting bloggerId to post
+		oldPost.setBlogger(opt1.get());
+		
+		return postRepo.save(oldPost);
 		// Getting community by id
 		Optional<Community> community = comRepo.findById(post.getCommunityId());
 		
@@ -259,11 +288,11 @@ public class PostServiceImpl implements IPostService {
 	}
 	
 	@Override
-	public List<PostOutputDto> getPostsByBlogger(int bloggerId) {
+	public List<PostDto> getPostsByBloggerId(int bloggerId) {
 		
-		List<PostOutputDto> allPosts = new ArrayList<>();
+		List<PostDto> allPosts = new ArrayList<>();
 		
-		List<Post> posts = postRepo.getPostsByBlogger(bloggerId);
+		List<Post> posts = postRepo.getPostsByBloggerId(bloggerId);
 		
 		if(posts.isEmpty())
 		{
@@ -273,19 +302,19 @@ public class PostServiceImpl implements IPostService {
 		for(Post post : posts) {
 			
 			// Creating PostOutputDto object
-			PostOutputDto postOutputDto = new PostOutputDto();
+			PostDto postOutputDto = new PostDto();
 			
 			// Setting values for postOutputDto
 			postOutputDto.setPostId(post.getPostId());
 			postOutputDto.setTitle(post.getTitle());
 			postOutputDto.setContent(post.getContent());
 			postOutputDto.setCreatedDateTime(post.getCreatedDateTime());
-			postOutputDto.setFlair(post.getFlair().substring(1));
-			postOutputDto.setNotSafeForWork(post.isNotSafeForWork());
-			postOutputDto.setOriginalContent(post.isOriginalContent());
 			postOutputDto.setVotes(post.getVotes());
 			postOutputDto.setVoteUp(post.isVoteUp());
+			postOutputDto.setNotSafeForWork(post.isNotSafeForWork());
 			postOutputDto.setSpoiler(post.isSpoiler());
+			postOutputDto.setOriginalContent(post.isOriginalContent());
+			postOutputDto.setFlair(post.getFlair());
 			postOutputDto.setAwards(post.getAwards());
 			
 			allPosts.add(postOutputDto);
