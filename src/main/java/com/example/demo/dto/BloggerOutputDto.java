@@ -8,5 +8,4 @@ public class BloggerOutputDto {
 	private int userId;
 	private String bloggerName;
 	private int karma;
-
 }

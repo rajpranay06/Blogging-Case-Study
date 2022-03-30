@@ -2,12 +2,14 @@ package com.example.demo.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.demo.bean.Comment;
+import com.example.demo.dto.CommentDto;
 import com.example.demo.dto.CommentInputDto;
 import com.example.demo.dto.CommentOutputDto;
 
@@ -18,41 +20,42 @@ class CommentServiceTest {
 	ICommentService comServ;
 
 	@Test
+	@Disabled
 	void addCommentTest() {
-		Comment comment = new Comment();
-		comment.setCommentId(57);
-		comment.setCommentDescription("Avg");
+		CommentInputDto comment = new CommentInputDto();
+		comment.setCommentDescription("Test 1");
 		comment.setVotes(9);
-		//comment.setVoteUp(false);
+		comment.setPostId(121);
 		
-		CommentOutputDto comDto = comServ.addComment(comment);
-		assertEquals("Avg", comDto.getCommentDescription());
+		CommentDto comDto = comServ.addCommentDto(comment);
+		assertEquals("Test 1", comDto.getCommentDescription());
 		assertEquals(9, comDto.getVotes());
-		//assertEquals(57, comDto.get)
+		assertEquals(121, comDto.getPost().getPostId());
 	}
 	
 	@Test
 	@Disabled
-	void deleteCommentTest() {
+	void updateCommentTest() {
+		CommentInputDto comment = new CommentInputDto();
+		comment.setCommentDescription("Updated Test 1");
+		comment.setVotes(9);
+		comment.setPostId(121);
 		
-		Comment comment = comServ.deleteComment(4);
-		
-		assertEquals("Good", comment.getCommentDescription());
-		assertEquals(10, comment.getVotes());
-		
+		CommentDto comDto = comServ.addCommentDto(comment);
+		assertEquals("Updated Test 1", comDto.getCommentDescription());
+		assertEquals(9, comDto.getVotes());
+		assertEquals(121, comDto.getPost().getPostId());
 	}
 	
 	@Test
-	void addCommentDto() {
-		CommentInputDto comDto = new CommentInputDto();
-		comDto.setCommentId(1);
-		comDto.setCommentDescription("Good");
-		comDto.setVotes(3);
-		comDto.setVoteUp(false);
-		CommentOutputDto comOutDto = comServ.addCommentDto(comDto);
-		assertEquals("Good", comOutDto.getCommentDescription());
-		assertEquals(3, comOutDto.getVotes());
-		assertEquals(false, comOutDto.isVoteUp());
+	@Disabled
+	void getCommentsByPostIdTest() {
+		
+		// Calling listAllCommentsByPost Function
+		List<CommentOutputDto> comments = comServ.listAllCommentsOfPost(121);
+		
+		// Comapring the number of comments
+		assertEquals(3, comments.size());
 	}
 
 }

@@ -8,13 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.bean.Award;
-import com.example.demo.bean.Comment;
 import com.example.demo.bean.Post;
-import com.example.demo.bean.PostType;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
+import com.example.demo.exception.AwardNotFoundException;
 import com.example.demo.exception.PostIdNotFoundException;
-import com.example.demo.exception.PostTypeInvalidException;
 import com.example.demo.repository.IPostRepository;
 import com.example.demo.repository.IAwardRepository;
 import com.example.demo.repository.ICommentRepository;
@@ -30,18 +28,13 @@ public class PostServiceImpl implements IPostService {
 	
 	@Autowired
 	IAwardRepository awardRepo;
-
+	
 	@Override
 	public Post addPostWithoutDto(Post post) {
 		return postRepo.save(post);
 	}
 	@Override
 	public Post addPost(PostInputDto post) {
-		
-		// Getting the post type enum
-		PostType postType = post.getContent();
-		if(!(postType.equals(PostType.TEXT) || postType.equals(PostType.LINK) || postType.equals(PostType.POLL) || postType.equals(PostType.VIDEO_IMAGE)))
-			throw new PostTypeInvalidException("Post Type should be TEXT or LINK or POLL or VIDEO_IMAGE");
 		
 		// Creating post object
 		Post newPost = new Post();
@@ -57,20 +50,7 @@ public class PostServiceImpl implements IPostService {
 		newPost.setVoteUp(post.isVoteUp());
 		newPost.setSpoiler(post.isSpoiler());
 		
-		// Creating a list of comments
-		List<Comment> comments = new ArrayList<>();
-		
-		// Getting comments from the Comment Entity by using ids
-		for(Integer id : post.getCommentIds()) {
-			System.out.println(id);
-			Comment comment = commentRepo.findById(id).get();
-			System.out.println(comment);
-			comments.add(comment);
-		}
-		
-		newPost.setComments(comments);
-		System.out.println(newPost);
-		
+		// Getting awards by award ID
 		List<Award> awards = new ArrayList<>();
 		for(Integer id : post.getAwardIds()) {
 			System.out.println(id);
@@ -78,11 +58,12 @@ public class PostServiceImpl implements IPostService {
 			System.out.println(award);
 			awards.add(award);
 		}
+		
+		// Setting the awards to the post
 		newPost.setAwards(awards);
-		System.out.println(newPost);
+
 		// Saving the post in database
 		return postRepo.save(newPost);
-		
 	}
 
 	@Override
@@ -96,12 +77,7 @@ public class PostServiceImpl implements IPostService {
 		}
 		// If post is present update the oldPost with new Post
 		Post oldPost = opt.get();
-		 
-		// Assigning PostType to check if valid or not 
-		PostType postType = post.getContent();
-			if(!(postType.equals(PostType.TEXT) || postType.equals(PostType.LINK) || postType.equals(PostType.POLL) || postType.equals(PostType.VIDEO_IMAGE)))
-				throw new PostTypeInvalidException("Post Type should be TEXT or LINK or POLL or VIDEO_IMAGE");
-		 
+	
 	    // Assigning values to oldPost
 		oldPost.setTitle(post.getTitle());
 		oldPost.setContent(post.getContent());
@@ -113,30 +89,26 @@ public class PostServiceImpl implements IPostService {
 		oldPost.setVoteUp(post.isVoteUp());
 		oldPost.setSpoiler(post.isSpoiler());
 		
-		// Creating a list of comments
-		List<Comment> comments = new ArrayList<>();
-				
-		// Getting comments from the Comment Entity by using ids
-		for(Integer id : post.getCommentIds()) {
-			comments.add(commentRepo.findById(id).get());
-		}
-				
-		oldPost.setComments(comments);	
-		
+		// Creating List of Award Objects to store awards 
 		List<Award> awards = new ArrayList<>();
 		
 		for(Integer id: post.getAwardIds()) {
-			awards.add(awardRepo.findById(id).get());
+			System.out.println(id);
+			Optional<Award> opt1 = awardRepo.findById(id);
+			if(!opt1.isPresent()) {
+				throw new AwardNotFoundException("Not found any award with id: " + id);
+			}
+			awards.add(opt1.get());
+			
 		}
-		
+		// Setting the awards
 		oldPost.setAwards(awards);
 		
 		return postRepo.save(oldPost);
-		
 	}
 
 	@Override
-	public Post deletePost(int id) {
+	public void deletePost(int id) {
 		
 		// Finding the post by id
 		Optional<Post> opt = postRepo.findById(id);
@@ -148,9 +120,6 @@ public class PostServiceImpl implements IPostService {
 		
 		// Calling delete function in postRepo
 		postRepo.delete(deletedPost);
-		
-		return deletedPost;
-		
 	}
 
 	@Override
@@ -158,13 +127,14 @@ public class PostServiceImpl implements IPostService {
 		
 		// Concatenate % to the string to find all the titles with the including string
 		String searchString = '%' + searchStr + '%';
-		// Creating a list of Post
-				List<Post> allPosts = postRepo.getPostBySearchString(searchString);
-				
-				if(allPosts.isEmpty()) {
-					throw new PostIdNotFoundException("No post with search string: " + searchStr);
-				}
-				return allPosts;
+		
+		// Creating a list of PostOutputDto
+		List<Post> allPosts = postRepo.getPostBySearchString(searchString);
+		
+		if(allPosts.isEmpty()) {
+			throw new PostIdNotFoundException("No post with search string: " + searchStr);
+		}
+		return allPosts;
 	}
 
 	@Override
@@ -183,10 +153,43 @@ public class PostServiceImpl implements IPostService {
 		postRepo.save(post);
 		
 	}
+	
+	@Override
+	public List<PostOutputDto> getPostsByBlogger(int bloggerId) {
+		
+		List<PostOutputDto> allPosts = new ArrayList<>();
+		
+		for(Post post : postRepo.getPostsByBlogger(bloggerId)) {
+			
+			// Creating PostOutputDto object
+			PostOutputDto postOutputDto = new PostOutputDto();
+			
+			// Setting values for postOutputDto
+			postOutputDto.setPostId(post.getPostId());
+			postOutputDto.setTitle(post.getTitle());
+			postOutputDto.setContent(post.getContent());
+			postOutputDto.setCreatedDateTime(post.getCreatedDateTime());
+			postOutputDto.setFlair(post.getFlair().substring(1));
+			postOutputDto.setNotSafeForWork(post.isNotSafeForWork());
+			postOutputDto.setOriginalContent(post.isOriginalContent());
+			postOutputDto.setVotes(post.getVotes());
+			postOutputDto.setVoteUp(post.isVoteUp());
+			postOutputDto.setSpoiler(post.isSpoiler());
+			
+			allPosts.add(postOutputDto);
+		}
+		return allPosts;
+	}
+		
 	@Override
 	public List<PostOutputDto> getPostByawardId(int id) {
+		
+		// Getting all the posts with award id
 		List<Post> posts = postRepo.getAllPostsByAwardId(id);
+		
+		// Creating a list of postOutputDto object
 		List<PostOutputDto> allPosts = new ArrayList<>();
+		
 		for(Post p : posts) {
 			PostOutputDto postOutputDto = new PostOutputDto();
 			postOutputDto.setPostId(p.getPostId());
@@ -204,6 +207,60 @@ public class PostServiceImpl implements IPostService {
 		return allPosts;
 	}
 
-	
-	
+	public List<PostOutputDto> listPostsByCommunityId(int communityId) {
+		
+		List<Post> posts = postRepo.getAllPostsByCommunityId(communityId);
+		
+		//Find whether community has posts or not
+		if(posts.isEmpty())
+		{
+			throw new PostIdNotFoundException("No post found for the community with id: "+ communityId);
+		}
+		
+		// Creating a list of postOutputDto object
+		List<PostOutputDto> allPosts = new ArrayList<>();
+		
+		for(Post p : posts) {
+			
+			PostOutputDto postOutputDto = new PostOutputDto();
+			
+			postOutputDto.setPostId(p.getPostId());
+			postOutputDto.setTitle(p.getTitle());
+			postOutputDto.setContent(p.getContent());
+			postOutputDto.setCreatedDateTime(p.getCreatedDateTime());
+			postOutputDto.setVotes(p.getVotes());
+			postOutputDto.setVoteUp(p.isVoteUp());
+			postOutputDto.setNotSafeForWork(p.isNotSafeForWork());
+			postOutputDto.setSpoiler(p.isSpoiler());
+			postOutputDto.setOriginalContent(p.isOriginalContent());
+			postOutputDto.setFlair(p.getFlair());
+			
+			allPosts.add(postOutputDto);
+		}
+		return allPosts;
+	}
+	public PostOutputDto getPostByCommentId(int commentId) {
+		Post post = postRepo.getPostByCommentId(commentId);
+		if(post == null) {
+			throw new PostIdNotFoundException("No post found with comment id: " + commentId);
+		}
+
+		// Creating PostOutputDto object
+		PostOutputDto postOutputDto = new PostOutputDto();
+					
+		// Setting values for postOutputDto by deletedPost values
+		postOutputDto.setPostId(post.getPostId());
+		postOutputDto.setTitle(post.getTitle());
+		postOutputDto.setContent(post.getContent());
+		postOutputDto.setCreatedDateTime(post.getCreatedDateTime());
+		postOutputDto.setFlair(post.getFlair().substring(1));
+		postOutputDto.setNotSafeForWork(post.isNotSafeForWork());
+		postOutputDto.setOriginalContent(post.isOriginalContent());
+		postOutputDto.setVotes(post.getVotes());
+		postOutputDto.setVoteUp(post.isVoteUp());
+		postOutputDto.setSpoiler(post.isSpoiler());
+		
+		return postOutputDto;
+	}
+
 }

@@ -35,14 +35,14 @@ class AwardServiceTest {
 	@Test
 	void getAwardByPostId() {
 		Award awards1 = new Award();
-		awards1.setAwardId(94);
+		awards1.setAwardId(121);
 		awards1.setCoin(Coin.GOLD);
 		
 		List<Award> allAwards = new ArrayList<>();
 		allAwards.add(awards1);
 		
 		List<Award> awards = awardServ.getAwardByPostId(awards1.getAwardId());
-		assertEquals(1, awards.size());
+		assertEquals(2, awards.size());
 		//List<Award> awards = awardServ.getAwardByPostId(94);
 		//assertEquals(1, awards.size());
 	}

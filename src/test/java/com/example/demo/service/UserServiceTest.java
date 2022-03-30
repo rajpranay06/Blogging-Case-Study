@@ -4,11 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.demo.bean.UserEntity;
+import com.example.demo.dto.PostOutputDto;
 
 @SpringBootTest
 class UserServiceTest {
@@ -17,32 +19,56 @@ class UserServiceTest {
 	IUserService userService;
 	
 	@Test
+	@Disabled
 	void getAllUserstest() {
+		
+		// Getting all the users
 		List<UserEntity> users = userService.getAllUsers();
-		int noOfUsers = users.size();
-		assertEquals(5,noOfUsers);
+		
+		// Comparing the number of users
+		assertEquals(8,users.size());
 	}
 	
 	@Test
-	void addNewUsertest() {
+	@Disabled
+	void addNewUserTest() {
+		
+		// Created User Entity
 		UserEntity user=new UserEntity();
 		user.setEmail("kevin@gmail.com");
 		user.setPassword("kevin@1234");
 		user.setRole("Admin");
 		
-		assertEquals("kevin@gmail.com",user.getEmail());
-		assertEquals("kevin@1234",user.getPassword());
-		assertEquals("Admin",user.getRole());
+		// Added User Entity
+		UserEntity addedUser = userService.addNewUser(user);
+		
+		// Comparing values
+		assertEquals("kevin@gmail.com",addedUser.getEmail());
+		assertEquals("kevin@1234",addedUser.getPassword());
+		assertEquals("Admin",addedUser.getRole());
 	}
 	
 	@Test
-	void signOuttest() {
-		UserEntity user=new UserEntity();
-		user.setEmail("bob@gmail.com");
-		user.setPassword("bob@1234");
+	@Disabled
+	void signOutTest() {
 		
-		assertEquals("bob@gmail.com",user.getEmail());
-		assertEquals("bob@1234",user.getPassword());
+		UserEntity user=new UserEntity();
+		user.setUserId(123);
+		user.setEmail("ram@gmail.com");
+		user.setPassword("ram@1234");
+		
+		UserEntity signedOutUser = userService.signOut(user.getUserId());
+		
+		assertEquals(123, signedOutUser.getUserId());
+		assertEquals("ram@gmail.com",signedOutUser.getEmail());
+		assertEquals("ram@1234",signedOutUser.getPassword());
+	}
+	
+	@Test
+	void getUserByBloggerId() {
+		UserEntity userEntity = userService.getUserByBloggerId(141);
+		assertEquals(135, userEntity.getUserId());
+		assertEquals( "ram@gmail.com", userEntity.getEmail());
 	}
 
 }

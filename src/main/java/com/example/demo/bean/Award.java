@@ -1,7 +1,7 @@
 package com.example.demo.bean;
-
-
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -17,5 +17,6 @@ public class Award {
 	@GeneratedValue
 	@Id
 	private int awardId;
+	@Enumerated(EnumType.ORDINAL)
 	private Coin coin;
 }

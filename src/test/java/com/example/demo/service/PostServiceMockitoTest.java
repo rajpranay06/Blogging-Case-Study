@@ -1,8 +1,6 @@
 package com.example.demo.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,24 +8,23 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.example.demo.bean.Award;
-import com.example.demo.bean.Comment;
+import com.example.demo.bean.Coin;
 import com.example.demo.bean.Post;
 import com.example.demo.bean.PostType;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
 import com.example.demo.repository.IAwardRepository;
 import com.example.demo.repository.ICommentRepository;
+import com.example.demo.repository.ICommunityRepository;
 import com.example.demo.repository.IPostRepository;
 
 @ExtendWith(SpringExtension.class)
@@ -36,6 +33,9 @@ public class PostServiceMockitoTest {
 //	// @InjectMocks - Creates instance of a class and injects mocks that are created with @Mock
 	@InjectMocks
 	PostServiceImpl postServ;
+	
+	@InjectMocks
+	CommunityServiceImpl communityServ;
 	
 	// @MockBean - Creates Mock of a class or interface
 	@MockBean
@@ -46,6 +46,9 @@ public class PostServiceMockitoTest {
 	
 	@MockBean
 	IAwardRepository awardRepo;
+	
+	@MockBean
+	ICommunityRepository communityRepo;
 	// Initialization of mock objects
 	@BeforeEach
 	void init() {
@@ -67,29 +70,14 @@ public class PostServiceMockitoTest {
 		newPost.setVoteUp(false);
 		newPost.setSpoiler(true);
 		
-		Comment comment1 = new Comment();
-		comment1.setCommentId(26);
-		comment1.setCommentDescription("Awesome");
-		comment1.setVotes(10);
+		List<Award> awards = new ArrayList<>();
+		Award award = new Award();
+		award.setAwardId(5);
+		award.setCoin(Coin.GOLD);
 		
-		// Sending comment when getCommentById is called
-		Mockito.when(comRepo.findById(26)).thenReturn(Optional.of(comment1));
+		awards.add(award);
 		
-		
-		
-		Comment comment2 = new Comment();
-		comment2.setCommentId(27);
-		comment2.setCommentDescription("Fab");
-		comment2.setVotes(10);
-		
-		// Sending comment when getCommentById is called
-		Mockito.when(comRepo.findById(27)).thenReturn(Optional.of(comment2));
-		
-		List<Comment> comments = new ArrayList<>();
-		comments.add(comment1);
-		comments.add(comment2);
-		
-		newPost.setComments(comments);
+		newPost.setAwards(awards);
 		
 		// Sending post object when save function is called
 		Mockito.when(postRepo.save(newPost)).thenReturn(newPost);
@@ -106,89 +94,7 @@ public class PostServiceMockitoTest {
 		assertEquals(true, addedPost.isOriginalContent());
 		assertEquals(true, addedPost.isSpoiler());
 		assertEquals(false, addedPost.isVoteUp());
-		assertEquals(2, addedPost.getComments().size());
-	}
-	
-	@Disabled
-	@Test
-	void addPostTest() {
-		
-		// Creating PostInputDto object
-		PostInputDto newPost = new PostInputDto(); 
-		
-		// Setting the values
-		newPost.setPostId(100);
-		newPost.setTitle("Lucifer");
-		newPost.setContent(PostType.VIDEO_IMAGE);
-		newPost.setCreatedDateTime(LocalDateTime.now());
-		newPost.setFlair("Deckerstar");
-		newPost.setNotSafeForWork(false);
-		newPost.setOriginalContent(true);
-		newPost.setVotes(10000);
-		newPost.setVoteUp(false);
-		newPost.setSpoiler(true);
-		
-		// Adding commentIds to the list
-		List<Integer> commentIds = new ArrayList<>();
-		commentIds.add(16);
-		commentIds.add(17);
-				
-		newPost.setCommentIds(commentIds);
-
-		// Creating post object
-		Post post = new Post();
-		
-		// Setting the post values
-		post.setPostId(newPost.getPostId());
-		post.setTitle(newPost.getTitle());
-		post.setContent(newPost.getContent());
-		post.setCreatedDateTime(newPost.getCreatedDateTime());
-		post.setFlair(newPost.getFlair());
-		post.setNotSafeForWork(newPost.isNotSafeForWork());
-		post.setOriginalContent(newPost.isOriginalContent());
-		post.setVotes(newPost.getVotes());
-		post.setVoteUp(newPost.isVoteUp());
-		post.setSpoiler(newPost.isSpoiler());
-		
-		Comment comment1 = new Comment();
-		comment1.setCommentId(26);
-		comment1.setCommentDescription("Awesome");
-		comment1.setVotes(10);
-		
-		// Sending comment when getCommentById is called
-		Mockito.when(comRepo.findById(16)).thenReturn(Optional.of(comment1));
-		
-		Comment comment2 = new Comment();
-		comment2.setCommentId(27);
-		comment2.setCommentDescription("Fab");
-		comment2.setVotes(10);
-		
-		// Sending comment when getCommentById is called
-		Mockito.when(comRepo.findById(17)).thenReturn(Optional.of(comment2));
-		
-		List<Comment> comments = new ArrayList<>();
-		comments.add(comment1);
-		comments.add(comment2);
-		
-		post.setComments(comments);
-		System.out.println(post);
-
-		// Sending post object when save function is called
-		Mockito.when(postRepo.save(post)).thenReturn(post);
-		
-		Post addedPost = postServ.addPost(newPost);
-		
-		// checking if the added post values are equal to the post or not
-		assertEquals(100, addedPost.getPostId());
-		assertEquals("Lucifer", addedPost.getTitle());
-		assertEquals(PostType.VIDEO_IMAGE, addedPost.getContent());
-		assertEquals("Deckerstar", addedPost.getFlair());
-		assertEquals(10000, addedPost.getVotes());
-		assertEquals(false, addedPost.isNotSafeForWork());
-		assertEquals(true, addedPost.isOriginalContent());
-		assertEquals(true, addedPost.isSpoiler());
-		assertEquals(false, addedPost.isVoteUp());
-		assertEquals(2, addedPost.getComments().size());
+		assertEquals(1, addedPost.getAwards().size());
 	}
 	
 	@Test
@@ -208,13 +114,6 @@ public class PostServiceMockitoTest {
 		updatedPost.setVotes(234578);
 		updatedPost.setVoteUp(true);
 		updatedPost.setSpoiler(true);
-
-		// Adding commentIds to the list
-		List<Integer> commentIds = new ArrayList<>();
-		commentIds.add(16);
-		commentIds.add(17);
-				
-		updatedPost.setCommentIds(commentIds);
 		
 		//Adding awardIds to list
 		List<Integer> awardIds = new ArrayList<>();
@@ -236,30 +135,9 @@ public class PostServiceMockitoTest {
 		post.setVoteUp(updatedPost.isVoteUp());
 		post.setSpoiler(updatedPost.isSpoiler());
 		
-		Comment comment1 = new Comment();
-		comment1.setCommentId(16);
-		comment1.setCommentDescription("Awesome");
-		comment1.setVotes(10);
-		
-		// Sending comment when getCommentById is called
-		Mockito.when(comRepo.findById(16)).thenReturn(Optional.of(comment1));
-		
-		Comment comment2 = new Comment();
-		comment2.setCommentId(17);
-		comment2.setCommentDescription("Fab");
-		comment2.setVotes(10);
-		
-		// Sending comment when getCommentById is called
-		Mockito.when(comRepo.findById(17)).thenReturn(Optional.of(comment2));
-		
-		List<Comment> comments = new ArrayList<>();
-		comments.add(comment1);
-		comments.add(comment2);
-		
-		post.setComments(comments);
-		
 		Award awards = new Award();
 		awards.setAwardId(88);
+		awards.setCoin(Coin.PLATINUM);
 		
 		Mockito.when(awardRepo.findById(88)).thenReturn(Optional.of(awards));
 		
@@ -277,92 +155,13 @@ public class PostServiceMockitoTest {
 		assertEquals(59, updatedPostOutput.getPostId());
 		assertEquals("Game of Thrones", updatedPostOutput.getTitle());
 		assertEquals(PostType.LINK, updatedPostOutput.getContent());
-		assertEquals("GameOfThrones", updatedPostOutput.getFlair());
+		assertEquals("#GameOfThrones", updatedPostOutput.getFlair());
 		assertEquals(234578, updatedPostOutput.getVotes());
 		assertEquals(false, updatedPostOutput.isNotSafeForWork());
 		assertEquals(true, updatedPostOutput.isOriginalContent());
 		assertEquals(true, updatedPostOutput.isSpoiler());
 		assertEquals(true, updatedPostOutput.isVoteUp());
-		assertEquals(2, updatedPostOutput.getComments().size());
 		assertEquals(1, updatedPostOutput.getAwards().size());
-	}
-	
-	@Test
-	void deletePostTest() {
-		
-		// Creating PostInputDto object
-		PostInputDto deletedPost = new PostInputDto(); 
-		
-		// Setting the values
-		deletedPost.setPostId(100);
-		deletedPost.setTitle("Lucifer");
-		deletedPost.setContent(PostType.VIDEO_IMAGE);
-		deletedPost.setCreatedDateTime(LocalDateTime.now());
-		deletedPost.setFlair("Deckerstar");
-		deletedPost.setNotSafeForWork(false);
-		deletedPost.setOriginalContent(true);
-		deletedPost.setVotes(10000);
-		deletedPost.setVoteUp(false);
-		deletedPost.setSpoiler(true);
-		
-		// Adding commentIds to the list
-		List<Integer> commentIds = new ArrayList<>();
-		commentIds.add(16);
-		commentIds.add(17);
-						
-		deletedPost.setCommentIds(commentIds);
-
-		// Creating post object
-		Post post = new Post();
-		
-		// Setting the post values
-		post.setPostId(deletedPost.getPostId());
-		post.setTitle(deletedPost.getTitle());
-		post.setContent(deletedPost.getContent());
-		post.setCreatedDateTime(deletedPost.getCreatedDateTime());
-		post.setFlair('#' + deletedPost.getFlair());
-		post.setNotSafeForWork(deletedPost.isNotSafeForWork());
-		post.setOriginalContent(deletedPost.isOriginalContent());
-		post.setVotes(deletedPost.getVotes());
-		post.setVoteUp(deletedPost.isVoteUp());
-		post.setSpoiler(deletedPost.isSpoiler());
-		
-		Comment comment1 = new Comment();
-		comment1.setCommentId(16);
-		comment1.setCommentDescription("Awesome");
-		comment1.setVotes(10);
-		
-		Comment comment2 = new Comment();
-		comment2.setCommentId(17);
-		comment2.setCommentDescription("Fab");
-		comment2.setVotes(10);
-		
-		List<Comment> comments = new ArrayList<>();
-		comments.add(comment1);
-		comments.add(comment2);
-		
-		post.setComments(comments);
-		
-		// Sending post object when findById function is called
-		Mockito.when(postRepo.findById(100)).thenReturn(Optional.of(post));
-		
-		// delete has void return type so do nothing is used
-		doNothing().when(postRepo).delete(post);
-		
-		Post deletedPostOutput = postServ.deletePost(100);
-		
-		// checking if the added post values are equal to the post or not
-		assertEquals(100, deletedPostOutput.getPostId());
-		assertEquals("Lucifer", deletedPostOutput.getTitle());
-		assertEquals(PostType.VIDEO_IMAGE, deletedPostOutput.getContent());
-		assertEquals("Deckerstar", deletedPostOutput.getFlair());
-		assertEquals(10000, deletedPostOutput.getVotes());
-		assertEquals(false, deletedPostOutput.isNotSafeForWork());
-		assertEquals(true, deletedPostOutput.isOriginalContent());
-		assertEquals(true, deletedPostOutput.isSpoiler());
-		assertEquals(false, deletedPostOutput.isVoteUp());	
-		assertEquals(2, deletedPostOutput.getComments().size());
-		
 	}
 	
 	@Test
@@ -380,13 +179,6 @@ public class PostServiceMockitoTest {
 		newPost.setVotes(10000);
 		newPost.setVoteUp(false);
 		newPost.setSpoiler(true);
-		
-		// Adding commentIds to the list
-		List<Integer> commentIds = new ArrayList<>();
-		commentIds.add(16);
-		commentIds.add(17);
-		
-		newPost.setCommentIds(commentIds);
 		
 		//Adding awardIds to list
 		List<Integer> awardIds = new ArrayList<>();
@@ -406,42 +198,66 @@ public class PostServiceMockitoTest {
 		post.setVoteUp(newPost.isVoteUp());
 		post.setSpoiler(newPost.isSpoiler());
 		
-		Comment comment1 = new Comment();
-		comment1.setCommentId(26);
-		comment1.setCommentDescription("Awesome");
-		comment1.setVotes(10);
-		
-		// Sending comment when getCommentById is called
-		Mockito.when(comRepo.findById(16)).thenReturn(Optional.of(comment1));
-		
-		Comment comment2 = new Comment();
-		comment2.setCommentId(27);
-		comment2.setCommentDescription("Fab");
-		comment2.setVotes(10);
-		
-		// Sending comment when getCommentById is called
-		Mockito.when(comRepo.findById(17)).thenReturn(Optional.of(comment2));
-				
-		List<Comment> comments = new ArrayList<>();
-		comments.add(comment1);
-		comments.add(comment2);
-				
-		post.setComments(comments);
-		System.out.println(post);
-		
 		List<Post> posts = new ArrayList<>();
 		posts.add(post);
 				
-		
-
 		Mockito.when(postRepo.getAllPostsByAwardId(88)).thenReturn(posts);
 		
 		List<PostOutputDto> allPost = postServ.getPostByawardId(88);
 		
 		assertEquals(1, allPost.size());
 		
+	}
+	
+	@Test
+	void listPostsByCommunityId()
+	{
+		List<Post> posts = new ArrayList<Post>();
 		
+		Post post1 = new Post();
+		post1.setPostId(100);
+		post1.setTitle("Lucifer");
+		post1.setContent(PostType.VIDEO_IMAGE);
+		post1.setCreatedDateTime(LocalDateTime.now());
+		post1.setFlair("Deckerstar");
+		post1.setNotSafeForWork(false);
+		post1.setOriginalContent(true);
+		post1.setVotes(10000);
+		post1.setVoteUp(false);
+		post1.setSpoiler(true);
 		
+		posts.add(post1);
+		
+		Mockito.when(postRepo.getAllPostsByCommunityId(12)).thenReturn(posts);
+		
+		List<PostOutputDto> postslist = postServ.listPostsByCommunityId(12);
+		assertEquals(1,postslist.size());
+		
+	}
+	
+	@Test
+	void listPostsByAwardId()
+	{
+		List<Post> posts = new ArrayList<Post>();
+		
+		Post post1 = new Post();
+		post1.setPostId(100);
+		post1.setTitle("Lucifer");
+		post1.setContent(PostType.VIDEO_IMAGE);
+		post1.setCreatedDateTime(LocalDateTime.now());
+		post1.setFlair("Deckerstar");
+		post1.setNotSafeForWork(false);
+		post1.setOriginalContent(true);
+		post1.setVotes(10000);
+		post1.setVoteUp(false);
+		post1.setSpoiler(true);
+		
+		posts.add(post1);
+		
+		Mockito.when(postRepo.getAllPostsByAwardId(10)).thenReturn(posts);
+		
+		List<PostOutputDto> postslist = postServ.getPostByawardId(10);
+		assertEquals(1,postslist.size());
 		
 	}
 }

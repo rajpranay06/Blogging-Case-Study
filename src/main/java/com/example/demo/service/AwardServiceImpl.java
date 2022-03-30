@@ -23,13 +23,13 @@ public class AwardServiceImpl implements IAwardService{
 	}
 
 	@Override
-	public Award deleteAwardById(int awardId) {
-		Award aw = awardRepo.getById(awardId);
-		if(aw != null) {
-			awardRepo.deleteById(awardId);
-			return aw;
+	public void deleteAwardById(int awardId) {
+		Optional<Award> opt = awardRepo.findById(awardId);
+		if(!opt.isPresent()) {
+			throw new AwardNotFoundException("No award found with id: " + awardId);
 		}
-		return null;
+		awardRepo.delete(opt.get());
+		
 	}
 
 	@Override
@@ -38,10 +38,7 @@ public class AwardServiceImpl implements IAwardService{
 		if(awards.isEmpty()) {
 			throw new AwardNotFoundException("award not found with given post id");
 		}
-		//return awardRepo.getAllAwardsByPostId(id);
 		return  awards;
 	}
-
-	
 
 }

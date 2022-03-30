@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.BloggerDto;
 import com.example.demo.dto.BloggerInputDto;
 import com.example.demo.dto.BloggerOutputDto;
 import com.example.demo.bean.Blogger;
@@ -26,6 +27,7 @@ public class BloggerController {
 
 	@Autowired
 	IBloggerService blogServ;
+	
 
 	// Add new blogger
 	@PostMapping("/bloggers")
@@ -37,38 +39,64 @@ public class BloggerController {
 
 	// Get all Bloggers
 	@GetMapping("/bloggers")
-	List<Blogger> viewAllBloggers() {
+	List<BloggerOutputDto> viewAllBloggers() {
 		return blogServ.viewAllBloggers();
 	}
 
 	// Add new blogger with dto
 	@PostMapping("/bloggers/dto")
-	ResponseEntity<BloggerOutputDto> addBloggerDto(@Valid @RequestBody BloggerInputDto blogger) {
-		BloggerOutputDto newDtoBlog = blogServ.addBloggerDto(blogger);
+	ResponseEntity<BloggerDto> addBloggerDto(@Valid @RequestBody BloggerInputDto blogger) {
+		BloggerDto newDtoBlog = blogServ.addBloggerDto(blogger);
 		return new ResponseEntity<>(newDtoBlog, HttpStatus.CREATED);
 
 	}
 
 	// Update blogger
 	@PutMapping("/blogger")
-	ResponseEntity<Blogger> updateBlogger(@RequestBody Blogger blogger) throws IdNotFoundException {
-		Blogger updatedBlog = blogServ.updateBlogger(blogger);
+	ResponseEntity<BloggerDto> updateBlogger(@RequestBody BloggerInputDto blogger) throws IdNotFoundException {
+		BloggerDto updatedBlog = blogServ.updateBlogger(blogger);
 		return new ResponseEntity<>(updatedBlog, HttpStatus.CREATED);
 
 	}
 
 	// Delete Blog
-	@DeleteMapping("/blogger")
-	ResponseEntity<Blogger> deleteBlogger(@RequestBody Blogger blogger) throws IdNotFoundException {
-		Blogger deletedBlog = blogServ.deleteBlogger(blogger);
-		return new ResponseEntity<>(deletedBlog, HttpStatus.CREATED);
+	@DeleteMapping("/blogger/{bloggerId}")
+	ResponseEntity<String> deleteBlogger(@PathVariable("bloggerId")  int bloggerId) throws IdNotFoundException {
+		blogServ.deleteBlogger(bloggerId);
+		return new ResponseEntity<>("Blogger with id " + bloggerId + " is deleted", HttpStatus.OK);
 
 	}
+	
 	//Get Blogger by Id
-	@GetMapping("/blogger/{id}")
-	Blogger viewBlogger(@PathVariable("id") int bloggerId) throws IdNotFoundException {
+	@GetMapping("/bloggers/{userId}")
+	BloggerOutputDto viewBlogger(@PathVariable("userId") int bloggerId) throws IdNotFoundException {
 		return blogServ.viewBlogger(bloggerId);
 
 	}
+	// Get Blogger by Comment Id
+	@GetMapping("/bloggers/byCommentId/{commentId}")
+	BloggerOutputDto getBloggerByCommentId(@PathVariable("commentId") int commentId) {
+		return blogServ.getBloggerByCommentId(commentId);
+	}
 
+	//Get Bloggers by Community Id
+	@GetMapping("/blogger/byCommunity/{communityId}")
+	ResponseEntity<List<BloggerOutputDto>> viewBloggerListByCommunityId(@PathVariable("communityId") int communityId) throws IdNotFoundException{
+		List<BloggerOutputDto> bloggers = blogServ.viewBloggerListByCommunityId(communityId);
+		return new ResponseEntity<>(bloggers, HttpStatus.OK);
+
+	}
+	
+	//Get Blogger by Post Id
+	@GetMapping("/blogger/byPost/{postId}")
+	ResponseEntity<BloggerOutputDto> getBloggerByPostId(@PathVariable("postId") int postId){
+		BloggerOutputDto blogger = blogServ.getBloggerByPostId(postId);
+		return new ResponseEntity<>(blogger, HttpStatus.OK);
+	}
+	
+	@GetMapping("/blogger/byUser/{id}")
+	ResponseEntity<BloggerOutputDto> getBloggerByUserId(@PathVariable("id") int id){
+		BloggerOutputDto blogger = blogServ.getBloggerByUserId(id);
+		return new ResponseEntity<>(blogger, HttpStatus.OK);
+	}
 }
