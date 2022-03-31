@@ -30,7 +30,6 @@ class UserServiceTest {
 	}
 	
 	@Test    
-	@Disabled
 	void addNewUsertest() {
 		
 		// Created User Entity

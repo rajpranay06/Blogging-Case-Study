@@ -69,7 +69,6 @@ public class PostServiceImpl implements IPostService {
 		// Getting awards by award ID
 		List<Award> awards = new ArrayList<>();
 		for(Integer id : post.getAwardIds()) {
-			System.out.println(id);
 			Optional<Award> opt = awardRepo.findById(id);
 			if(opt.isPresent()) {
 				awards.add(opt.get());
@@ -164,7 +163,6 @@ public class PostServiceImpl implements IPostService {
 		List<Award> awards = new ArrayList<>();
 		
 		for(Integer id: post.getAwardIds()) {
-			System.out.println(id);
 			Optional<Award> opt1 = awardRepo.findById(id);
 			if(opt1.isPresent()) {
 				awards.add(opt1.get());

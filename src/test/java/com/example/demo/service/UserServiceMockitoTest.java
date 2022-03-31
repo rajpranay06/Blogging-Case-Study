@@ -34,7 +34,6 @@ class UserServiceMockitoTest {
 	}
 	
 	@Test
-	@Disabled
 	void singOuttest() {
 		UserEntity user=new UserEntity(5,"ram@gmail.com","ram@1234","Trader",false);
 		
@@ -49,7 +48,6 @@ class UserServiceMockitoTest {
 	}
 	
 	@Test
-	@Disabled
 	void singIntest() {
 		UserInputDto user=new UserInputDto(8,"john@gmail.com","john@1234");
 		

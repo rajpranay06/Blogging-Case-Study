@@ -20,7 +20,6 @@ class CommentServiceTest {
 	ICommentService comServ;
 
 	@Test
-	@Disabled
 	void addCommentTest() {
 		CommentInputDto comment = new CommentInputDto();
 		comment.setCommentDescription("Comment Test 2");
@@ -36,7 +35,6 @@ class CommentServiceTest {
 	}
 	
 	@Test
-	@Disabled
 	void updateCommentTest() {
 		CommentInputDto comment = new CommentInputDto();
 		comment.setCommentId(17);
@@ -53,7 +51,6 @@ class CommentServiceTest {
 	
 	
 	@Test
-	@Disabled
 	void getCommentByIdTest() {
 		
 		CommentOutputDto comment = comServ.getCommentById(18);
@@ -64,7 +61,6 @@ class CommentServiceTest {
 	}
 	
 	@Test
-	@Disabled
 	void getCommentsByPostIdTest() {
 		
 		// Calling listAllCommentsByPost Function
@@ -75,7 +71,6 @@ class CommentServiceTest {
 	}
 	
 	@Test
-	@Disabled
 	void getCommentsByBloggerIdTest() {
 		
 		// Calling listAllCommentsByPost Function

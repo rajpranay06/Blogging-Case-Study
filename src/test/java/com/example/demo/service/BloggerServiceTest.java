@@ -21,7 +21,6 @@ class BloggerServiceTest {
 	IBloggerService bloggerSer;
 
 	@Test
-	@Disabled
 	void addBloggerTest(){
 		
 		// Creating blogger object and setting values
@@ -49,7 +48,6 @@ class BloggerServiceTest {
 	}
 
 	@Test
-	@Disabled
 	void updateBloggerTest(){
 		
 		BloggerInputDto blogger = new BloggerInputDto();

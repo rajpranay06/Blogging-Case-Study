@@ -21,7 +21,6 @@ public class CommunityServiceTest {
 	ICommunityService comServ;
 	
 	@Test
-	@Disabled
 	void addCommunityTest()
 	{
 		//Create community object
@@ -78,7 +77,6 @@ public class CommunityServiceTest {
 	}
 	
 	@Test
-	@Disabled
 	void updateCommunityTest()
 	{
 		Community com = new Community();

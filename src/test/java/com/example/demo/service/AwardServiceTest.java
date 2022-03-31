@@ -20,7 +20,6 @@ class AwardServiceTest {
 	IAwardService awardServ;
 
 	@Test
-	@Disabled
 	void addAwardTest() {
 		Award awards1 = new Award();
 		awards1.setCoin(Coin.GOLD);

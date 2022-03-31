@@ -53,9 +53,7 @@ public class CommunityServiceImpl implements ICommunityService {
 		newCommunity.setFlairs(community.getFlairs());
 		
 		// Saving Community Object to Repository
-		Community com = comRepo.save(newCommunity);
-		
-		return com;
+		return comRepo.save(newCommunity);
 	}
 
 	@Override
@@ -77,8 +75,8 @@ public class CommunityServiceImpl implements ICommunityService {
 		newCommunity.setFlairs(community.getFlairs());
 
 		// Save Updated Community to repository
-		Community com = comRepo.save(newCommunity);
-		return com;
+		return comRepo.save(newCommunity);
+
 	}
 
 	@Override
@@ -175,8 +173,7 @@ public class CommunityServiceImpl implements ICommunityService {
 			throw new CommunityNotFoundException("Community not found with the given id:" + community.getCommunityId());
 		}
 		// Save Updated Community to repository
-		Community com = comRepo.save(community);
-		return com;
+		return comRepo.save(community);
 	}
 
 	
