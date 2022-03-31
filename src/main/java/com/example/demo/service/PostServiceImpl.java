@@ -16,7 +16,7 @@ import com.example.demo.dto.PostDto;
 import com.example.demo.dto.PostInputDto;
 import com.example.demo.dto.PostOutputDto;
 import com.example.demo.exception.AwardNotFoundException;
-import com.example.demo.exception.IdNotFoundException;
+import com.example.demo.exception.BloggerIdNotFoundException;
 import com.example.demo.exception.PostIdNotFoundException;
 import com.example.demo.repository.IPostRepository;
 import com.example.demo.repository.IAwardRepository;
@@ -69,7 +69,6 @@ public class PostServiceImpl implements IPostService {
 		// Getting awards by award ID
 		List<Award> awards = new ArrayList<>();
 		for(Integer id : post.getAwardIds()) {
-			System.out.println(id);
 			Optional<Award> opt = awardRepo.findById(id);
 			if(opt.isPresent()) {
 				awards.add(opt.get());
@@ -164,7 +163,6 @@ public class PostServiceImpl implements IPostService {
 		List<Award> awards = new ArrayList<>();
 		
 		for(Integer id: post.getAwardIds()) {
-			System.out.println(id);
 			Optional<Award> opt1 = awardRepo.findById(id);
 			if(opt1.isPresent()) {
 				awards.add(opt1.get());
@@ -180,7 +178,7 @@ public class PostServiceImpl implements IPostService {
 		Optional<Blogger> blog = blogRepo.findById(post.getBloggerId());
 		if(!blog.isPresent())
 		{
-			throw new IdNotFoundException("Blogger not found");
+			throw new BloggerIdNotFoundException("Blogger not found");
 		}
 		// Setting bloggerId to post
 		oldPost.setBlogger(blog.get());

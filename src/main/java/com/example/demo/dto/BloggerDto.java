@@ -3,8 +3,6 @@ package com.example.demo.dto;
 import java.util.List;
 
 import com.example.demo.bean.Award;
-import com.example.demo.bean.UserEntity;
-
 import lombok.Data;
 
 @Data

@@ -1,16 +1,20 @@
 package com.example.demo.exception;
 
 public class BloggerIdNotFoundException extends RuntimeException {
-	
+
 	public BloggerIdNotFoundException() {
 		super();
+		
 	}
 
 	public BloggerIdNotFoundException(String message) {
 		super(message);
+		
 	}
 
-	public BloggerIdNotFoundException(Throwable msg) {
-		super(msg);
+	public BloggerIdNotFoundException(Throwable cause) {
+		super(cause);
+		
 	}
+
 }

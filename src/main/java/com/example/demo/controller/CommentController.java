@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.bean.Comment;
 import com.example.demo.dto.CommentDto;
 import com.example.demo.dto.CommentInputDto;
 import com.example.demo.dto.CommentOutputDto;
@@ -27,13 +26,6 @@ public class CommentController {
 
 	@Autowired
 	CommentServiceImpl comServ;
-	
-	// Add new Comment
-	@PostMapping("/comments")
-	public ResponseEntity<CommentDto> addComment(@Valid @RequestBody Comment comment) {
-		CommentDto com = comServ.addComment(comment); 
-		return new ResponseEntity<>(com, HttpStatus.OK);
-	}
 	
 	// Add comment using DTO
 	@PostMapping("/comments/dto")

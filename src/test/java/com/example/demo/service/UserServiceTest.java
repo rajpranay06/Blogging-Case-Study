@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.demo.bean.UserEntity;
+import com.example.demo.dto.UserInputDto;
 import com.example.demo.dto.UserOutputDto;
 
 @SpringBootTest
@@ -29,14 +30,14 @@ class UserServiceTest {
 	}
 	
 	@Test    
-	@Disabled
 	void addNewUsertest() {
 		
 		// Created User Entity
-		UserEntity user=new UserEntity();
+		UserInputDto user=new UserInputDto();
 		user.setEmail("newUserTest@gmail.com");
 		user.setPassword("new@123");
 		user.setRole("Admin");
+		
 		
 		// Added User Entity
 		UserOutputDto addedUser = userService.addNewUser(user);

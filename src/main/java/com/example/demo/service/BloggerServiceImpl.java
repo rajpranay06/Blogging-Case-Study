@@ -16,7 +16,7 @@ import com.example.demo.bean.Award;
 import com.example.demo.bean.Blogger;
 import com.example.demo.bean.Community;
 import com.example.demo.bean.UserEntity;
-import com.example.demo.exception.IdNotFoundException;
+import com.example.demo.exception.BloggerIdNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.IAwardRepository;
 import com.example.demo.repository.IBloggerRepository;
@@ -59,41 +59,45 @@ public class BloggerServiceImpl implements IBloggerService {
 		
 		// Getting community IDs
 		List<Integer> communityIds = bloggerInputDto.getCommunityIds();
-		if(!communityIds.isEmpty()) {
-			for(Integer id : communityIds) {
-				
-				// Getting community by ID
-				Optional<Community> opt = commRepo.findById(id);
-				if(!opt.isPresent()) {
-					throw new CommunityNotFoundException("No community is for with given id: "+ id);				}
-				
-				// Adding community to list
-				communities.add(opt.get());
-			}
-			// Setting the communities to blog
-			blog.setCommunities(communities);
+		if(communityIds.isEmpty()) {
+			throw new CommunityNotFoundException("Give atleast one community Id");
 		}
+		
+		for(Integer id : communityIds) {
+			
+			// Getting community by ID
+			Optional<Community> opt = commRepo.findById(id);
+			if(!opt.isPresent()) {
+				throw new CommunityNotFoundException("No community is for with given id: "+ id);				}
+			
+			// Adding community to list
+			communities.add(opt.get());
+		}
+		// Setting the communities to blog
+		blog.setCommunities(communities);
 		
 		// List to store awards
 		List<Award> awards = new ArrayList<>();
 
 		// Getting award IDs
 		List<Integer> awardIds = bloggerInputDto.getAwardsIds();
-		if (!awardIds.isEmpty()) {
-			for (Integer id : awardIds) {
-
-				// Getting award by ID
-				Optional<Award> opt = awardRepo.findById(id);
-				if (!opt.isPresent()) {
-					throw new AwardNotFoundException("Award is not found with the given id: " + id);
-				}
-
-				// Adding award to list
-				awards.add(opt.get());
-			}
-			// Setting the awards to blog
-			blog.setAwards(awards);
+		if (awardIds.isEmpty()) {
+			throw new AwardNotFoundException("Provide atleast one award id");
 		}
+		
+		for (Integer id : awardIds) {
+
+			// Getting award by ID
+			Optional<Award> opt = awardRepo.findById(id);
+			if (!opt.isPresent()) {
+				throw new AwardNotFoundException("Award is not found with the given id: " + id);
+			}
+
+			// Adding award to list
+			awards.add(opt.get());
+		}
+		// Setting the awards to blog
+		blog.setAwards(awards);
 		
 		// Getting the user by ID
 		Optional<UserEntity> user = userRepo.findById(bloggerInputDto.getUserId());
@@ -153,11 +157,11 @@ public class BloggerServiceImpl implements IBloggerService {
 	}
 
 	@Override
-	public BloggerDto updateBlogger(BloggerInputDto blogger) throws IdNotFoundException {
+	public BloggerDto updateBlogger(BloggerInputDto blogger) {
 		
 		Optional<Blogger> opt1 = blogRepo.findById(blogger.getBloggerId());
 		if (!opt1.isPresent()) {
-			throw new IdNotFoundException("Blogger not found with the given id:" + blogger.getUserId());
+			throw new BloggerIdNotFoundException("Blogger not found with the given id:" + blogger.getUserId());
 		}
 		Blogger updateBlogger = opt1.get();
 		
@@ -169,32 +173,30 @@ public class BloggerServiceImpl implements IBloggerService {
 		List<Community> communities = new ArrayList<>();
 		
 		List<Integer> communityIds = blogger.getCommunityIds();
-		if(!communityIds.isEmpty()) {
-			for(Integer id : communityIds) {
-				Optional<Community> opt = commRepo.findById(id);
-				if(opt.isPresent()) {
-					communities.add(opt.get());
-				}
-				else {
-					throw new CommunityNotFoundException("No community is for with given id: "+ id);
-				}
-			}
-			updateBlogger.setCommunities(communities);
+		if(communityIds.isEmpty()) {
+			throw new CommunityNotFoundException("Give atleast one community");
 		}
-		
+		for(Integer id : communityIds) {
+			Optional<Community> opt = commRepo.findById(id);
+			if(!opt.isPresent()) {
+				throw new CommunityNotFoundException("No community is for with given id: "+ id);
+			}
+			communities.add(opt.get());
+		}
+		updateBlogger.setCommunities(communities);
 		// List to store awards
 		List<Award> awards = new ArrayList<>();
 
 		List<Integer> awardIds = blogger.getAwardsIds();
-		if (!awardIds.isEmpty()) {
-			for (Integer id : awardIds) {
-				Optional<Award> award = awardRepo.findById(id);
-				if (!award.isPresent()) {
-					throw new AwardNotFoundException("Award not found with the given id: " + id);
-				}
-
-				awards.add(award.get());
+		if (awardIds.isEmpty()) {
+			throw new AwardNotFoundException("Give atleast one award id");
+		}
+		for (Integer id : awardIds) {
+			Optional<Award> award = awardRepo.findById(id);
+			if (!award.isPresent()) {
+				throw new AwardNotFoundException("Award not found with the given id: " + id);
 			}
+			awards.add(award.get());
 		}
 		updateBlogger.setAwards(awards);
 		
@@ -255,11 +257,11 @@ public class BloggerServiceImpl implements IBloggerService {
 	}
 
 	@Override
-	public void deleteBlogger(int bloggerId) throws IdNotFoundException {
+	public void deleteBlogger(int bloggerId) {
 		
 		Optional<Blogger> opt = blogRepo.findById(bloggerId);
 		if (!opt.isPresent()) {
-			throw new IdNotFoundException("Blogger not found with the given id:" + bloggerId);
+			throw new BloggerIdNotFoundException("Blogger not found with the given id:" + bloggerId);
 		}
 		
 		Blogger blogger = opt.get();
@@ -267,11 +269,11 @@ public class BloggerServiceImpl implements IBloggerService {
 	}
 
 	@Override
-	public BloggerOutputDto viewBlogger(int bloggerId) throws IdNotFoundException {
+	public BloggerOutputDto viewBlogger(int bloggerId) {
 
 		Optional<Blogger> opt = blogRepo.findById(bloggerId);
 		if (!opt.isPresent()) {
-			throw new IdNotFoundException("Blogger not found with the given id:" + bloggerId);
+			throw new BloggerIdNotFoundException("Blogger not found with the given id:" + bloggerId);
 		}
 
 		Blogger blogger = opt.get();
@@ -303,11 +305,11 @@ public class BloggerServiceImpl implements IBloggerService {
 	}
 
 	@Override
-	public BloggerOutputDto getBloggerByCommentId(int commentId) throws IdNotFoundException {
+	public BloggerOutputDto getBloggerByCommentId(int commentId) {
 		
 		Blogger blog = blogRepo.getBloggerByCommentId(commentId);
 		if(blog == null) {
-			throw new IdNotFoundException("No blogger found with comment id: " + commentId);
+			throw new BloggerIdNotFoundException("No blogger found with comment id: " + commentId);
 		}
 
 		// Creating PostOutputDto object
@@ -320,11 +322,11 @@ public class BloggerServiceImpl implements IBloggerService {
 		
 		return bloggerOutputDto;
 	}
-	public List<BloggerOutputDto> viewBloggerListByCommunityId(int communityId) throws IdNotFoundException {
+	public List<BloggerOutputDto> viewBloggerListByCommunityId(int communityId) {
 		
 		List<Blogger> bloggers = blogRepo.viewBloggerListByCommunityId(communityId);
 		if(bloggers.isEmpty()) {
-			throw new IdNotFoundException("Bloggers not found with the community id:" + communityId);
+			throw new BloggerIdNotFoundException("Bloggers not found with the community id:" + communityId);
 		}
 		List<BloggerOutputDto> allBloggers = new ArrayList<>();
 		
@@ -343,10 +345,10 @@ public class BloggerServiceImpl implements IBloggerService {
 	}
 
 	@Override
-	public BloggerOutputDto getBloggerByPostId(int postId) throws IdNotFoundException {
+	public BloggerOutputDto getBloggerByPostId(int postId) {
 		Blogger blogger = blogRepo.getBloggerByPostId(postId);
 		if(blogger == null) {
-			throw new IdNotFoundException("Bloggers not found with the post id:" + postId);
+			throw new BloggerIdNotFoundException("Bloggers not found with the post id:" + postId);
 		}
 		BloggerOutputDto bloggerOutputDto = new BloggerOutputDto();
 		
@@ -358,11 +360,11 @@ public class BloggerServiceImpl implements IBloggerService {
 	}
 	
 	@Override
-	public List<BloggerOutputDto> getBloggerByAwardId(int awardId) throws IdNotFoundException {
+	public List<BloggerOutputDto> getBloggerByAwardId(int awardId) {
 
 		List<Blogger> bloggers = blogRepo.getBloggerByAwardId(awardId);
 		if (bloggers.isEmpty()) {
-			throw new IdNotFoundException("Bloggers not found with the Award id:" + awardId);
+			throw new BloggerIdNotFoundException("Bloggers not found with the Award id:" + awardId);
 		}
 		List<BloggerOutputDto> allBloggers = new ArrayList<>();
 

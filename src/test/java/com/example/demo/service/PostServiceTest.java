@@ -23,7 +23,6 @@ public class PostServiceTest {
 	IPostService postServ;
 	
 	@Test
-	@Disabled
 	void addPostTest() {
 		
 		// Creating PostInputDto object
@@ -69,7 +68,6 @@ public class PostServiceTest {
 	
 	
 	@Test
-	@Disabled
 	void updatePostTest() {
 		// Creating PostInputDto object
 		PostInputDto updatedPost = new PostInputDto(); 
@@ -114,7 +112,6 @@ public class PostServiceTest {
 		assertEquals(24,post.getBlogger().getBloggerId());
 	}
 	
-	@Disabled
 	@Test
 	void deletePostTest() {
 		

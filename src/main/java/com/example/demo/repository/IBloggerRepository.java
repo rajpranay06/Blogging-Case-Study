@@ -7,7 +7,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.bean.Blogger;
-import com.example.demo.dto.PostOutputDto;
 
 @Repository
 public interface IBloggerRepository extends JpaRepository<Blogger, Integer> {

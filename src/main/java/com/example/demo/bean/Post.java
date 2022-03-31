@@ -15,8 +15,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
 
-import com.example.demo.dto.BloggerOutputDto;
-
 import lombok.Data;
 
 @Entity       
