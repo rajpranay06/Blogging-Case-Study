@@ -25,9 +25,15 @@ public class UserServiceImpl implements IUserService{
 	IAdminRepository adminRepo;
 	
 	@Override
-	public UserOutputDto addNewUser(UserEntity user) {
+	public UserOutputDto addNewUser(UserInputDto user) {
+		
+		UserEntity addUser = new UserEntity();
+		addUser.setEmail(user.getEmail());
+		addUser.setPassword(user.getPassword());
+		addUser.setLoginStatus(user.isLoginStatus());
+		addUser.setRole(user.getRole());
 	
-		UserEntity newUser = userRepo.save(user);
+		UserEntity newUser = userRepo.save(addUser);
 		
 		// Creating UserOutputDto
 		UserOutputDto userOutput = new UserOutputDto();
@@ -112,9 +118,24 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public Admin addAdmin(Admin admin) {
+	public Admin addAdmin(int userId, Admin admin) {
+		
+		if(userId != admin.getUserId()) {
+			throw new UserNotFoundException("The user id should be same for admin and user");
+		}
+		
+		// Checking if user role is matching with Admin or not
+		if(!userRepo.getById(userId).getRole().equals("Admin")) {
+			throw new UserNotFoundException("This user is not an admin"); 
+		}
+		// Saving admin
+		Admin ad = adminRepo.save(admin);
+		
+		UserEntity user = new UserEntity();
+		// Setting admin to user
+		user.setAdmin(ad);
 	
-		return adminRepo.save(admin);
+		return ad;
 	}
 	
 	@Override

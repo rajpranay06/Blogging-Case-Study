@@ -19,7 +19,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.example.demo.dto.BloggerOutputDto;
 import com.example.demo.bean.Blogger;
-import com.example.demo.exception.IdNotFoundException;
 import com.example.demo.repository.IBloggerRepository;
 import com.example.demo.repository.ICommentRepository;
 
@@ -58,7 +57,7 @@ class BloggerServiceMockitoTest {
 	}
 
 	@Test
-	void addBlogger() {
+	void addBloggerTest() {
 		// Creating blogger object
 		Blogger blogger = new Blogger();
 		
@@ -114,7 +113,7 @@ class BloggerServiceMockitoTest {
 	}
 
 	@Test
-	void viewBloggerTest() throws IdNotFoundException {
+	void viewBloggerTest(){
 		Blogger blogger = new Blogger();
 		
 		// Setting the values
@@ -166,7 +165,7 @@ class BloggerServiceMockitoTest {
 	}
 	
 	@Test
-	public void viewAllBloggers() {
+	public void viewAllBloggersTest() {
 		List<Blogger> bloggers = new ArrayList<>();
 		bloggers.add(new Blogger());
 		
@@ -182,7 +181,7 @@ class BloggerServiceMockitoTest {
 	}
 
 	@Test
-	public void getBloggerByUserId() {
+	public void getBloggerByUserIdTest() {
 		
 		Blogger blogger = new Blogger();
 		

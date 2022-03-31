@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-
 import java.util.List;
 
 import javax.validation.Valid;
@@ -15,12 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.bean.Admin;
-import com.example.demo.bean.UserEntity;
 import com.example.demo.dto.UserInputDto;
 import com.example.demo.dto.UserOutputDto;
-import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.IUserRepository;
-import com.example.demo.service.IAdminService;
 import com.example.demo.service.IUserService;
 
 @RestController
@@ -28,9 +24,6 @@ public class UserController {
 
 	@Autowired
 	IUserService userServ;
-	
-	@Autowired
-	IAdminService adminServ;
 	
 	@Autowired
 	IUserRepository userRepo;
@@ -43,7 +36,7 @@ public class UserController {
 	
 	// Adding new user
 	@PostMapping("/users")
-	ResponseEntity<UserOutputDto> addNewUser(@Valid @RequestBody UserEntity user) {
+	ResponseEntity<UserOutputDto> addNewUser(@Valid @RequestBody UserInputDto user) {
 		UserOutputDto newUser=userServ.addNewUser(user);
 		return new ResponseEntity<>(newUser,HttpStatus.CREATED);
 	}
@@ -63,18 +56,10 @@ public class UserController {
 	}
 	
 	// Add admin
-	@PostMapping("/users/byRole/{id}")
-	ResponseEntity<Admin> addAdmin(@PathVariable int id, @Valid @RequestBody Admin admin){
-		if(!userRepo.getById(id).getRole().equals("Admin")) {
-			throw new UserNotFoundException("This user is not an admin"); 
-		}
-		else {
-			Admin ad=adminServ.addAdmin(admin);
-			UserEntity user=new UserEntity();
-			user.setAdmin(ad);
-
-			return new ResponseEntity<>(ad,HttpStatus.CREATED);
-		}	
+	@PostMapping("/users/byRole/{userId}")
+	ResponseEntity<Admin> addAdmin(@PathVariable int userId, @Valid @RequestBody Admin admin){
+		Admin addedAdmin = userServ.addAdmin(userId, admin);
+		return new ResponseEntity<>(addedAdmin,HttpStatus.CREATED);
 	}
 	
 	// Get User by Blogger Id

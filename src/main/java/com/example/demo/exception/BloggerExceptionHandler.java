@@ -14,7 +14,7 @@ import com.example.demo.bean.ErrorResponse;
 public class BloggerExceptionHandler {
 	
 	@ExceptionHandler
-	public ResponseEntity<ErrorResponse> handleException(IdNotFoundException exception) {
+	public ResponseEntity<ErrorResponse> handleException(BloggerIdNotFoundException exception) {
 		ErrorResponse error = new ErrorResponse();
 		
 		error.setStatus(HttpStatus.NOT_FOUND.value());

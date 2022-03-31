@@ -17,7 +17,7 @@ import com.example.demo.dto.CommentInputDto;
 import com.example.demo.dto.CommentOutputDto;
 import com.example.demo.dto.PostOutputDto;
 import com.example.demo.exception.CommentNotFoundException;
-import com.example.demo.exception.IdNotFoundException;
+import com.example.demo.exception.BloggerIdNotFoundException;
 import com.example.demo.exception.ModeratorApprovalException;
 import com.example.demo.exception.PostIdNotFoundException;
 import com.example.demo.repository.IBloggerRepository;
@@ -138,7 +138,7 @@ public class CommentServiceImpl implements ICommentService{
 		//Get the Blogger with the id
 		Optional<Blogger> opt2 = blogRepo.findById(commentInputDto.getBloggerId());
 		if(!opt2.isPresent()) {
-			throw new IdNotFoundException("No blogger is found with id:" + commentInputDto.getBloggerId());
+			throw new BloggerIdNotFoundException("No blogger is found with id:" + commentInputDto.getBloggerId());
 		}
 		Blogger blogger = opt2.get();
 		
@@ -293,7 +293,7 @@ public class CommentServiceImpl implements ICommentService{
 		//Get the Blogger with the id
 		Optional<Blogger> opt2 = blogRepo.findById(comment.getBloggerId());
 		if(!opt2.isPresent()) {
-			throw new IdNotFoundException("No blogger is found with id:" + comment.getBloggerId());
+			throw new BloggerIdNotFoundException("No blogger is found with id:" + comment.getBloggerId());
 		}
 		Blogger blogger = opt2.get();
 		com.setBlogger(blogger);

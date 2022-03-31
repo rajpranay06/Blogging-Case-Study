@@ -11,7 +11,6 @@ import com.example.demo.bean.Community;
 import com.example.demo.dto.CommunityInputDto;
 import com.example.demo.dto.CommunityOutputDto;
 import com.example.demo.exception.CommentNotFoundException;
-import com.example.demo.exception.CommunityFoundException;
 import com.example.demo.exception.CommunityNotFoundException;
 import com.example.demo.repository.IBloggerRepository;
 import com.example.demo.repository.ICommunityRepository;
@@ -36,8 +35,7 @@ public class CommunityServiceImpl implements ICommunityService {
 		Optional<Community> opt = comRepo.findById(community.getCommunityId());
 
 		if (opt.isPresent()) {
-			throw new CommunityFoundException(
-					"Community is already present with the given id: " + community.getCommunityId());
+			throw new CommunityNotFoundException("Community is not found with the given id: " + community.getCommunityId());
 		}
 		
 		//Create community object

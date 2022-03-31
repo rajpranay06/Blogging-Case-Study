@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.example.demo.dto.BloggerDto;
 import com.example.demo.dto.BloggerInputDto;
 import com.example.demo.dto.BloggerOutputDto;
-import com.example.demo.exception.IdNotFoundException;
 
 @SpringBootTest
 class BloggerServiceTest {
@@ -23,7 +22,7 @@ class BloggerServiceTest {
 
 	@Test
 	@Disabled
-	void addBloggerTest() throws IdNotFoundException {
+	void addBloggerTest(){
 		
 		// Creating blogger object and setting values
 		BloggerInputDto blogger = new BloggerInputDto();
@@ -51,7 +50,7 @@ class BloggerServiceTest {
 
 	@Test
 	@Disabled
-	void updateBloggerTest() throws IdNotFoundException {
+	void updateBloggerTest(){
 		
 		BloggerInputDto blogger = new BloggerInputDto();
 		blogger.setBloggerId(15);
@@ -79,7 +78,7 @@ class BloggerServiceTest {
 	}
 
 	@Test
-	void viewBloggerTest() throws IdNotFoundException {
+	void viewBloggerTest(){
 		BloggerOutputDto blogger = bloggerSer.viewBlogger(15);
 		assertEquals("Updated Blogger 1", blogger.getBloggerName());
 		assertEquals(50, blogger.getKarma());
@@ -94,7 +93,7 @@ class BloggerServiceTest {
 	}
 
 	@Test
-	void viewBloggerListByCommunityIdTest() throws IdNotFoundException {
+	void viewBloggerListByCommunityIdTest(){
 		
 		List<BloggerOutputDto> bloggers = bloggerSer.viewBloggerListByCommunityId(11);
 		
@@ -102,7 +101,7 @@ class BloggerServiceTest {
 	}
 	
 	@Test
-	void getBloggerByAwardIdTest() throws IdNotFoundException {
+	void getBloggerByAwardIdTest(){
 
 		List<BloggerOutputDto> bloggers = bloggerSer.getBloggerByAwardId(7);
 
@@ -111,7 +110,7 @@ class BloggerServiceTest {
 	}
 	
 	@Test
-	void getBloggerByUserId() {
+	void getBloggerByUserIdTest() {
 		BloggerOutputDto  blogger = bloggerSer.getBloggerByUserId(1);
 		assertEquals(15, blogger.getBloggerId());
 		assertEquals("Updated Blogger 1", blogger.getBloggerName());
