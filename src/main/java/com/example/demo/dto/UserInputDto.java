@@ -5,9 +5,13 @@ import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserInputDto {
 
 	@Id
@@ -19,13 +23,5 @@ public class UserInputDto {
 	private String password;
 	private String role;
 	private boolean loginStatus;
-	
-	public UserInputDto(int userId, String email, String password) {
-		super();
-		this.userId = userId;
-		this.email = email;
-		this.password = password;
-	}
-	public UserInputDto() {}
 	
 }

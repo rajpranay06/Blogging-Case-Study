@@ -34,10 +34,29 @@ class UserServiceMockitoTest {
 	}
 	
 	@Test
+	void addUserTest() {
+		
+		UserEntity user = new UserEntity(5,"ram@gmail.com","ram@1234","Trader",false);
+				
+		// Mockito to save user
+		Mockito.when(userRepo.save(user)).thenReturn(user);
+		
+		// Calling saving function
+		UserOutputDto newUser = userService.addUser(user);
+		
+		assertEquals(5, newUser.getUserId());
+		assertEquals("ram@gmail.com", newUser.getEmail());
+		assertEquals("Trader", newUser.getRole());
+		assertEquals(false, newUser.isLoginStatus());
+		
+	}
+	
+	@Test
 	void singOuttest() {
 		UserEntity user=new UserEntity(5,"ram@gmail.com","ram@1234","Trader",false);
 		
 		Mockito.when(userRepo.findById(5)).thenReturn(Optional.of(user));
+		Mockito.when(userRepo.save(user)).thenReturn(user);
 		
 		UserOutputDto userTest = userService.signOut(5);
 		
@@ -49,16 +68,18 @@ class UserServiceMockitoTest {
 	
 	@Test
 	void singIntest() {
-		UserInputDto user=new UserInputDto(8,"john@gmail.com","john@1234");
+		
+		UserInputDto user=new UserInputDto(8,"john@gmail.com","john@1234", "Admin", true);
 		
 		UserEntity userEntity=new UserEntity();
 		userEntity.setUserId(user.getUserId());
 		userEntity.setEmail(user.getEmail());
 		userEntity.setPassword(user.getPassword());
-		userEntity.setRole("Admin");
-		userEntity.setLoginStatus(true);
+		userEntity.setRole(user.getRole());
+		userEntity.setLoginStatus(user.isLoginStatus());
 		
-		Mockito.when(userRepo.getById(8)).thenReturn(userEntity);
+		Mockito.when(userRepo.findById(8)).thenReturn(Optional.of(userEntity));
+		Mockito.when(userRepo.save(userEntity)).thenReturn(userEntity);
 		
 		UserOutputDto userTest=userService.signIn(user);
 		

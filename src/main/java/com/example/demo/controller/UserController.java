@@ -49,7 +49,7 @@ public class UserController {
 	}
 	
 	// Logout
-	@GetMapping("/users/{id}")
+	@GetMapping("/users/logout/{id}")
 	ResponseEntity<UserOutputDto> signOut(@PathVariable int id) {
 		UserOutputDto logout=userServ.signOut(id);
 		return new ResponseEntity<>(logout,HttpStatus.OK);
