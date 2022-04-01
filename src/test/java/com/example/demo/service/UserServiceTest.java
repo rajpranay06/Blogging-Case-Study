@@ -26,27 +26,8 @@ class UserServiceTest {
 		List<UserOutputDto> users = userService.getAllUsers();
 		
 		// Comparing the number of users
-		assertEquals(5,users.size());
+		assertEquals(7,users.size());
 	}
-	
-	@Test    
-	void addNewUsertest() {
-		
-		// Created User Entity
-		UserInputDto user=new UserInputDto();
-		user.setEmail("newUserTest@gmail.com");
-		user.setPassword("new@123");
-		user.setRole("Admin");
-		
-		
-		// Added User Entity
-		UserOutputDto addedUser = userService.addNewUser(user);
-		
-		// Comparing values
-		assertEquals("newUserTest@gmail.com",addedUser.getEmail());
-		assertEquals("Admin", addedUser.getRole());
-	}
-	
 	@Test
 	void signOuttest() {
 		

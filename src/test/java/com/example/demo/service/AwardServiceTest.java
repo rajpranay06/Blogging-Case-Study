@@ -39,7 +39,7 @@ class AwardServiceTest {
 	@Test
 	void getAwardsByBlogId() {
 		List<Award> awards = awardServ.getAwardsByBlogId(15);
-		assertEquals(2, awards.size());
+		assertEquals(1, awards.size());
 	}
 
 }

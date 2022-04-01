@@ -25,6 +25,21 @@ public class UserServiceImpl implements IUserService{
 	IAdminRepository adminRepo;
 	
 	@Override
+	public UserOutputDto addUser(UserEntity user) {
+		
+		UserEntity newUser = userRepo.save(user);
+		
+		// Creating UserOutputDto
+		UserOutputDto userOutput = new UserOutputDto();
+		userOutput.setEmail(newUser.getEmail());
+		userOutput.setUserId(newUser.getUserId());
+		userOutput.setLoginStatus(newUser.isLoginStatus());
+		userOutput.setRole(newUser.getRole());
+		
+		return userOutput;
+	}
+	
+	@Override
 	public UserOutputDto addNewUser(UserInputDto user) {
 		
 		UserEntity addUser = new UserEntity();
@@ -153,5 +168,6 @@ public class UserServiceImpl implements IUserService{
 		
 		return userOutput;
 	}
+
 
 }

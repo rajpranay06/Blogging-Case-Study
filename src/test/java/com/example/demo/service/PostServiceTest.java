@@ -23,16 +23,17 @@ public class PostServiceTest {
 	IPostService postServ;
 	
 	@Test
+	@Disabled
 	void addPostTest() {
 		
 		// Creating PostInputDto object
 		PostInputDto newPost = new PostInputDto(); 
 		
 		// Setting the values
-		newPost.setTitle("Game of Thrones");
+		newPost.setTitle("Friends");
 		newPost.setContent(PostType.LINK);
 		newPost.setCreatedDateTime(LocalDateTime.now());
-		newPost.setFlair("GOT");
+		newPost.setFlair("friends");
 		newPost.setNotSafeForWork(false);
 		newPost.setOriginalContent(true);
 		newPost.setVotes(67890);
@@ -41,7 +42,7 @@ public class PostServiceTest {
 		
 		// Creating List of award ids
 		List<Integer> awardIds = new ArrayList<>();
-		awardIds.add(7);
+		awardIds.add(22);
 		newPost.setAwardIds(awardIds);
 		
 		// Setting community ID
@@ -54,9 +55,9 @@ public class PostServiceTest {
 		PostDto post = postServ.addPost(newPost);
 		
 		// checking if the added post values are equal to the post or not
-		assertEquals("Game of Thrones", post.getTitle());
+		assertEquals("Friends", post.getTitle());
 		assertEquals(PostType.LINK, post.getContent());
-		assertEquals("GOT", post.getFlair());
+		assertEquals("friends", post.getFlair());
 		assertEquals(67890, post.getVotes());
 		assertEquals(false, post.isNotSafeForWork());
 		assertEquals(true, post.isOriginalContent());
@@ -86,7 +87,7 @@ public class PostServiceTest {
 		
 		// Setting list of award ids
 		List<Integer> awardIds = new ArrayList<>();
-		awardIds.add(7);
+		awardIds.add(22);
 		updatedPost.setAwardIds(awardIds);
 		
 		// Setting community ID
@@ -113,14 +114,6 @@ public class PostServiceTest {
 	}
 	
 	@Test
-	void deletePostTest() {
-		
-		// Deleting the post
-		postServ.deletePost(13);
-		
-	}
-	
-	@Test
 	void getPostsBySearchStringTest() {
 		
 		// Getting the posts
@@ -133,7 +126,7 @@ public class PostServiceTest {
 	@Test
 	void getPostByawardIdTest() {
 		List<PostOutputDto> posts = postServ.getPostByawardId(7);
-		assertEquals(2, posts.size());
+		assertEquals(1, posts.size());
 	}
 	@Test
 	void listPostsByCommunityId()

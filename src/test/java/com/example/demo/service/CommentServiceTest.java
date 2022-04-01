@@ -20,17 +20,18 @@ class CommentServiceTest {
 	ICommentService comServ;
 
 	@Test
+	@Disabled
 	void addCommentTest() {
 		CommentInputDto comment = new CommentInputDto();
 		comment.setCommentDescription("Comment Test 2");
 		comment.setVotes(90);
-		comment.setPostId(16);
+		comment.setPostId(25);
 		comment.setBloggerId(24);
 		
 		CommentDto comDto = comServ.addCommentDto(comment);
 		assertEquals("Comment Test 2", comDto.getCommentDescription());
 		assertEquals(90, comDto.getVotes());
-		assertEquals(16, comDto.getPost().getPostId());
+		assertEquals(25, comDto.getPost().getPostId());
 		assertEquals(24, comDto.getBlogger().getBloggerId());
 	}
 	

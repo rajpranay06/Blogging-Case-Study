@@ -21,6 +21,7 @@ public class CommunityServiceTest {
 	ICommunityService comServ;
 	
 	@Test
+	@Disabled
 	void addCommunityTest()
 	{
 		//Create community object
@@ -157,7 +158,7 @@ public class CommunityServiceTest {
 	{	
 		List<CommunityOutputDto> com = comServ.listAllCommunitiesByBloggerId(15);
 		
-		assertEquals(2,com.size());
+		assertEquals(1,com.size());
 		
 	}
 }

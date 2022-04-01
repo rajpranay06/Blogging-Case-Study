@@ -21,7 +21,7 @@ repositories {
 }
 
 // reports will be generated after test cases 
-// project.tasks["sonarqube"].dependsOn "test"
+project.tasks["sonarqube"].dependsOn "test"
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
