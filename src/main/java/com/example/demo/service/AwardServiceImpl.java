@@ -15,6 +15,11 @@ public class AwardServiceImpl implements IAwardService{
 	
 	@Autowired
 	IAwardRepository awardRepo;
+	
+	@Override
+	public List<Award> viewAllAwards() {
+		return awardRepo.findAll();
+	}
 
 	@Override
 	public Award addAward(Award award) {
@@ -49,5 +54,7 @@ public class AwardServiceImpl implements IAwardService{
 		}
 		return  awards;
 	}
+
+	
 
 }

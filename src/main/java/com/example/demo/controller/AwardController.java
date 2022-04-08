@@ -23,6 +23,12 @@ public class AwardController {
 	@Autowired
 	IAwardService awardServ;
 	
+	// Get all awards
+		@GetMapping("/awards")
+		List<Award> viewAllAwards() {
+			return awardServ.viewAllAwards();
+		}
+	
 	// Add Awards
 	@PostMapping("/awards")
 	ResponseEntity<Award> addAward(@Valid @RequestBody Award award){
